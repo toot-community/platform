@@ -5,14 +5,14 @@ module "databases" {
   db_cluster_name      = "db-postgresql-ams3-toot-community"
   db_cluster_version   = "14"
   db_node_count        = "1"
-  db_cluster_size      = "db-s-2vcpu-4gb"
+  db_cluster_size      = "gd-4vcpu-16gb"
   connection_pool_name = "mastodon-pool"
-  connection_pool_size = 97
+  connection_pool_size = 397
 
   # Postgresql replica
   db_cluster_replica_name  = "db-ro-postgresql-ams3-toot-community"
   db_cluster_replica_size  = "db-s-2vcpu-4gb"
-  db_cluster_replica_count = 2
+  db_cluster_replica_count = 0
 
   # Postgresql database
   db_username = "mastodon"
