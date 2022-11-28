@@ -9,11 +9,6 @@ module "databases" {
   connection_pool_name = "mastodon-pool"
   connection_pool_size = 397
 
-  # Postgresql replica
-  db_cluster_replica_name  = "db-ro-postgresql-ams3-toot-community"
-  db_cluster_replica_size  = "db-s-2vcpu-4gb"
-  db_cluster_replica_count = 0
-
   # Postgresql database
   db_username = "mastodon"
   db_name     = "mastodon"

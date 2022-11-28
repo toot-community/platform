@@ -19,22 +19,6 @@ variable "db_cluster_size" {
   description = "Sizing of the DB cluster"
 }
 
-variable "db_cluster_replica_name" {
-  type        = string
-  description = "Name of the DB replica"
-}
-
-variable "db_cluster_replica_size" {
-  type        = string
-  description = "Size of the DB replica"
-}
-
-variable "db_cluster_replica_count" {
-  type        = number
-  description = "Size of the DB replica"
-  default     = 0
-}
-
 variable "db_username" {
   type        = string
   description = "Name of the user to create on the DB cluster"

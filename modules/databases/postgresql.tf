@@ -26,17 +26,3 @@ resource "digitalocean_database_connection_pool" "postgresql" {
   name       = var.connection_pool_name
   size       = var.connection_pool_size
 }
-
-resource "digitalocean_database_replica" "psql-readonly" {
-  count                = var.db_cluster_replica_count
-  cluster_id           = digitalocean_database_cluster.postgresql.id
-  name                 = "${var.db_cluster_replica_name}-${count.index}"
-  region               = var.region
-  size                 = var.db_cluster_replica_size
-  private_network_uuid = data.digitalocean_vpc.this.id
-  lifecycle {
-    ignore_changes = [
-      size
-    ]
-  }
-}

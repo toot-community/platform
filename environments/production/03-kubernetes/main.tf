@@ -7,7 +7,7 @@ module "kubernetes" {
   region               = "ams3"
 
   # Node pool - generic
-  generic_pool_name      = "pool-generic-2"
+  generic_pool_name      = "pool-generic-3"
   generic_pool_size      = "s-4vcpu-8gb-amd"
   generic_pool_min_nodes = 2
   generic_pool_max_nodes = 6
