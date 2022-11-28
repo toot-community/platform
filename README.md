@@ -44,3 +44,19 @@ Active the aws-cli profile:
 ```
 export AWS_PROFILE=digitalocean
 ```
+
+## Deployment
+
+In the environments folder you will find a `production` folder, that's the only environment for now. If you want to test major changes you can simply copy the `production` folder, change all variables and deploy an entirely seperate environment just for testing.
+
+To deploy the infrastructure needed on Digitalocean you can `cd` into every folder in `environments/production` and change all variables. 
+
+After you did that you can run...
+
+```
+terraform init
+terraform plan
+terraform apply
+```
+
+Repeat these steps until you reached the end of the folder tree.
