@@ -9,7 +9,7 @@ module "kubernetes" {
   # Node pool - generic
   generic_pool_name      = "pool-generic-2"
   generic_pool_size      = "s-4vcpu-8gb-amd"
-  generic_pool_min_nodes = 1
+  generic_pool_min_nodes = 2
   generic_pool_max_nodes = 6
 
   # Node pool - sidekiq
