@@ -48,3 +48,5 @@ terraform apply
 ```
 
 Repeat these steps until you reached the end of the folder tree.
+
+Continue with [deploying Mastodon](https://github.com/toot-community/kubernetes).
