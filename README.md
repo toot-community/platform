@@ -1,5 +1,7 @@
 # Infrastructure
 
+> :warning: **This code is provided as-is — it is not meant to be executed verbatim. No support is provided in any way.**
+
 This repository holds all platform code for running a Mastadon server on [DigitalOcean](https://www.digitalocean.com/) using [Kubernetes](https://www.digitalocean.com/products/kubernetes).
 
 ## Getting started
