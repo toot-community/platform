@@ -3,14 +3,18 @@ resource "digitalocean_spaces_bucket" "this" {
   region = var.region
   acl    = "private"
 
-  cors_rule {
-    allowed_methods = ["GET"]
-    allowed_origins = [join("", ["https://", var.cors_hostname])]
-    max_age_seconds = 0
+  dynamic "cors_rule" {
+    for_each = var.cors_hostname.length > 0 ? [1] : []
+    content {
+      allowed_methods = ["GET"]
+      allowed_origins = [join("", ["https://", var.cors_hostname])]
+      max_age_seconds = 0
+    }
   }
 }
 
 resource "digitalocean_certificate" "this" {
+  count             = var.cdn_hostname.length > 0 ? 1 : 0
   name              = "cf-origin-cert"
   type              = "custom"
   private_key       = file("../../../../certificate_temp/origin-cert.key")
@@ -19,6 +23,7 @@ resource "digitalocean_certificate" "this" {
 }
 
 resource "digitalocean_cdn" "this" {
+  count            = var.cdn_hostname.length > 0 ? 1 : 0
   origin           = digitalocean_spaces_bucket.this.bucket_domain_name
   custom_domain    = var.cdn_hostname
   certificate_name = digitalocean_certificate.this.name

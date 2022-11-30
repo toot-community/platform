@@ -11,10 +11,12 @@ variable "region" {
 
 variable "cdn_hostname" {
   type        = string
-  description = "Hostname for the CDN"
+  description = "(Optional) Hostname for the CDN"
+  default     = ""
 }
 
 variable "cors_hostname" {
   type        = string
-  description = "Hostname to trust for CORS"
+  description = "(Optional) Hostname to trust for CORS"
+  default     = ""
 }
