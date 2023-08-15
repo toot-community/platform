@@ -1,21 +1,34 @@
-data "digitalocean_kubernetes_cluster" "this" {
-  name = var.kubernetes_cluster_name
-}
+resource "digitalocean_firewall" "dbs" {
+  droplet_ids = [digitalocean_droplet.dbs.id]
+  name        = var.firewall_name # "dbs-toot-community-1"
 
-resource "digitalocean_database_firewall" "redis" {
-  cluster_id = digitalocean_database_cluster.redis.id
-
-  rule {
-    type  = "k8s"
-    value = data.digitalocean_kubernetes_cluster.this.id
+  inbound_rule {
+    port_range       = "22"
+    protocol         = "tcp"
+    source_addresses = ["86.93.122.193"]
   }
-}
-
-resource "digitalocean_database_firewall" "postgresql" {
-  cluster_id = digitalocean_database_cluster.postgresql.id
-
-  rule {
-    type  = "k8s"
-    value = data.digitalocean_kubernetes_cluster.this.id
+  inbound_rule {
+    port_range            = "5432"
+    protocol              = "tcp"
+    source_kubernetes_ids = [data.digitalocean_kubernetes_cluster.this.id]
+  }
+  inbound_rule {
+    port_range            = "6379"
+    protocol              = "tcp"
+    source_kubernetes_ids = [data.digitalocean_kubernetes_cluster.this.id]
+  }
+  outbound_rule {
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+    protocol              = "icmp"
+  }
+  outbound_rule {
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+    port_range            = "all"
+    protocol              = "tcp"
+  }
+  outbound_rule {
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+    port_range            = "all"
+    protocol              = "udp"
   }
 }
