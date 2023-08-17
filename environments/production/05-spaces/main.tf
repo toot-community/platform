@@ -10,8 +10,6 @@ module "spaces-db-backups" {
 
   spaces_name = "db-backup-toot-community"
   region      = "ams3"
-
-  expiration_enabled = true
 }
 
 module "spaces-loki" {
