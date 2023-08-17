@@ -1,41 +1,16 @@
 module "databases" {
   source = "../../../modules/databases"
 
-  # PostgreSQL
-  db_cluster_name    = "db-postgresql-ams3-toot-community"
-  db_cluster_version = "15"
-  db_node_count      = "1"
-  db_cluster_size    = "db-s-4vcpu-8gb"
-  db_usernames       = ["app", "esb"]
-  db_names           = ["app", "esb"]
+  droplet_image = "debian-12-x64"
+  droplet_name  = "dbs-toot-community-1"
+  droplet_size  = "s-8vcpu-16gb-amd"
+  region        = "ams3"
 
-  # Pools
-  db_connection_pools = [
-    {
-      name     = "app-pool"
-      size     = 194,
-      mode     = "transaction",
-      user     = "app",
-      database = "app"
-    },
-    {
-      name     = "esb-pool"
-      size     = 3,
-      mode     = "session",
-      user     = "esb",
-      database = "esb"
-    }
-  ]
+  firewall_name = "dbs-toot-community-1"
 
-  # Redis
-  redis_cluster_name    = "db-redis-ams3-toot-community"
-  redis_cluster_version = "7"
-  redis_node_count      = "1"
-  redis_cluster_size    = "db-s-2vcpu-4gb"
-
-  # Networking
+  # Networking datasource
   vpc_name = "ams3-vpc-toot-community-01"
 
-  # Kubernetes
+  # Kubernetes datasource
   kubernetes_cluster_name = "k8s-toot-community-1"
 }

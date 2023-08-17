@@ -1,78 +1,41 @@
-# Postgresql
-variable "db_cluster_name" {
+variable "droplet_image" {
+  description = "The image to use for the droplet"
   type        = string
-  description = "Name of the DB cluster"
+  default     = "debian-12-x64"
 }
 
-variable "db_cluster_version" {
+variable "droplet_name" {
+  description = "The name of the droplet"
   type        = string
-  description = "Engine version used by the DB cluster (ex. 14 for PostgreSQL 14)"
-}
-
-variable "db_node_count" {
-  type        = string
-  description = "Number of nodes in the DB cluster"
-}
-
-variable "db_cluster_size" {
-  type        = string
-  description = "Sizing of the DB cluster"
-}
-
-variable "db_usernames" {
-  type        = list(string)
-  description = "Names of the users to create on the DB cluster"
-}
-
-variable "db_names" {
-  type        = list(string)
-  description = "names of the databases to create on the DB cluster"
-}
-
-variable "db_connection_pools" {
-  type = list(object({
-    name     = string
-    size     = string
-    user     = string
-    database = string
-    mode     = string
-  }))
-  description = "List of connection pools to create in the database cluster"
-}
-
-# Redis
-variable "redis_cluster_name" {
-  type        = string
-  description = "Name of the Redis cluster"
-}
-
-variable "redis_cluster_version" {
-  type        = string
-  description = "Engine version used by the Redis cluster"
-}
-
-variable "redis_node_count" {
-  type        = string
-  description = "Number of nodes in the Redis cluster"
-}
-
-variable "redis_cluster_size" {
-  type        = string
-  description = "Sizing of the DB cluster"
+  default     = "dbs-toot-community-1"
 }
 
 variable "region" {
+  description = "The region to deploy the droplet"
   type        = string
-  description = "Name of the region to target"
   default     = "ams3"
 }
 
-variable "vpc_name" {
+variable "droplet_size" {
+  description = "The size of the droplet"
   type        = string
-  description = "Name of the VPC to put the resources in"
+  default     = "s-8vcpu-16gb-amd"
+}
+
+variable "firewall_name" {
+  description = "The name of the firewall"
+  type        = string
+  default     = "dbs-toot-community-1"
+}
+
+variable "vpc_name" {
+  description = "The name of the VPC"
+  type        = string
+  default     = "ams3-vpc-toot-community-01"
 }
 
 variable "kubernetes_cluster_name" {
+  description = "The name of the Kubernetes cluster"
   type        = string
-  description = "Name of the Kubernetes cluster to trust incoming connections from"
+  default     = "k8s-toot-community-1"
 }
