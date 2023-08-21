@@ -3,11 +3,6 @@ resource "digitalocean_firewall" "dbs" {
   name        = var.firewall_name # "dbs-toot-community-1"
 
   inbound_rule {
-    port_range       = "22"
-    protocol         = "tcp"
-    source_addresses = ["86.93.122.193"]
-  }
-  inbound_rule {
     port_range            = "5432"
     protocol              = "tcp"
     source_kubernetes_ids = [data.digitalocean_kubernetes_cluster.this.id]
