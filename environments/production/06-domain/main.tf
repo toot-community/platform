@@ -1,3 +1,7 @@
+data "digitalocean_droplet" "db_server" {
+  name = "dbs-toot-community-1"
+}
+
 module "domain" {
   source = "../../../modules/domain"
 
@@ -38,8 +42,9 @@ module "domain" {
     { name = "status", type = "CNAME", value = "statuspage.betteruptime.com." },
 
     # toot.community VPC
-    # update me when `dbs-toot-community-1` is adopted into TF
-    { name = "dbs-toot-community-1.private", type = "A", value = "10.110.0.5", ttl = 60 },
+    # update me when `egress-toot-community-1` is adopted into TF
+    { name = "dbs-toot-community-1.private", type = "A", value = data.digitalocean_droplet.db_server.ipv4_address_private, ttl = 60 },
+    { name = "egress-toot-community-1.private", type = "A", value = "10.110.0.4", ttl = 60 },
 
     # GitHub Pages (Blog)
     { name = "blog", type = "CNAME", value = "toot-community.github.io." },
