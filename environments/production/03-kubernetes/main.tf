@@ -3,14 +3,14 @@ module "kubernetes" {
 
   # Cluster
   doks_cluster_name    = "k8s-toot-community-1"
-  doks_cluster_version = "1.27.2-do.0"
+  doks_cluster_version = "1.28.2-do.0"
   region               = "ams3"
   high_availability    = true
 
   # Node pool - generic
   generic_pool_name      = "pool-toot-1"
   generic_pool_size      = "s-8vcpu-16gb-amd"
-  generic_pool_min_nodes = 4
+  generic_pool_min_nodes = 3
   generic_pool_max_nodes = 10
 
   # Networking
