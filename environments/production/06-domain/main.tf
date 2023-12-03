@@ -57,11 +57,11 @@ module "domain" {
     },
     {
       name  = "potvnn4g6cujc4wx5f3lo5rplctlm6sh._domainkey", type = "CNAME",
-      value = "opoxxgcqfzd7oot6oi3mtggu5nh6nqy3.dkim.amazonses.com."
+      value = "potvnn4g6cujc4wx5f3lo5rplctlm6sh.dkim.amazonses.com."
     },
     {
       name  = "opoxxgcqfzd7oot6oi3mtggu5nh6nqy3._domainkey", type = "CNAME",
-      value = "potvnn4g6cujc4wx5f3lo5rplctlm6sh.dkim.amazonses.com."
+      value = "opoxxgcqfzd7oot6oi3mtggu5nh6nqy3.dkim.amazonses.com."
     },
     { name = "ses", type = "MX", value = "feedback-smtp.eu-west-1.amazonses.com.", priority = 10 },
     { name = "ses", type = "TXT", value = "v=spf1 include:amazonses.com ~all" },
