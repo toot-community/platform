@@ -1,7 +1,3 @@
-data "digitalocean_droplet" "db_server" {
-  name = "dbs-toot-community-1"
-}
-
 module "domain" {
   source = "../../../modules/domain"
 
@@ -32,19 +28,10 @@ module "domain" {
     { name = "@", type = "TXT", value = "google-site-verification=vKFUBJLyiP68EJv81ewOeD6hdd_qcBGvpe6RsIIu6a0" },
 
     # toot.community Services
-    { name = "streaming", type = "A", value = "188.166.132.64" },
-    { name = "argocd", type = "A", value = "188.166.132.64" },
-    { name = "monitoring", type = "A", value = "188.166.132.64" },
-    { name = "relay", type = "A", value = "188.166.132.64" },
+    { name = "streaming", type = "A", value = "128.140.28.147" },
+    { name = "relay", type = "A", value = "128.140.28.147" },
     { name = "tls", type = "A", value = "206.189.241.51" },
-    { name = "automation", type = "A", value = "188.166.132.64" },
-    { name = "fluent-bit", type = "A", value = "188.166.132.64" },
     { name = "status", type = "CNAME", value = "statuspage.betteruptime.com." },
-
-    # toot.community VPC
-    # update me when `egress-toot-community-1` is adopted into TF
-    { name = "dbs-toot-community-1.private", type = "A", value = data.digitalocean_droplet.db_server.ipv4_address_private, ttl = 60 },
-    { name = "egress-toot-community-1.private", type = "A", value = "10.110.0.4", ttl = 60 },
 
     # GitHub Pages (Blog)
     { name = "blog", type = "CNAME", value = "toot-community.github.io." },
@@ -67,12 +54,11 @@ module "domain" {
     { name = "ses", type = "TXT", value = "v=spf1 include:amazonses.com ~all" },
 
     # Email
-    { name = "@", type = "MX", value = "mx1.improvmx.com.", priority = 10 },
-    { name = "@", type = "MX", value = "mx2.improvmx.com.", priority = 20 },
-    { name = "@", type = "TXT", value = "v=spf1 include:spf.improvmx.com -all" },
-    {
-      name  = "_dmarc", type = "TXT",
-      value = "v=DMARC1; p=none; pct=100; rua=mailto:re+uojmv5z8mwt@dmarc.postmarkapp.com; sp=none; aspf=r;"
-    },
+    { name = "@", type = "MX", value = "in1-smtp.messagingengine.com.", priority = 10 },
+    { name = "@", type = "MX", value = "in2-smtp.messagingengine.com.", priority = 20 },
+    { name = "@", type = "TXT", value = "v=spf1 include:spf.messagingengine.com -all" },
+    { name = "fm1._domainkey", type = "CNAME", value = "fm1.toot.community.dkim.fmhosted.com." },
+    { name = "fm2._domainkey", type = "CNAME", value = "fm2.toot.community.dkim.fmhosted.com." },
+    { name = "fm3._domainkey", type = "CNAME", value = "fm3.toot.community.dkim.fmhosted.com." },
   ]
 }
