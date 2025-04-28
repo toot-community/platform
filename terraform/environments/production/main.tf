@@ -32,4 +32,6 @@ module "mmh-eu-prod" {
   whitelist_admins = [
     "86.93.122.193/32"
   ]
+
+  hcloud_token = var.hcloud_token
 }
