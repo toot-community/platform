@@ -1,4 +1,4 @@
-module "mmh-eu-prod" {
+module "mmh_eu_prod" {
   source = "../../modules/cluster"
 
   cluster_name    = "mmh-eu-prod"
