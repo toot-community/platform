@@ -1,9 +1,9 @@
 output "talosconfig" {
-  value     = data.talos_client_configuration.talosconfig.talos_config
+  value     = module.mmh_eu_prod.talosconfig
   sensitive = true
 }
 
 output "kubeconfig" {
-  value     = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+  value     = module.mmh_eu_prod.kubeconfig
   sensitive = true
 }
