@@ -1,9 +1,9 @@
 output "talosconfig" {
-  value     = module.mmh_eu_prod.talosconfig
+  value     = module.tc_prod.talosconfig
   sensitive = true
 }
 
 output "kubeconfig" {
-  value     = module.mmh_eu_prod.kubeconfig
+  value     = module.tc_prod.kubeconfig
   sensitive = true
 }

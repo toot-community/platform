@@ -1,1 +1,0 @@
-helm upgrade -i metrics-server ms/metrics-server -n kube-system --values values.yaml

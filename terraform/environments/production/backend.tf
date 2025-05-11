@@ -7,7 +7,7 @@ terraform {
     skip_requesting_account_id  = true
     skip_s3_checksum            = true
     use_path_style              = true
-    bucket                      = "mmh-tfstate"
+    bucket                      = "tc-prod-tfstate"
     key                         = "environments/production/terraform.tfstate"
     region                      = "eu-central-1"
 
