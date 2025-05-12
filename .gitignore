@@ -30,7 +30,5 @@ override.tf.json
 terraform.rc
 
 .envrc
-kubeconfig.yaml
-talosconfig
 
 manifests/**/charts

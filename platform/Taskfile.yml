@@ -2,19 +2,35 @@ version: "3"
 
 env:
   ENV: production
+  CONFIG_PATH: ./configs/${ENV}
 
 tasks:
-  plan:
+  init:
     cmds:
-      - terraform init -backend-config="./configs/$ENV/state.config" -reconfigure
-      - terraform plan -var-file="./configs/$ENV/vars.tfvars"
+      - terraform init -backend-config="{{.CONFIG_PATH}}/state.config" -reconfigure
+    internal: true
+
+  plan:
+    deps: [init]
+    cmds:
+      - terraform plan -var-file="{{.CONFIG_PATH}}/vars.tfvars"
 
   apply:
+    deps: [init]
     cmds:
-      - terraform init -backend-config="./configs/$ENV/state.config" -reconfigure
-      - terraform apply -var-file="./configs/$ENV/vars.tfvars"
+      - terraform apply -var-file="{{.CONFIG_PATH}}/vars.tfvars"
 
   destroy:
+    deps: [init]
     cmds:
-      - terraform init -backend-config="./configs/$ENV/state.config" -reconfigure
-      - terraform destroy -var-file="./configs/$ENV/vars.tfvars"
+      - terraform destroy -var-file="{{.CONFIG_PATH}}/vars.tfvars"
+
+  get-kubeconfig:
+    deps: [init]
+    cmds:
+      - terraform output -raw kubeconfig > "{{.CONFIG_PATH}}/output/kubeconfig.yaml"
+
+  get-talosconfig:
+    deps: [init]
+    cmds:
+      - terraform output -raw talosconfig > "{{.CONFIG_PATH}}/output/talosconfig.yaml"

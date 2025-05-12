@@ -24,5 +24,9 @@ cluster:
   network:
     cni:
       name: none
+    podSubnets:
+      - 10.0.16.0/20
+    serviceSubnets:
+      - 10.0.8.0/21  
   proxy:
     disabled: true
