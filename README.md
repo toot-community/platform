@@ -23,6 +23,5 @@ cd platform
 task get-kubeconfig
 task get-talosconfig
 cd ../
-kubectl create secret generic -n kube-system hcloud --from-literal=token=${HCLOUD_TOKEN} --from-literal=network=tc-prod-cluster-network
 kustomize build --enable-helm --load-restrictor=LoadRestrictionsNone manifests/cluster-bootstrap | kubectl apply -f -
 ```

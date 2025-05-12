@@ -4,6 +4,5 @@ namespace: kube-system
 
 resources:
   - ../applications/cilium
-  - ../applications/talos-ccm
-  - ../applications/hetzner-ccm
-  - ../applications/metrics-server
+  - ../applications/op-connect
+  - ../applications/argocd

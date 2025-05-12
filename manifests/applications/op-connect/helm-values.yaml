@@ -1,0 +1,6 @@
+connect:
+  replicas: 2
+  
+operator:
+  create: true
+  replicas: 2
