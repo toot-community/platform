@@ -29,6 +29,3 @@ worker_nodes = [
 whitelist_admins = [
   "86.93.122.193/32"
 ]
-
-# TODO: Get this token from 1Password or similar 
-hcloud_token = var.hcloud_token
