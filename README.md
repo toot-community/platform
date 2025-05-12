@@ -5,14 +5,15 @@
 ```
 cd packer
 packer build .
-# note the image ID, update it in terraform/environments/production
 ```
+
+> Note the image ID, update it in configs/production/vars.tfvars
 
 ## Create infrastructure
 
 ```
-cd terraform/environments/production
-terraform apply
+task plan
+task apply
 ```
 
 ## Bootstrap
