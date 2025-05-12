@@ -9,9 +9,9 @@ module "tc_prod" {
   kubernetes_version = "v1.30.0"
 
   vpc_name         = "cluster-network"
-  vpc_cidr         = "10.0.0.0/16"
+  vpc_cidr         = "10.0.0.0/8"
   vpc_subnet_name  = "cluster-network-subnet"
-  vpc_subnet_cidr  = "10.0.0.0/16"
+  vpc_subnet_cidr  = "10.0.0.0/8"
   vpc_network_zone = "eu-central"
 
   controlplane_image = "236768893"

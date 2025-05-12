@@ -41,7 +41,9 @@ cgroup:
 
 k8sServiceHost: localhost
 k8sServicePort: "7445"
+
 policyAuditMode: true # fixme
 
+# https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md#how-to-deploy
 routingMode: native
-ipv4NativeRoutingCIDR: 10.0.0.0/16
+ipv4NativeRoutingCIDR: 10.0.0.0/8

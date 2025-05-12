@@ -30,13 +30,13 @@ variable "vpc_network_zone" {
 variable "vpc_cidr" {
   description = "CIDR block for the VPC address space."
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.0.0.0/8"
 }
 
 variable "vpc_subnet_cidr" {
   description = "CIDR block for the VPC subnet. Should match or be a subset of vpc_cidr."
   type        = string
-  default     = "10.0.0.0/16"
+  default     = "10.0.0.0/8"
 }
 
 variable "controlplane_image" {

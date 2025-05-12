@@ -1,0 +1,1 @@
+- [ ] implement IP ranges: [these](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md#considerations-on-the-ip-ranges)
