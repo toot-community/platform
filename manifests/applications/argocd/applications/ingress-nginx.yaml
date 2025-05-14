@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingresss-nginx
+  name: ingress-nginx
   namespace: argocd
 spec:
   destination:
@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: manifests/applications/ingresss-nginx
+    path: manifests/applications/ingress-nginx
     repoURL: git@github.com:jorijn/tc.git
     targetRevision: main
   syncPolicy:
