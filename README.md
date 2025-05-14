@@ -26,5 +26,7 @@ cd ../
 kubectl create namespace op-connect
 kubectl create --namespace op-connect secret generic op-credentials --from-literal=1password-credentials.json="$(op read 'op://toot.community/toot.community Production on Hetzner Credentials File/1password-credentials.json' | base64 -w 0)"
 kubectl create --namespace op-connect secret generic onepassword-token --from-literal=token="$(op read 'op://toot.community/put37jzwsy6wtsfydfdwvpdaxm/credential')"
+kubectl create --namespace kube-system secret generic hcloud --from-literal=network="$(op read 'op://toot.community/fcd7bcotmu6iuxk44nvbs6ocpq/network')" --from-literal=token="$(op read 'op://toot.community/fcd7bcotmu6iuxk44nvbs6ocpq/token')"
 kustomize build --enable-helm --load-restrictor=LoadRestrictionsNone manifests/cluster-bootstrap | kubectl apply -f -
+# (run again after this command created the argo CRDs)
 ```
