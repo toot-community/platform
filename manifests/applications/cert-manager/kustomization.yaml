@@ -12,8 +12,4 @@ helmCharts:
     namespace: cert-manager
     releaseName: cert-manager
     includeCRDs: true
-    valuesInline:
-      crds:
-        enabled: true
-      prometheus:
-        enabled: false # FIXME: enable after observability is enabled
+    valuesFile: helm-values.yaml

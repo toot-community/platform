@@ -1,0 +1,4 @@
+includeCRDs:
+  enabled: true
+prometheus:
+  enabled: false # FIXME: enable after observability is enabled
