@@ -6,3 +6,4 @@ resources:
   - cilium.yaml
   - talos-ccm.yaml
   - hetzner-ccm.yaml
+  - cloudnative-pg.yaml

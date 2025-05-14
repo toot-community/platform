@@ -1,0 +1,6 @@
+replicaCount: 2
+
+monitoring:
+  podMonitorEnabled: false # FIXME: enable after observability is enabled
+  grafanaDashboard:
+    create: true

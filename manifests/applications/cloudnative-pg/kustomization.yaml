@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # - rules.yaml # FIXME: enable after observability is enabled
+  - network-policies
+
+helmCharts:
+  - name: cloudnative-pg
+    valuesFile: helm-values.yaml
+    releaseName: cloudnative-pg
+    namespace: cnpg-system
+    version: 0.23.2
+    repo: https://cloudnative-pg.github.io/charts
