@@ -22,8 +22,8 @@ worker_image = "236768893"
 worker_nodes = [
   { name = "worker-nbg1-1", ip = "10.0.1.6", location = "nbg1", type = "cax11", },
   { name = "worker-nbg1-2", ip = "10.0.1.7", location = "nbg1", type = "cax11", },
-  # { name = "worker-fsn1-3", ip = "10.0.1.8", location = "fsn1", type = "cax11", },
-  # { name = "worker-fsn1-4", ip = "10.0.1.9", location = "fsn1", type = "cax11", },
+  { name = "worker-fsn1-3", ip = "10.0.1.8", location = "fsn1", type = "cax11", },
+  { name = "worker-fsn1-4", ip = "10.0.1.9", location = "fsn1", type = "cax11", },
 ]
 
 whitelist_admins = [

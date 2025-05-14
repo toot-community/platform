@@ -6,5 +6,6 @@ resources:
   - cilium.yaml
   - cloudnative-pg.yaml
   - hetzner-ccm.yaml
+  - ingress-nginx.yaml
   - metrics-server.yaml
   - talos-ccm.yaml
