@@ -32,6 +32,7 @@ controller:
       load-balancer.hetzner.cloud/algorithm-type: round_robin
       load-balancer.hetzner.cloud/type: lb11
       load-balancer.hetzner.cloud/network-zone: eu-central
+      load-balancer.hetzner.cloud/private-ipv4: 10.0.1.2
 
   config:
     use-http2: "true"
