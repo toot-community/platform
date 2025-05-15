@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: &namespace microblog-network
 
 helmGlobals:
-  chartHome: charts
+  chartHome: ../../../../../charts
   
 resources:
   - ../../base
@@ -26,3 +26,11 @@ helmCharts:
     additionalValuesFiles:
       - helm-values/haproxy.yaml
     repo: https://haproxytech.github.io/helm-charts
+  - name: mastodon
+    version: "0.0.0"
+    releaseName: mastodon
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/mastodon.yaml
+    additionalValuesFiles:
+      - helm-values/mastodon.yaml
+  

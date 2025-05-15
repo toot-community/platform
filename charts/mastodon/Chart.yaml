@@ -1,6 +1,5 @@
 apiVersion: v2
 name: mastodon
-description: The toot.community Helm chart for running Mastodon
+description: A Mastodon Helm chart for Kubernetes
 type: application
-version: v4.3.1
-appVersion: v4.3.1
+version: v1.0.0
