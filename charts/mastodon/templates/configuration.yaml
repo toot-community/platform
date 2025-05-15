@@ -1,0 +1,71 @@
+apiVersion: v1
+data:
+  DB_HOST: {{ .Values.configuration.database.host }}
+  DB_NAME: {{ .Values.configuration.database.name }}
+  DB_POOL: {{ .Values.configuration.database.poolsize | quote }}
+  DB_PORT: {{ .Values.configuration.database.port | quote }}
+  DB_SSLMODE: {{ .Values.configuration.database.sslmode }}
+  {{- if .Values.configuration.databaseReplicas.enabled }}
+  REPLICA_DB_HOST: {{ .Values.configuration.databaseReplicas.host }}
+  REPLICA_DB_PORT: {{ .Values.configuration.databaseReplicas.port | quote }}
+  {{- end }}
+  DEFAULT_LOCALE: {{ .Values.configuration.defaultLocale }}
+  LOCAL_DOMAIN: {{ .Values.configuration.localDomain }}
+  MALLOC_ARENA_MAX: "2"
+  NODE_ENV: production
+  PREPARED_STATEMENTS: "false"
+  RAILS_ENV: production
+  REDIS_HOST: {{ .Values.configuration.redis.host }}
+  REDIS_PORT: {{ .Values.configuration.redis.port | quote }}
+  REDIS_DB: {{ .Values.configuration.redis.database | default 0 | quote }}
+  S3_ALIAS_HOST: {{ .Values.configuration.s3.aliasHost }}
+  S3_BUCKET: {{ .Values.configuration.s3.bucket }}
+  S3_ENABLED: "true"
+  S3_ENDPOINT: {{ .Values.configuration.s3.endpoint }}
+  S3_HOSTNAME: {{ .Values.configuration.s3.hostname }}
+  S3_PROTOCOL: {{ .Values.configuration.s3.protocol }}
+  S3_REGION: {{ .Values.configuration.s3.region }}
+  S3_OPEN_TIMEOUT: {{ .Values.configuration.s3.timeouts.open | default 5 | quote }}
+  S3_READ_TIMEOUT: {{ .Values.configuration.s3.timeouts.read | default 5 | quote }}
+  SMTP_AUTH_METHOD: {{ .Values.configuration.smtp.authMethod }}
+  SMTP_CA_FILE: {{ .Values.configuration.smtp.caFile }}
+  SMTP_DELIVERY_METHOD: {{ .Values.configuration.smtp.deliveryMethod }}
+  SMTP_ENABLE_STARTTLS_AUTO: {{ .Values.configuration.smtp.enableStarttlsAuto | quote }}
+  SMTP_OPENSSL_VERIFY_MODE: {{ .Values.configuration.smtp.opensslVerifyMode }}
+  SMTP_PORT: {{ .Values.configuration.smtp.port | quote }}
+  SMTP_DOMAIN: {{ .Values.configuration.smtp.domain }}
+  SMTP_FROM_ADDRESS: {{ .Values.configuration.smtp.fromAddress }}
+  SMTP_SERVER: {{ .Values.configuration.smtp.smtpServer }}
+  STREAMING_CLUSTER_NUM: "1"
+  WEB_DOMAIN: {{ .Values.web.domain }}
+  WEB_CONCURRENCY: {{ .Values.web.concurrency | quote }}
+  MAX_THREADS: {{ .Values.web.maxThreads | quote }}
+  ALLOWED_PRIVATE_ADDRESSES: {{ .Values.configuration.allowedPrivateAddresses }}
+  {{- if .Values.translations.enabled }}
+  DEEPL_PLAN: {{ .Values.translations.deepl.plan }}
+  {{- end }}
+  {{- if .Values.configuration.search.enabled }}
+  ES_ENABLED: "true"
+  ES_HOST: {{ .Values.configuration.search.host }}
+  ES_PORT: {{ .Values.configuration.search.port | quote }}
+  ES_USER: {{ .Values.configuration.search.user }}
+  ES_PRESET: {{ .Values.configuration.search.preset | default "single_node_cluster" }}
+  {{- end }}
+  {{- if .Values.streaming.baseURL }}
+  STREAMING_API_BASE_URL: {{ .Values.streaming.baseURL }}
+  {{- end }}
+  {{- if .Values.configuration.authorizedFetch }}
+  AUTHORIZED_FETCH: "true"
+  {{- end }}
+  {{- if .Values.configuration.limitedFederationMode }}
+  LIMITED_FEDERATION_MODE: "true"
+  {{- end }}
+  {{- if .Values.configuration.trustedProxyIPs }}
+  TRUSTED_PROXY_IP: {{ .Values.configuration.trustedProxyIPs }}
+  {{- end }}
+kind: ConfigMap
+metadata:
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  name: {{ include "mastodon.fullname" . }}-env
+

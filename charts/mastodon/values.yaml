@@ -1,0 +1,326 @@
+image:
+  repository: ghcr.io/mastodon/mastodon
+  pullPolicy: IfNotPresent
+  tag: "v4.3.1@sha256:a18ce2a5b443a7074a083d7a5afb162fdaaca78d85850aaee287144f337f0901"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 991
+  runAsGroup: 991
+  runAsUser: 991
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 991
+
+configuration:
+  database:
+    host: db.pooler-hostname
+    name: db.name
+    poolsize: 25
+    port: 6432
+    dbMigrations: # to circumvent pgpooler
+      port: 5432
+      name: app
+      host: db.hostname
+    sslmode: require
+    runDatabaseMigrations: true
+  databaseReplicas:
+    enabled: false
+    host: db.read-only-hostname
+    port: 5432
+  defaultLocale: en
+  localDomain: toot.community
+  allowedPrivateAddresses: 10.0.0.0/8
+  redis:
+    host: redis.hostname
+    port: 6379
+    database: 0
+  s3:
+    aliasHost: static.toot.community
+    bucket: static-toot-community
+    endpoint: https://endpoint.of.s3
+    hostname: hostname.of.s3
+    region: region
+    protocol: https
+    timeouts:
+      open: 10
+      read: 10
+  smtp:
+    authMethod: plain
+    caFile: /etc/ssl/certs/ca-certificates.crt
+    deliveryMethod: smtp
+    enableStarttlsAuto: true
+    opensslVerifyMode: none
+    port: 587
+    domain: toot.community
+    fromAddress: toot.community Notifications <notifications@toot.community>
+    smtpServer: smtp.server
+  search:
+    enabled: true
+    host: elasticsearch.hostname
+    port: 9200
+    scheme: http
+    preset: single_node_cluster # https://github.com/mastodon/documentation/pull/1279/files
+    user: elastic
+    password:
+      secretKeyRef:
+        name: tootcommunity-search-elastic-user
+        key: elastic
+
+web:
+  domain: toot.community
+  concurrency: 2
+  maxThreads: 5
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      memory: 4Gi # higher due to the need to convert big images using ImageMagick
+  startupProbe:
+    httpGet:
+      port: http
+      path: /health
+    periodSeconds: 3
+    failureThreshold: 30
+  readinessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /health
+      port: http
+      scheme: HTTP
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+  annotations: ~
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+
+translations:
+  enabled: true
+  deepl:
+    plan: free
+
+streaming:
+  image:
+    repository: ghcr.io/mastodon/mastodon-streaming
+    pullPolicy: IfNotPresent
+    tag: v4.3.1@sha256:f4cacc762093adcae739e4549de1717411a19b518efb34ef4d58dbe6f96168c2
+  replicaCount: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  readinessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /api/v1/streaming/health
+      port: streaming
+      scheme: HTTP
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+  startupProbe:
+    httpGet:
+      port: streaming
+      path: /api/v1/streaming/health
+    periodSeconds: 3
+    failureThreshold: 30
+  resources:
+    requests:
+      cpu: 6m
+      memory: 202M
+    limits:
+      memory: 202M
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  podMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    path: /metrics
+    port: streaming
+    scheme: http
+  annotations: ~
+  redis:
+    url: redis://redis.hostname:6379
+  baseURL: wss://streaming.toot.community
+
+sidekiq:
+  workers:
+    - name: generic
+      concurrency: 25
+      replicaCount: 2
+      queues:
+        - default
+        - mailers
+        - ingress
+        - push
+        - pull
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1000M
+        limits:
+          memory: 1800M
+    - name: default
+      concurrency: 25
+      queues:
+        - default
+      resources:
+        requests:
+          cpu: 200m
+          memory: 500M
+        limits:
+          memory: 1800M
+    - name: ingress
+      concurrency: 25
+      queues:
+        - ingress
+      resources:
+        requests:
+          cpu: 200m
+          memory: 500M
+        limits:
+          memory: 1800Mi
+    - name: pull
+      concurrency: 25
+      queues:
+        - pull
+      resources:
+        requests:
+          cpu: 200m
+          memory: 500M
+        limits:
+          memory: 1.68Gi
+    - name: push
+      concurrency: 25
+      queues:
+        - push
+      resources:
+        requests:
+          cpu: 100m
+          memory: 407Mi
+        limits:
+          memory: 1000Mi
+    - name: mailers
+      concurrency: 25
+      queues:
+        - mailers
+      resources:
+        requests:
+          cpu: 7m
+          memory: 300M
+        limits:
+          memory: 500Mi
+    - name: scheduler
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - scheduler
+      resources:
+        requests:
+          cpu: 100m
+          memory: 300Mi
+        limits:
+          memory: 1800Mi
+
+ingress:
+  web:
+    maxBodySize: 100m
+    upstreamProxyTimeout: 120
+    ingressClassName: nginx
+    host: toot.community
+    annotations: ~
+    verifyClient:
+      enabled: true
+      secretName: tootcommunity/tootcommunity-ca-secret
+    tls:
+      - hosts:
+          - toot.community
+        secretName: toot.community-tls
+  streaming:
+    host: streaming.toot.community
+    ingressClassName: nginx
+    annotations: ~
+    tls:
+      - hosts:
+          - streaming.toot.community
+        secretName: streaming.toot.community-tls
+
+jobs:
+  annotations: ~
+  cleanupMedia:
+    enabled: true
+    schedule: "0 5 * * *" # every day at 5am
+    days: 7
+    resources:
+      requests:
+        cpu: 250m
+        memory: 750M
+      limits:
+        memory: 750M
+  statusesRemove:
+    enabled: true
+    schedule: "5 4 * * 6"
+    days: 90
+    resources:
+      requests:
+        cpu: 300m
+        memory: 1500M
+      limits:
+        memory: 1500M
+  cleanupMediaProfiles:
+    enabled: true
+    schedule: "0 5 * * *" # every day at 5am
+    days: 7
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 721M
+      limits:
+        memory: 721M
+  accountsPrune:
+    enabled: true
+    schedule: "0 2 * * 1" # every monday at 2am
+    resources:
+      requests:
+        cpu: 1033m
+        memory: 584M
+      limits:
+        memory: 584M
+  removePreviewCards:
+    enabled: true
+    schedule: "0 5 * * 1" # every monday at 5am
+    resources:
+      requests:
+        cpu: 500m
+        memory: 400Mi
+      limits:
+        memory: 400Mi
+    days: 180
+  periodicWebRestart: # to circumvent memory leaks
+    enabled: true
+    schedule: "0 3,9,15,21 * * *"

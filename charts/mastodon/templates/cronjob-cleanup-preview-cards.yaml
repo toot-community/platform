@@ -1,0 +1,57 @@
+{{ if .Values.jobs.removePreviewCards.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "mastodon.fullname" . }}-remove-preview-cards
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.jobs.removePreviewCards.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ include "mastodon.fullname" . }}-cleanup-unused-media
+          {{- with .Values.jobs.annotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "mastodon.labels" . | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
+          containers:
+            - name: remove-preview-cards
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - bash
+                - -c
+                - "bin/tootctl preview_cards remove --days={{ .Values.jobs.removePreviewCards.days }}"
+              envFrom:
+                - configMapRef:
+                    name: {{ include "mastodon.fullname" . }}-env
+                - secretRef:
+                    name: {{ include "mastodon.fullname" . }}-secrets-env
+              env:
+              {{- if .Values.configuration.search.enabled }}
+                - name: ES_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.configuration.search.password.secretKeyRef.key }}
+                      name: {{ .Values.configuration.search.password.secretKeyRef.name }}
+              {{- end }}
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.configuration.database.credentials.usernameKey }}
+                      name: {{ .Values.configuration.database.credentials.secretName }}
+                - name: DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.configuration.database.credentials.passwordKey }}
+                      name: {{ .Values.configuration.database.credentials.secretName }}
+              resources:
+                {{- toYaml .Values.jobs.removePreviewCards.resources | nindent 16 }}
+{{ end }}

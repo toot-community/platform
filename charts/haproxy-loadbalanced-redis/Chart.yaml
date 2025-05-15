@@ -1,0 +1,16 @@
+apiVersion: v2
+name: haproxy-loadbalanced-redis
+description: A Helm chart for running a loadbalanced Redis cluster with HAProxy
+type: application
+version: 1.0.18
+maintainers:
+  - name: Jorijn Schrijvershof
+    email: jorijn@jorijn.com
+dependencies:
+  - name: haproxy
+    repository: https://haproxytech.github.io/helm-charts
+    version: ~1.21.0
+    condition: haproxy.enabled
+  - name: redis
+    version: 18.17.0
+    repository: https://charts.bitnami.com/bitnami

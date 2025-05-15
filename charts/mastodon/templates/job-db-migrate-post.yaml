@@ -1,0 +1,14 @@
+{{ if .Values.configuration.database.runDatabaseMigrations | default false }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "mastodon.fullname" . }}-db-migrate-post
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-2"
+spec:
+  {{ include "mastodon.dbMigrationJobTemplate" (merge (dict "skipPostMigrations" false) .) | nindent 2 }}
+{{ end }}

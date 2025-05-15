@@ -1,0 +1,9 @@
+dependencies:
+- name: haproxy
+  repository: https://haproxytech.github.io/helm-charts
+  version: 1.21.0
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 18.17.0
+digest: sha256:f65ca52fd2902b4b44e113676cf8721dbb745794175110d1ba66c3015f896cc6
+generated: "2024-02-27T10:38:31.394738042Z"
