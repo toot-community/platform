@@ -120,7 +120,7 @@ web:
     minAvailable: 2
 
 translations:
-  enabled: true
+  enabled: false
   deepl:
     plan: free
 

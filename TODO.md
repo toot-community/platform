@@ -14,6 +14,8 @@ After taking ownership:
 - [ ] To drop Fastly, we need a good Varnish configuration
   - [ ] For web
   - [ ] For static
+- [ ] DeepL no longer free?
+- [ ] Translation endpoint is causing 500s
 
 Stage 2 after ownership:
 
