@@ -12,5 +12,5 @@ dependencies:
     version: ~1.24.0
     condition: haproxy.enabled
   - name: redis
-    version: 18.19.4
+    version: 21.1.1
     repository: https://charts.bitnami.com/bitnami
