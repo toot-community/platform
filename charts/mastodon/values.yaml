@@ -38,6 +38,10 @@ configuration:
       host: db.hostname
     sslmode: require
     runDatabaseMigrations: true
+    credentials:
+      usernameKey: username
+      passwordKey: password
+      secretName: db-credentials
   databaseReplicas:
     enabled: false
     host: db.read-only-hostname

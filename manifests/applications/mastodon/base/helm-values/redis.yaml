@@ -1,0 +1,16 @@
+architecture: replication
+
+auth:
+  enabled: false
+  sentinel: false
+
+replica:
+  replicaCount: 3
+
+sentinel:
+  enabled: true
+
+metrics: 
+  enabled: &metricsEnabled false
+  serviceMonitor: 
+    enabled: *metricsEnabled

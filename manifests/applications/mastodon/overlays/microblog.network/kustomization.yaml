@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace microblog-network
+
+helmGlobals:
+  chartHome: charts
+  
+resources:
+  - ../../base
+  - namespace.yaml
+
+helmCharts:
+  - name: redis
+    version: "21.1.1"
+    releaseName: redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/redis.yaml
+    additionalValuesFiles:
+      - helm-values/redis.yaml
+    repo: https://charts.bitnami.com/bitnami
+  - name: haproxy
+    version: "1.24.0"
+    releaseName: haproxy
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/haproxy.yaml
+    additionalValuesFiles:
+      - helm-values/haproxy.yaml
+    repo: https://haproxytech.github.io/helm-charts
