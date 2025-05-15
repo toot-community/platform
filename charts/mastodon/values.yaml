@@ -1,7 +1,6 @@
 image:
   repository: ghcr.io/mastodon/mastodon
   pullPolicy: IfNotPresent
-  tag: "v4.3.8@sha256:b99679915129b9c47fb39a6f5ddeec14a062a47603ac22169d87a45a3859c89f"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -28,29 +27,29 @@ securityContext:
 
 configuration:
   database:
-    host: db.pooler-hostname
-    name: db.name
+    host: database-pooler-rw
+    name: app
     poolsize: 25
-    port: 6432
+    port: 5432
     dbMigrations: # to circumvent pgpooler
       port: 5432
       name: app
-      host: db.hostname
+      host: database-rw
     sslmode: require
     runDatabaseMigrations: true
     credentials:
       usernameKey: username
       passwordKey: password
-      secretName: db-credentials
+      secretName: database-app
   databaseReplicas:
-    enabled: false
-    host: db.read-only-hostname
+    enabled: true
+    host: database-pooler-ro
     port: 5432
   defaultLocale: en
-  localDomain: toot.community
+  localDomain: example.com
   allowedPrivateAddresses: 10.0.0.0/8
   redis:
-    host: redis.hostname
+    host: haproxy-redis
     port: 6379
     database: 0
   s3:
@@ -68,21 +67,21 @@ configuration:
     caFile: /etc/ssl/certs/ca-certificates.crt
     deliveryMethod: smtp
     enableStarttlsAuto: true
-    opensslVerifyMode: none
+    opensslVerifyMode: peer
     port: 587
     domain: toot.community
     fromAddress: toot.community Notifications <notifications@toot.community>
     smtpServer: smtp.server
   search:
     enabled: true
-    host: elasticsearch.hostname
+    host: elasticsearch-es-http
     port: 9200
     scheme: http
     preset: single_node_cluster # https://github.com/mastodon/documentation/pull/1279/files
     user: elastic
     password:
       secretKeyRef:
-        name: tootcommunity-search-elastic-user
+        name: elasticsearch-es-elastic-user
         key: elastic
 
 web:
@@ -130,7 +129,7 @@ streaming:
     repository: ghcr.io/mastodon/mastodon-streaming
     pullPolicy: IfNotPresent
     tag: v4.3.8@sha256:9c258e83c69b7e6219425b1867e5851ffd53c9029e19e831bd31be8d80c5b42a
-  replicaCount: 4
+  replicaCount: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -161,7 +160,7 @@ streaming:
     enabled: true
     minAvailable: 1
   podMonitor:
-    enabled: true
+    enabled: false # FIXME: enable after observability is set up
     interval: 30s
     scrapeTimeout: 10s
     path: /metrics
@@ -169,14 +168,14 @@ streaming:
     scheme: http
   annotations: ~
   redis:
-    url: redis://redis.hostname:6379
+    url: redis://haproxy-redis:6379
   baseURL: wss://streaming.toot.community
 
 sidekiq:
   workers:
     - name: generic
       concurrency: 25
-      replicaCount: 2
+      replicaCount: 1
       queues:
         - default
         - mailers
@@ -189,56 +188,6 @@ sidekiq:
           memory: 1000M
         limits:
           memory: 1800M
-    - name: default
-      concurrency: 25
-      queues:
-        - default
-      resources:
-        requests:
-          cpu: 200m
-          memory: 500M
-        limits:
-          memory: 1800M
-    - name: ingress
-      concurrency: 25
-      queues:
-        - ingress
-      resources:
-        requests:
-          cpu: 200m
-          memory: 500M
-        limits:
-          memory: 1800Mi
-    - name: pull
-      concurrency: 25
-      queues:
-        - pull
-      resources:
-        requests:
-          cpu: 200m
-          memory: 500M
-        limits:
-          memory: 1.68Gi
-    - name: push
-      concurrency: 25
-      queues:
-        - push
-      resources:
-        requests:
-          cpu: 100m
-          memory: 407Mi
-        limits:
-          memory: 1000Mi
-    - name: mailers
-      concurrency: 25
-      queues:
-        - mailers
-      resources:
-        requests:
-          cpu: 7m
-          memory: 300M
-        limits:
-          memory: 500Mi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
@@ -259,7 +208,7 @@ ingress:
     host: toot.community
     annotations: ~
     verifyClient:
-      enabled: true
+      enabled: false
       secretName: tootcommunity/tootcommunity-ca-secret
     tls:
       - hosts:
