@@ -30,3 +30,9 @@ whitelist_admins = [
   "86.93.122.193/32",
   "86.86.243.190/32",
 ]
+
+s3_buckets = [
+  { name = "microblog-network-assets", acl = "private" },
+  { name = "microblog-network-cnpg", acl = "private" },
+  { name = "microblog-network-velero", acl = "private" },
+]
