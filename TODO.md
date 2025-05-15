@@ -1,5 +1,8 @@
 - [x] implement IP ranges: [these](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md#considerations-on-the-ip-ranges)
 - [x] Update README to work with new file structure
+- [ ] Create ArgoCD app for microblog.network
+- [ ] Install Velero
+  - [ ] Test a full backup and restore
 
 After taking ownership:
 
