@@ -9,6 +9,6 @@ helmCharts:
     valuesFile: helm-values.yaml
     releaseName: eck-operator
     namespace: elastic-system
-    version: 2.12.1
+    version: 2.16.1
     includeCRDs: true
     repo: https://helm.elastic.co
