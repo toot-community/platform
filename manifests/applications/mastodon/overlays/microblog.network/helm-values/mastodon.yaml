@@ -2,8 +2,12 @@
 .streamingDomain: &streamingDomain streaming.microblog.network
 .staticDomain: &staticDomain static.microblog.network
 
+debug: true
+
 configuration:
   localDomain: *instanceDomain
+  limitedFederationMode: true
+  authorizedFetch: false
   
   s3:
     aliasHost: *staticDomain
