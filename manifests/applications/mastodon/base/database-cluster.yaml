@@ -1,0 +1,148 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: database
+  labels:
+    velero.io/exclude-from-backup: "true"
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.5 # TODO: renovate annotation
+  primaryUpdateStrategy: unsupervised
+
+  storage:
+    size: 40Gi
+
+  monitoring:
+    enablePodMonitor: false # FIXME: enable me after observability is set up
+
+  postgresql:
+    parameters:
+      # statistics
+      pg_stat_statements.max: "10000"
+      pg_stat_statements.track: "all"
+
+      # pgtune
+      # DB Version: 17
+      # OS Type: linux
+      # DB Type: oltp
+      # Total Memory (RAM): 2 GB
+      # CPUs num: 1
+      # Data Storage: san
+      max_connections: "300"
+      shared_buffers: "512MB"
+      effective_cache_size: "512MB"
+      maintenance_work_mem: "128MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "300"
+      work_mem: "1702kB"
+      huge_pages: "off"
+      min_wal_size: "2GB"
+      max_wal_size: "8GB"
+
+  # backup:
+  #   barmanObjectStore:
+  #     destinationPath: s3://toot-community-cnpg-production/
+  #     endpointURL: https://s3.eu-central-2.wasabisys.com
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: tootcommunity-db-s3-credentials
+  #         key: ACCESS_KEY_ID
+  #       secretAccessKey:
+  #         name: tootcommunity-db-s3-credentials
+  #         key: ACCESS_SECRET_KEY
+  #     wal:
+  #       compression: gzip
+  #   retentionPolicy: "91d"
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "2Gi"
+
+  # https://cloudnative-pg.io/documentation/1.19/kubernetes_upgrade/
+  nodeMaintenanceWindow:
+    inProgress: false
+    # reusePVC: false
+
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: database-backup
+spec:
+  schedule: "0 0 6 * * 0" # Run once a week on Sunday at 06:00
+  backupOwnerReference: self
+  cluster:
+    name: database
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: database-pooler-rw
+spec:
+  cluster:
+    name: database
+  instances: 2
+  type: rw
+  pgbouncer:
+    poolMode: transaction
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "50"
+  template:
+    metadata:
+      labels:
+        app: database-pooler-rw
+    spec:
+      containers: []
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - database-pooler-rw
+              topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: database-pooler-ro
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  cluster:
+    name: database
+  instances: 2
+  type: ro
+  pgbouncer:
+    poolMode: transaction
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "50"
+  template:
+    metadata:
+      labels:
+        app: database-pooler-ro
+    spec:
+      containers: []
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - database-pooler-ro
+              topologyKey: "kubernetes.io/hostname"

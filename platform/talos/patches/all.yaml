@@ -7,8 +7,16 @@ machine:
       rotate-server-certificates: true
       cloud-provider: external
   sysctls:
-    net.core.somaxconn: 65535
     net.core.netdev_max_backlog: 4096
+    fs.file-max: "500000"
+    kernel.pid_max: "4194303"
+    net.core.somaxconn: "32768"
+    net.ipv4.ip_local_port_range: 1024 65535
+    net.ipv4.tcp_fin_timeout: "15"
+    net.ipv4.tcp_tw_reuse: "1"
+    vm.max_map_count: "262144"
+    # vm.nr_hugepages: "1024"
+    vm.swappiness: "10"
   time:
     servers:
       - ntp1.hetzner.de
