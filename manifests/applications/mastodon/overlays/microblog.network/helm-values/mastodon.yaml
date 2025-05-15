@@ -2,7 +2,7 @@
 .streamingDomain: &streamingDomain streaming.microblog.network
 .staticDomain: &staticDomain static.microblog.network
 
-debug: true
+debug: false
 
 configuration:
   localDomain: *instanceDomain

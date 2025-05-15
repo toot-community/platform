@@ -68,7 +68,7 @@ configuration:
     deliveryMethod: smtp
     enableStarttlsAuto: true
     opensslVerifyMode: peer
-    port: 587
+    port: 465
     domain: toot.community
     fromAddress: toot.community Notifications <notifications@toot.community>
     smtpServer: smtp.server
@@ -206,7 +206,10 @@ ingress:
     upstreamProxyTimeout: 120
     ingressClassName: nginx
     host: toot.community
-    annotations: ~
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     verifyClient:
       enabled: false
       secretName: tootcommunity/tootcommunity-ca-secret
@@ -217,7 +220,10 @@ ingress:
   streaming:
     host: streaming.toot.community
     ingressClassName: nginx
-    annotations: ~
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     tls:
       - hosts:
           - streaming.toot.community
