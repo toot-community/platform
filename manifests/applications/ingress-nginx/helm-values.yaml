@@ -1,6 +1,7 @@
 controller:
   watchIngressWithoutClass: true
   kind: DaemonSet
+  hostNetwork: true
 
   extraArgs:
     enable-ssl-passthrough: ""
