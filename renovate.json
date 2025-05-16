@@ -10,12 +10,15 @@
     {
       "matchManagers": [
         "kustomize",
-        "helmv3"
+        "helmv3",
+        "terraform"
       ],
       "matchFileNames": [
         "manifests/**/*.yaml"
       ],
+      "additionalBranchPrefix": "{{parentDir}}-",
       "addLabels": [
+        "environment::{{parentDir}}",
         "dependency::{{depName}}"
       ]
     },
@@ -25,9 +28,6 @@
       ],
       "matchFileNames": [
         "platform/**/*.tf"
-      ],
-      "addLabels": [
-        "dependency::{{depName}}"
       ]
     }
   ]
