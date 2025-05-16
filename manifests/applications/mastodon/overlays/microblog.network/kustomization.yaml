@@ -40,3 +40,5 @@ images:
   - name: ghcr.io/mastodon/mastodon-streaming
     newTag: "v4.3.8@sha256:9c258e83c69b7e6219425b1867e5851ffd53c9029e19e831bd31be8d80c5b42a"
     
+patches:
+  - path: database-cluster.yaml

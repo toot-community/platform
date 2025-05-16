@@ -6,7 +6,7 @@ metadata:
     velero.io/exclude-from-backup: "true"
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.5 # TODO: renovate annotation
+  # imageName: patch-me
   primaryUpdateStrategy: unsupervised
 
   storage:
@@ -42,20 +42,20 @@ spec:
       min_wal_size: "2GB"
       max_wal_size: "8GB"
 
-  # backup:
-  #   barmanObjectStore:
-  #     destinationPath: s3://toot-community-cnpg-production/
-  #     endpointURL: https://s3.eu-central-2.wasabisys.com
-  #     s3Credentials:
-  #       accessKeyId:
-  #         name: tootcommunity-db-s3-credentials
-  #         key: ACCESS_KEY_ID
-  #       secretAccessKey:
-  #         name: tootcommunity-db-s3-credentials
-  #         key: ACCESS_SECRET_KEY
-  #     wal:
-  #       compression: gzip
-  #   retentionPolicy: "91d"
+  backup:
+    barmanObjectStore:
+      # destinationPath: patch-me
+      endpointURL: https://s3.jorijn.com
+      s3Credentials:
+        accessKeyId:
+          name: database-s3-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: database-s3-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+    retentionPolicy: "30d"
 
   resources:
     requests:
