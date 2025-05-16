@@ -83,6 +83,9 @@ configuration:
       secretKeyRef:
         name: elasticsearch-es-elastic-user
         key: elastic
+  ipRetentionPeriod: "31556952" # 1 year
+  sessionRetentionPeriod: "31556952" # 1 year
+  trustedProxyIPs: "10.0.16.0/20" # Pod CIDR range
 
 web:
   domain: toot.community

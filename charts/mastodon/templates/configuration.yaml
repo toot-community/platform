@@ -64,6 +64,8 @@ data:
   {{- if .Values.configuration.trustedProxyIPs }}
   TRUSTED_PROXY_IP: {{ .Values.configuration.trustedProxyIPs }}
   {{- end }}
+  IP_RETENTION_PERIOD: {{ .Values.configuration.ipRetentionPeriod | quote }}
+  SESSION_RETENTION_PERIOD: {{ .Values.configuration.sessionRetentionPeriod | quote }}
 kind: ConfigMap
 metadata:
   labels:
