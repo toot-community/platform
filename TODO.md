@@ -19,6 +19,7 @@ After taking ownership:
   - [ ] For static
 - [ ] DeepL no longer free?
 - [ ] Translation endpoint is causing 500s
+- [ ] Source IP isn't correctly passed on in the chain
 
 Stage 2 after ownership:
 
