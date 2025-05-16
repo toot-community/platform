@@ -34,6 +34,7 @@ controller:
       load-balancer.hetzner.cloud/location: fsn1
       load-balancer.hetzner.cloud/private-ipv4: 10.0.1.2
       load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
+    externalTrafficPolicy: Local
 
   config:
     use-http2: "true"
