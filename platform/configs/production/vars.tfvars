@@ -36,7 +36,5 @@ whitelist_admins = [
 ]
 
 s3_buckets = [
-  { name = "microblog-network-assets", acl = "private" },
-  { name = "microblog-network-cnpg", acl = "private" },
-  { name = "microblog-network-velero", acl = "private" },
+  { name = "microblog-network-assets", acl = "public-read" }
 ]
