@@ -11,7 +11,7 @@ packer {
 
 variable "talos_version" {
   type    = string
-  default = "v1.10.1"
+  default = "v1.10.2"
 }
 
 locals {

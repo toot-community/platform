@@ -1,3 +1,5 @@
+# https://docs.cilium.io/en/stable/operations/performance/tuning/
+
 ipam:
   mode: kubernetes
 
@@ -48,8 +50,8 @@ policyAuditMode: true # fixme
 routingMode: native
 ipv4NativeRoutingCIDR: 10.0.0.0/8
 
-bfp:
-  datamodePath: netkit
+bpf:
+  datapathMode: netkit
   masquerade: true
   distributedLRU:
     enabled: true
