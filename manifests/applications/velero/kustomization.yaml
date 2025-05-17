@@ -20,4 +20,4 @@ images:
   - name: velero/velero-plugin-for-aws
     newTag: v1.12.0@sha256:c648365557865767366eb6597ebebf722d508dfbb1c163ca1ffd848ecf1c6dfc
   - name: velero/velero-plugin-for-csi
-    newTag: v0.7.0
+    newTag: v0.7.1@sha256:f58d508bb90651c0d90edf51ebfc91aad603cdc78cb9c1ffb9bee47b09b90157
