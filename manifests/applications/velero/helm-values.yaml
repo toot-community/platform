@@ -13,6 +13,8 @@
     name: velero-s3-credentials
     key: credentials
 
+snapshotsEnabled: false
+
 configuration:
   features: EnableCSI
   backupStorageLocation:
