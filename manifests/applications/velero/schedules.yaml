@@ -13,7 +13,7 @@ spec:
       - velero
       - victoriametrics
       - victorialogs
-    includeClusterResources: false
+    includeClusterResources: true
     itemOperationTimeout: 4h
     ttl: 744h # 30d+1d
     uploaderConfig:
