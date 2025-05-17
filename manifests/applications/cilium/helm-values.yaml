@@ -50,19 +50,19 @@ policyAuditMode: true # fixme
 routingMode: native
 ipv4NativeRoutingCIDR: 10.0.0.0/8
 
-bpf:
-  datapathMode: netkit
-  masquerade: true
-  distributedLRU:
-    enabled: true
-  mapDynamicSizeRatio: 0.08
+# bpf:
+#   datapathMode: netkit
+#   masquerade: true
+#   distributedLRU:
+#     enabled: true
+#   mapDynamicSizeRatio: 0.08
   
 ipv4:
   enabled: true
 
-nableIPv4BIGTCP: true
-bpfClockProbe: true
+# enableIPv4BIGTCP: true
+# bpfClockProbe: true
 
-bandwidthManager:
-  enabled: true
-  bbr: true
+# bandwidthManager:
+#   enabled: true
+#   bbr: true
