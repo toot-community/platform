@@ -17,6 +17,7 @@ After taking ownership:
 - [ ] To drop Fastly, we need a good Varnish configuration
   - [ ] For web
   - [ ] For static
+  - Look at Fastly TF module for inspiration
 - [ ] DeepL no longer free?
 - [ ] Translation endpoint is causing 500s
 - [ ] Source IP isn't correctly passed on in the chain
