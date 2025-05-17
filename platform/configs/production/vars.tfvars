@@ -3,7 +3,7 @@ resource_prefix = "tc-prod-"
 architecture    = "arm64"
 
 talos_version      = "v1.10.1"
-kubernetes_version = "v1.33.0"
+kubernetes_version = "v1.33.1"
 
 vpc_name         = "cluster-network"
 vpc_cidr         = "10.0.0.0/16"

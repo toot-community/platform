@@ -27,12 +27,13 @@ After taking ownership:
 - [ ] IMAP migrate support@toot.community
 - [ ] Ko-fi aankleden met plaatjes en tekst
 - [ ] Patreon aankleden met plaatjes en tekst
-- [ ] Eigen PP voor toot.c
-- [ ] DNSsec voor toot.c
+- [ ] Eigen PayPal voor toot.c
+- [x] DNSsec voor toot.c
 - [ ] kennismaken met solarbranka
 - [ ] es resolving werkt nog niet
 - [ ] email werkt nog niet
 - [ ] iftas sync?
+- [ ] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
 
 Stage 2 after ownership:
 
