@@ -21,6 +21,18 @@ After taking ownership:
 - [ ] DeepL no longer free?
 - [ ] Translation endpoint is causing 500s
 - [ ] Source IP isn't correctly passed on in the chain
+- [ ] Set up MC mirror of Toot assets to NAS (Minio)
+- [ ] N8N workflows?
+- [ ] [](https://toot.community/notifications/requests/114508118978012662)
+- [ ] IMAP migrate support@toot.community
+- [ ] Ko-fi aankleden met plaatjes en tekst
+- [ ] Patreon aankleden met plaatjes en tekst
+- [ ] Eigen PP voor toot.c
+- [ ] DNSsec voor toot.c
+- [ ] kennismaken met solarbranka
+- [ ] es resolving werkt nog niet
+- [ ] email werkt nog niet
+- [ ] iftas sync?
 
 Stage 2 after ownership:
 

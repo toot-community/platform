@@ -20,14 +20,9 @@ controlplane_nodes = [
 
 worker_image = "236768893"
 worker_nodes = [
-  { name = "worker-1", ip = "10.0.1.6", location = "fsn1", type = "cax11", },
-  { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax11", },
-  { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax11", },
-  { name = "worker-4", ip = "10.0.1.9", location = "fsn1", type = "cax11", },
-  { name = "worker-5", ip = "10.0.1.10", location = "fsn1", type = "cax11", },
-  { name = "worker-6", ip = "10.0.1.11", location = "fsn1", type = "cax11", },
-  { name = "worker-7", ip = "10.0.1.12", location = "fsn1", type = "cax11", },
-  { name = "worker-8", ip = "10.0.1.13", location = "fsn1", type = "cax11", },
+  { name = "worker-1", ip = "10.0.1.6", location = "fsn1", type = "cax31", },
+  { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax31", },
+  { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax31", },
 ]
 
 whitelist_admins = [
