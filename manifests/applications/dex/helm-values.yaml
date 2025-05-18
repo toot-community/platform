@@ -108,6 +108,11 @@ config:
         #  - If teams are specified, dex only returns group claims for those teams.
         orgs:
         - name: toot-community
+          teams:
+          - dex-users
+          - kubernetes-admin
+          - grafana-admin
+          - argocd-admin
 
         teamNameField: slug
         useLoginAsID: false
