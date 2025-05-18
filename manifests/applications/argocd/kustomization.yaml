@@ -8,6 +8,7 @@ resources:
   - platform-repository.yaml
   - ./applications
   - namespace.yaml
+  - ingress.yaml
 
 patches:
   - path: argocd-cm.yaml
