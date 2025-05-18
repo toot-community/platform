@@ -9,6 +9,7 @@ resources:
   - ./applications
   - namespace.yaml
   - ingress.yaml
+  - secrets.yaml
 
 patches:
   - path: argocd-cm.yaml
