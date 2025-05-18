@@ -18,7 +18,6 @@
       ],
       "additionalBranchPrefix": "{{parentDir}}-",
       "addLabels": [
-        "environment::{{parentDir}}",
         "dependency::{{depName}}"
       ]
     },
