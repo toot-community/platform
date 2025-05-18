@@ -4,7 +4,6 @@ metadata:
   name: daily
 spec:
   schedule: 0 2 * * *
-  skipImmediately: false
   template:
     snapshotVolumes: false
     defaultVolumesToFsBackup: true

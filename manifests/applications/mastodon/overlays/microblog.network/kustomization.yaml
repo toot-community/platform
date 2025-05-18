@@ -11,13 +11,13 @@ resources:
 
 helmCharts:
   - name: redis
-    version: "21.1.2"
+    version: "21.1.3"
     releaseName: redis
     namespace: *namespace
     valuesFile: ../../base/helm-values/redis.yaml
     additionalValuesFiles:
       - helm-values/redis.yaml
-    repo: https://charts.bitnami.com/bitnami
+    repo: oci://registry-1.docker.io/bitnamicharts
   - name: haproxy
     version: "1.24.0"
     releaseName: haproxy-redis
