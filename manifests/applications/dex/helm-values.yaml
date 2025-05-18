@@ -1,0 +1,130 @@
+replicaCount: 3
+
+https:
+  enabled: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    type: RuntimeDefault
+
+podSecurityContext:
+  fsGroup: 1000
+
+serviceMonitor:
+  enabled: false # FIXME: enable after observability is set up
+
+service:
+  type: ClusterIP
+  ports:
+    http:
+      port: 80
+    https:
+      port: 443
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 256Mi
+
+envFrom:
+  - secretRef:
+      name: static-client-secrets
+  - secretRef:
+      name: dex-secrets
+
+volumes:
+  - name: dex-tls
+    secret:
+      secretName: dex-tls
+
+volumeMounts:
+  - name: dex-tls
+    mountPath: /etc/dex/tls
+
+config:
+  issuer: https://idp.toot.community
+  logger:
+    level: info
+    format: text
+  storage:
+    type: kubernetes
+    config:
+      inCluster: true
+
+  enablePasswordDB: false
+
+  oauth2:
+    responseTypes:
+      - code
+      - id_token
+      - token
+    skipApprovalScreen: true
+    alwaysShowLoginScreen: false
+    
+  staticClients:
+    - id: argocd
+      redirectURIs:
+        - https://argocd.toot.community/auth/callback
+      name: "ArgoCD"
+      secretEnv: STATIC_CLIENT_ARGOCD_SECRET
+
+  web:
+    https: 0.0.0.0:5554
+    tlsCert: /etc/dex/tls/tls.crt
+    tlsKey: /etc/dex/tls/tls.key
+    tlsMinVersion: 1.2
+    tlsMaxVersion: 1.3
+
+  connectors:
+    - type: github
+      id: github
+      name: GitHub
+      config:
+        # Credentials can be string literals or pulled from the environment.
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://idp.toot.community/callback
+
+        # List of org and team names.
+        #  - If specified, a user MUST be a member of at least ONE of these orgs
+        #    and teams (if set) to authenticate with dex.
+        #  - Dex queries the following organizations for group information if the
+        #    "groups" scope is requested. Group claims are formatted as "(org):(team)".
+        #    For example if a user is part of the "engineering" team of the "coreos" org,
+        #    the group claim would include "coreos:engineering".
+        #  - If teams are specified, dex only returns group claims for those teams.
+        orgs:
+        - name: toot-community
+          teams:
+          - dex-users
+
+        teamNameField: slug
+        useLoginAsID: false
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: idp.toot.community
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: dex-tls
+      hosts:
+        - idp.toot.community

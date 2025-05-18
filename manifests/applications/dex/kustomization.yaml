@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dex
+
+resources:
+  - namespace.yaml
+  - secrets.yaml
+
+helmCharts:
+  - name: dex
+    namespace: dex
+    releaseName: dex
+    repo: https://charts.dexidp.io
+    valuesFile: helm-values.yaml
+    version: 0.23.0

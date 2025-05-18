@@ -18,3 +18,9 @@ data:
         - "*"
   kustomize.buildOptions: "--enable-helm --load-restrictor=LoadRestrictionsNone"
   application.resourceTrackingMethod: "annotation"
+  admin.enabled: "false"
+  oidc.config: |
+    name: Dex
+    issuer: $argocd-oidc-secret:ISSUER
+    clientID: $argocd-oidc-secret:CLIENT_ID
+    clientSecret: $argocd-oidc-secret:CLIENT_SECRET
