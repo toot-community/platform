@@ -21,6 +21,6 @@ data:
   admin.enabled: "false"
   oidc.config: |
     name: Dex
-    issuer: $argocd-oidc-secret:ISSUER
-    clientID: $argocd-oidc-secret:CLIENT_ID
-    clientSecret: $argocd-oidc-secret:CLIENT_SECRET
+    issuer: $argocd-secrets:oidc.issuer
+    clientID: $argocd-secrets:oidc.clientID
+    clientSecret: $argocd-secrets:oidc.clientSecret
