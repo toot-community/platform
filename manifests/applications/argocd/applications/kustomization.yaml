@@ -6,6 +6,7 @@ resources:
   - cert-manager.yaml
   - cilium.yaml
   - cloudnative-pg.yaml
+  - dex.yaml
   - elastic-operator.yaml
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
