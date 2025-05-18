@@ -2,8 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: database
-  labels:
-    velero.io/exclude-from-backup: "true"
+  # labels:
+  #   velero.io/exclude-from-backup: "true"
 spec:
   instances: 2
   # imageName: patch-me

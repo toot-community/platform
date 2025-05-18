@@ -34,6 +34,7 @@ After taking ownership:
 - [ ] email werkt nog niet
 - [ ] iftas sync?
 - [ ] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
+- [ ] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
 
 Stage 2 after ownership:
 
