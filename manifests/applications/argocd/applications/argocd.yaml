@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: manifests/applications/argocd
-    repoURL: git@github.com:jorijn/tc.git
+    repoURL: git@github.com:toot-community/platform.git
     targetRevision: main
   syncPolicy:
     automated:
