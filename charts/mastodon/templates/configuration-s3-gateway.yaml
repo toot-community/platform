@@ -5,10 +5,10 @@ data:
   S3_SERVER_PORT: "443"
   S3_SERVER_PROTO: {{ .Values.configuration.s3.protocol }}
   S3_REGION: {{ .Values.configuration.s3.region }}
-  S3_STYLE: virtual-v2
+  S3_STYLE: path
   S3_SERVICE: s3
   DEBUG: "true"
-  # AWS_SIGS_VERSION: "4"
+  AWS_SIGS_VERSION: "2"
   ALLOW_DIRECTORY_LIST: "false"
   PROVIDE_INDEX_PAGE: "false"
   APPEND_SLASH_FOR_POSSIBLE_DIRECTORY: "false"
