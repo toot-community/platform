@@ -30,6 +30,6 @@ whitelist_admins = [
   "86.86.243.190/32",
 ]
 
-s3_buckets = [
-  { name = "microblog-network-assets", acl = "public-read" }
+mastodon_s3_buckets = [
+  { name = "microblog-network-assets" }
 ]

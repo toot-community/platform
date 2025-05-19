@@ -123,11 +123,10 @@ variable "architecture" {
   default     = "arm64"
 }
 
-variable "s3_buckets" {
-  description = "List of S3 buckets"
+variable "mastodon_s3_buckets" {
+  description = "List of S3 buckets for Mastodon"
   type = list(object({
     name = string,
-    acl  = string,
   }))
   default = []
 }
