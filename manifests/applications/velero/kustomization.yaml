@@ -4,7 +4,7 @@ namespace: velero
 
 resources:
   - namespace.yaml
-  - schedules.yaml
+  # - schedules.yaml
   - credentials.yaml
 
 helmCharts:
