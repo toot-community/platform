@@ -21,7 +21,7 @@ resource "hcloud_server" "controlplane" {
 
   public_net {
     ipv4_enabled = true
-    ipv6_enabled = false
+    ipv6_enabled = true
   }
 
   network {
@@ -46,7 +46,7 @@ resource "hcloud_server" "worker" {
 
   public_net {
     ipv4_enabled = true
-    ipv6_enabled = false
+    ipv6_enabled = true
   }
 
   network {

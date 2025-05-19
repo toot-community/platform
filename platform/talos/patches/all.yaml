@@ -34,7 +34,9 @@ cluster:
       name: none
     podSubnets:
       - 10.0.16.0/20
+      - fd02:7430:3074::/48
     serviceSubnets:
       - 10.0.8.0/21  
+      - fd02:7430:5300::/112
   proxy:
     disabled: true

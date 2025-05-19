@@ -37,3 +37,11 @@ ingress:
       - hosts:
           - *streamingDomain
         secretName: ingress-streaming-tls
+
+s3Gateway:
+  ingress:
+    host: *staticDomain
+    tls:
+      - hosts:
+          - *staticDomain
+        secretName: ingress-static-tls
