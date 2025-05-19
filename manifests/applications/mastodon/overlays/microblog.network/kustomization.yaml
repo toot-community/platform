@@ -40,7 +40,7 @@ images:
   - name: ghcr.io/mastodon/mastodon-streaming
     newTag: "v4.3.8@sha256:9c258e83c69b7e6219425b1867e5851ffd53c9029e19e831bd31be8d80c5b42a"
   - name: ghcr.io/nginx/nginx-s3-gateway/nginx-oss-s3-gateway
-    newTag: "unprivileged-oss-20250519@sha256:787705b7a05ede916d700c3b8d4bb17e093c0d02326be36c23fa0282545d02b6"
+    newTag: "unprivileged-oss-20250519@sha256:621fb43b072d22d20c1d9716e6991afffc90c3d972770607910fd3c11c359e09"
     
 patches:
   - path: database-cluster.yaml
