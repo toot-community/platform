@@ -1,3 +1,4 @@
 *
-!mastodon
+!mastodon/
+!mastodon/**
 !.gitignore
