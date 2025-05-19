@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace toot-community
+
+helmGlobals:
+  chartHome: ../../../../../charts
+  
+resources:
+  - ../../base/database-cluster.yaml
+  - secrets.yaml
+
+patches:
+  - path: database-cluster.yaml

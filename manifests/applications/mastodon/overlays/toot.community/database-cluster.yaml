@@ -1,0 +1,35 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: database
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.8 # TODO: renovate annotation
+
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://tc-prod-cnpg-toot-community
+      endpointURL: https://s3.jorijn.com
+
+  # https://cloudnative-pg.io/documentation/1.16/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
+  # https://cloudnative-pg.io/documentation/1.16/replica_cluster/
+  bootstrap:
+    pg_basebackup:
+      source: fhf
+      
+  replica:
+    enabled: true
+    source: fhf
+          
+  storage:
+    size: 500Gi
+          
+  externalClusters:
+    - name: fhf
+      connectionParameters:
+        host: 5.75.132.246
+        user: app
+        dbname: app
+        sslmode: disable
+      password:
+        name: fhf-db-credentials
+        key: password
