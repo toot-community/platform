@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: n8n
+    app.kubernetes.io/name: n8n
+  name: n8n
+  namespace: n8n
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: n8n
+      app.kubernetes.io/name: n8n
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: n8n
+        app.kubernetes.io/name: n8n
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - image: n8nio/n8n:1.40.0@sha256:d970ae15c333e413b2d921519f43c7ebea693bfe0ed29a69f90d67eb4464e0de
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: n8n
+        envFrom:
+          - configMapRef:
+              name: n8n-env
+          - secretRef:
+              name: n8n-secrets
+        ports:
+        - containerPort: 5678
+          protocol: TCP
+          name: http
+        env:
+          - name: DB_POSTGRESDB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: database-app
+                key: dbname
+          - name: DB_POSTGRESDB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: database-app
+                key: host
+          - name: DB_POSTGRESDB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: database-app
+                key: port
+          - name: DB_POSTGRESDB_USER
+            valueFrom:
+              secretKeyRef:
+                name: database-app
+                key: user
+          - name: DB_POSTGRESDB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: database-app
+                key: password
+        volumeMounts:
+        - name: database-ca-volume
+          mountPath: /etc/ssl/certs/database-ca.crt
+          subPath: ca.crt
+      volumes:
+      - name: database-ca-volume
+        secret:
+          secretName: database-ca

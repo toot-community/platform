@@ -6,7 +6,7 @@
 
 After taking ownership:
 
-- [ ] Run a full recount on all Redis metrics, follower counts, etc. are incorrect
+- [ ] Run a full recount on all Redis metrics, follower counts, etc. are incorrect (tootctl cache recount)
 - [ ] Check streaming
 - [ ] Set up Kubernetes access using OIDC with Dex
 - [ ] Set up Dex using the GitHub organization
@@ -35,6 +35,7 @@ After taking ownership:
 - [ ] iftas sync?
 - [x] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
 - [x] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
+- [ ] Database index inconsistency: /usr/local/bundle/gems/activerecord-7.1.5.1/lib/active_record/connection_adapters/postgresql/database_statements.rb:55:in `exec': ERROR:  index row requires 22576 bytes, maximum size is 8191 (PG::ProgramLimitExceeded) (tootctl status remove)
 
 Stage 2 after ownership:
 
