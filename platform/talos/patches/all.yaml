@@ -17,6 +17,8 @@ machine:
     vm.max_map_count: "262144"
     # vm.nr_hugepages: "1024"
     vm.swappiness: "10"
+    net.ipv6.conf.all.disable_ipv6: "1" # disable IPv6
+    net.ipv6.conf.default.disable_ipv6: "1" # disable IPv6
   time:
     servers:
       - ntp1.hetzner.de
@@ -34,9 +36,9 @@ cluster:
       name: none
     podSubnets:
       - 10.0.16.0/20
-      - fd02:7430:3074::/48
+      # - fd02:7430:3074::/48
     serviceSubnets:
       - 10.0.8.0/21  
-      - fd02:7430:5300::/112
+      # - fd02:7430:5300::/112
   proxy:
     disabled: true

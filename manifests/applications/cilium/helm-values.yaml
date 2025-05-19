@@ -60,10 +60,10 @@ ipv4NativeRoutingCIDR: 10.0.0.0/8
 ipv4:
   enabled: true
   
-ipv6:
-  enabled: true
+# ipv6:
+#   enabled: true
 
-ipv6PodCIDR: fd02:7430:3074::/48
+# ipv6PodCIDR: fd02:7430:3074::/48
 
 # enableIPv4BIGTCP: true
 # bpfClockProbe: true
