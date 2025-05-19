@@ -1,0 +1,16 @@
+{{- if .Values.s3Gateway.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  name: {{ include "mastodon.fullname" . }}-s3-gateway
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/component: s3-gateway
+    {{- include "mastodon.selectorLabels" . | nindent 4 }}
+{{- end -}}
