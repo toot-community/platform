@@ -15,6 +15,12 @@ helmCharts:
     valuesFile: helm-values.yaml
     includeCRDs: true
     repo: https://victoriametrics.github.io/helm-charts/
+  - name: prometheus-operator-crds
+    version: "20.0.0"
+    releaseName: prometheus-operator-crds
+    namespace: victoriametrics
+    includeCRDs: true
+    repo: https://prometheus-community.github.io/helm-charts
 
 patches:
   - target: # the operator subchart does not support .Values.argocdReleaseOverride, so patch it here.
