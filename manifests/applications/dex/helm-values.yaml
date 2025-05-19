@@ -22,7 +22,7 @@ podSecurityContext:
   fsGroup: 1000
 
 serviceMonitor:
-  enabled: false # FIXME: enable after observability is set up
+  enabled: true
 
 service:
   type: ClusterIP

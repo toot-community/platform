@@ -12,7 +12,7 @@ spec:
     size: 1Gi
 
   monitoring:
-    enablePodMonitor: false # FIXME
+    enablePodMonitor: true
 
   postgresql:
     parameters:
