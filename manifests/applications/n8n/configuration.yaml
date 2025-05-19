@@ -9,7 +9,7 @@ data:
   DB_LOGGING_OPTIONS: "error"
   DB_TYPE: "postgresdb"
   DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED: "true"
-  DB_POSTGRESDB_SSL_CA_FILE: "/etc/ssl/certs/db-ca.crt"
+  DB_POSTGRESDB_SSL_CA_FILE: "/etc/ssl/certs/database-ca.crt"
   N8N_LOG_LEVEL: "info"
   N8N_EDITOR_BASE_URL: "https://workflows.toot.community"
   N8N_TEMPLATES_ENABLED: "false"
@@ -18,5 +18,8 @@ data:
   GENERIC_TIMEZONE: "Europe/Amsterdam"
   N8N_HOST: workflows.toot.community"
   N8N_PORT: "5678"
-  N8N_PROTOCOL: http
+  N8N_PROTOCOL: https
   N8N_LISTEN_ADDRESS: "0.0.0.0"
+  N8N_RUNNERS_ENABLED: "true"
+  N8N_PROXY_HOPS: "1"
+  WEBHOOK_URL: https://workflows.toot.community

@@ -24,7 +24,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - image: n8nio/n8n:1.40.0@sha256:d970ae15c333e413b2d921519f43c7ebea693bfe0ed29a69f90d67eb4464e0de
+      - image: n8nio/n8n
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false

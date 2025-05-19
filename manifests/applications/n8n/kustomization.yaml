@@ -11,3 +11,7 @@ resources:
   - secret.yaml
   - service.yaml
   - serviceaccount.yaml
+
+images:
+  - name: n8nio/n8n
+    newTag: 1.93.0@sha256:78361e40291fedd5bf07540b8fd435037f45432a0668aa042e1a11e79c45c8d3
