@@ -80,6 +80,11 @@ config:
         - https://argocd.toot.community/auth/callback
       name: "ArgoCD"
       secretEnv: STATIC_CLIENT_ARGOCD_SECRET
+    - id: grafana
+      redirectURIs:
+        - https://monitoring.toot.community/login/generic_oauth
+      name: "Grafana"
+      secretEnv: STATIC_CLIENT_GRAFANA_SECRET
 
   web:
     https: 0.0.0.0:5554
