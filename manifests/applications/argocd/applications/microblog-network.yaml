@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: manifests/applications/mastodon/overlays/microblog-network
+    path: manifests/applications/mastodon/overlays/microblog.network
     repoURL: git@github.com:toot-community/platform.git
     targetRevision: main
   syncPolicy:
