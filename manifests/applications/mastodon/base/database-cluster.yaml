@@ -8,6 +8,7 @@ spec:
   instances: 2
   # imageName: patch-me
   primaryUpdateStrategy: unsupervised
+  enablePDB: true
 
   storage:
     size: 40Gi
@@ -63,11 +64,6 @@ spec:
       cpu: "1"
     limits:
       memory: "2Gi"
-
-  # https://cloudnative-pg.io/documentation/1.19/kubernetes_upgrade/
-  nodeMaintenanceWindow:
-    inProgress: false
-    # reusePVC: false
 
   affinity:
     enablePodAntiAffinity: true
