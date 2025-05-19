@@ -23,18 +23,18 @@ After taking ownership:
 - [ ] Source IP isn't correctly passed on in the chain
 - [ ] Set up MC mirror of Toot assets to NAS (Minio)
 - [ ] N8N workflows?
-- [ ] [](https://toot.community/notifications/requests/114508118978012662)
-- [ ] IMAP migrate support@toot.community
+- [x] [](https://toot.community/notifications/requests/114508118978012662)
+- [x] IMAP migrate support@toot.community
 - [ ] Ko-fi aankleden met plaatjes en tekst
 - [ ] Patreon aankleden met plaatjes en tekst
 - [ ] Eigen PayPal voor toot.c
 - [x] DNSsec voor toot.c
 - [ ] kennismaken met solarbranka
-- [ ] es resolving werkt nog niet
-- [ ] email werkt nog niet
+- [x] es resolving werkt nog niet
+- [x] email werkt nog niet
 - [ ] iftas sync?
-- [ ] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
-- [ ] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
+- [x] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
+- [x] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
 
 Stage 2 after ownership:
 

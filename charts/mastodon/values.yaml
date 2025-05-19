@@ -123,9 +123,11 @@ web:
     minAvailable: 2
 
 translations:
-  enabled: false
-  deepl:
-    plan: free
+  enabled: true
+  libretranslate:
+    endpoint: https://translate.mstdn.social/ # FIXME: set to deepl when their system works again
+  # deepl:
+    # plan: free
 
 streaming:
   image:
