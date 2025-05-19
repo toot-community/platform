@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  # - rules.yaml # FIXME: enable after observability is enabled
+  - rules.yaml
 
 helmCharts:
   - name: cloudnative-pg

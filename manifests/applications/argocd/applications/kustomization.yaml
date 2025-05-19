@@ -13,3 +13,4 @@ resources:
   - metrics-server.yaml
   - talos-ccm.yaml
   - velero.yaml
+  - victoriametrics.yaml

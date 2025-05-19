@@ -31,6 +31,15 @@ machine:
     image: ${installer_image}
 
 cluster:
+  apiServer:
+    extraArgs:
+      bind-address: 0.0.0.0 # Allows VictoriaMetrics to scrape the API server.
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0 # Allows VictoriaMetrics to scrape the controller manager.
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
   network:
     cni:
       name: none

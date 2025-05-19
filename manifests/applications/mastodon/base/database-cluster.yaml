@@ -14,7 +14,7 @@ spec:
     size: 40Gi
 
   monitoring:
-    enablePodMonitor: false # FIXME: enable me after observability is set up
+    enablePodMonitor: true
 
   postgresql:
     parameters:

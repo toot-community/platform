@@ -2,6 +2,8 @@ cluster:
   etcd:
     advertisedSubnets:
       - ${vpc_subnet_cidr}
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
 
 machine:
   network:
