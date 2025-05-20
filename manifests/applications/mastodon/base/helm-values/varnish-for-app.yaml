@@ -14,7 +14,6 @@ varnish:
     backend default {
       .host = "{{ .Values.backend.host }}";
       .port = "{{ .Values.backend.port }}";
-      .via = onload;
     }
     
     sub vcl_recv {
