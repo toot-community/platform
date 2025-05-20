@@ -85,7 +85,7 @@ configuration:
         key: elastic
   ipRetentionPeriod: "31556952" # 1 year
   sessionRetentionPeriod: "31556952" # 1 year
-  trustedProxyIPs: "10.0.16.0/20" # Pod CIDR range
+  trustedProxyIPs: "10.0.0.0/16" # VPC CIDR
 
 web:
   domain: toot.community
