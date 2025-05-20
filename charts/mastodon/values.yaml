@@ -42,7 +42,7 @@ configuration:
       passwordKey: password
       secretName: database-app
   databaseReplicas:
-    enabled: true
+    enabled: false
     host: database-pooler-ro
     port: 5432
   defaultLocale: en
