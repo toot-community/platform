@@ -92,7 +92,7 @@ spec:
     poolMode: transaction
     parameters:
       max_client_conn: "1000"
-      default_pool_size: "50"
+      default_pool_size: "125"
   template:
     metadata:
       labels:
@@ -109,36 +109,36 @@ spec:
                     values:
                       - database-pooler-rw
               topologyKey: "kubernetes.io/hostname"
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Pooler
-metadata:
-  name: database-pooler-ro
-  annotations:
-    kustomize.toolkit.fluxcd.io/prune: disabled
-spec:
-  cluster:
-    name: database
-  instances: 2
-  type: ro
-  pgbouncer:
-    poolMode: transaction
-    parameters:
-      max_client_conn: "1000"
-      default_pool_size: "50"
-  template:
-    metadata:
-      labels:
-        app: database-pooler-ro
-    spec:
-      containers: []
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - database-pooler-ro
-              topologyKey: "kubernetes.io/hostname"
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: Pooler
+# metadata:
+#   name: database-pooler-ro
+#   annotations:
+#     kustomize.toolkit.fluxcd.io/prune: disabled
+# spec:
+#   cluster:
+#     name: database
+#   instances: 2
+#   type: ro
+#   pgbouncer:
+#     poolMode: transaction
+#     parameters:
+#       max_client_conn: "1000"
+#       default_pool_size: "50"
+#   template:
+#     metadata:
+#       labels:
+#         app: database-pooler-ro
+#     spec:
+#       containers: []
+#       affinity:
+#         podAntiAffinity:
+#           requiredDuringSchedulingIgnoredDuringExecution:
+#             - labelSelector:
+#                 matchExpressions:
+#                   - key: app
+#                     operator: In
+#                     values:
+#                       - database-pooler-ro
+#               topologyKey: "kubernetes.io/hostname"
