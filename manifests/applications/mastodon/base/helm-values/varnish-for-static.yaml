@@ -30,3 +30,17 @@ varnish:
       unset resp.http.x-debug-bucket;
       unset resp.http.x-rgw-object-type;
     }
+    
+    sub vcl_recv {
+      if (req.url == "/__health") {
+          return (synth(200, "OK"));
+      }
+    }
+
+    sub vcl_synth {
+        if (resp.status == 200 && req.url == "/__health") {
+            set resp.http.Content-Type = "text/plain";
+            set resp.body = "Varnish is healthy\n";
+            return (deliver);
+        }
+    }
