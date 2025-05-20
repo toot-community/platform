@@ -1,0 +1,39 @@
+containerPorts:
+  haproxy: 8080
+
+replicaCount: 2
+
+PodDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+config: |
+  global
+    log stdout format raw local0
+    maxconn 1024
+
+  resolvers resolvconf
+    parse-resolv-conf
+
+  defaults
+    log global
+    timeout client 600s
+    timeout connect 5s
+    timeout server 600s
+
+  listen sslon
+    mode tcp
+    maxconn 1024
+    bind *:8080 accept-proxy
+    server s00 0.0.0.0:0 ssl ca-file /etc/ssl/certs/ca-certificates.crt alpn http/1.1 sni fc_pp_authority
+    server s01 0.0.0.0:0 ssl ca-file /etc/ssl/certs/ca-certificates.crt alpn http/1.1 sni fc_pp_authority
+    server s02 0.0.0.0:0 ssl ca-file /etc/ssl/certs/ca-certificates.crt alpn http/1.1 sni fc_pp_authority
+    server s04 0.0.0.0:0 ssl ca-file /etc/ssl/certs/ca-certificates.crt alpn http/1.1 sni fc_pp_authority

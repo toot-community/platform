@@ -1,0 +1,49 @@
+onload: 
+  host: haproxy-onload.haproxy-onload.svc.cluster.local
+  port: 8080
+  
+varnish:
+  size: 256M
+  configuration: |
+    |-
+    vcl 4.1;
+
+    # import digest;
+    
+    include "hit-miss.vcl";
+    
+    backend onload {
+      .host = "{{ .Values.onload.host }}";
+      .port = "{{ .Values.onload.port }}";
+    }
+
+    backend default {
+      .host = "{{ .Values.backend.host }}";
+      .port = "{{ .Values.backend.port }}";
+      .via = onload;
+    }
+    
+    sub vcl_backend_fetch {
+      set bereq.http.Host = "{{ .Values.backend.host }}";
+      set bereq.http.Date = now;
+
+    #   set bereq.http.NL = {"
+    # "};
+
+    #   set bereq.http.Authorization = "AWS " + "%ACCESS_ID%" + ":" +
+    #     digest.base64_hex(digest.hmac_sha1("%SECRET_KEY%",
+    #       bereq.method + bereq.http.NL +
+    #       bereq.http.Content-MD5 + bereq.http.NL +
+    #       bereq.http.Content-Type + bereq.http.NL +
+    #       bereq.http.Date + bereq.http.NL + 
+    #       "/" + "%BUCKET%" + bereq.url)
+    #     );
+
+    #   unset bereq.http.NL;
+    }
+    
+    sub vcl_deliver {
+      unset resp.http.x-amz-request-id;
+      unset resp.http.x-debug-bucket;
+      unset resp.http.x-rgw-object-type;
+    }
