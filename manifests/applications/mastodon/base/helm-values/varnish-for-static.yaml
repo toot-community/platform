@@ -8,6 +8,7 @@ varnish:
     |-
     vcl 4.1;
     
+    # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
     include "hit-miss.vcl";
     
     backend onload {
