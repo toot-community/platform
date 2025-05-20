@@ -290,7 +290,7 @@ jobs:
     schedule: "0 3,9,15,21 * * *"
 
 s3Gateway:
-  enabled: true
+  enabled: false
   image:
     repository: ghcr.io/nginx/nginx-s3-gateway/nginx-oss-s3-gateway
     pullPolicy: IfNotPresent
