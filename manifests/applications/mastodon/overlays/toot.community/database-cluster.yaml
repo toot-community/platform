@@ -33,3 +33,7 @@ spec:
       password:
         name: fhf-db-credentials
         key: password
+        
+  postgresql:
+    parameters:
+      max_connections: "600"
