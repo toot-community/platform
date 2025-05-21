@@ -1,0 +1,8 @@
+[sync_reader]
+address = "195.201.28.10:6379"
+
+[redis_writer]
+address = "127.0.0.1:6379"
+
+[advanced]
+empty_db_before_sync = true
