@@ -9,5 +9,14 @@ resources:
   - ../../base/database-cluster.yaml
   - secrets.yaml
 
+helmCharts:
+  - name: varnish
+    version: "0.0.0"
+    releaseName: varnish-for-static
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/varnish-for-static.yaml
+    additionalValuesFiles:
+      - helm-values/varnish-for-static.yaml
+
 patches:
   - path: database-cluster.yaml

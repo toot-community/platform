@@ -1,5 +1,5 @@
 backend:
-  host: microblog-network-assets.fsn1.your-objectstorage.com # FIXME: set to wasabi (is this public?)
+  host: toot-community-assets-production.s3.eu-central-2.wasabisys.com
   port: 443
   
 ingress:
