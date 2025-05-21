@@ -28,8 +28,8 @@ varnish:
     sub vcl_init {
         new d = dynamic.director(
             port = "{{ .Values.backend.port }}",
-            ttl = 60s
-            via = proxy
+            ttl = 60s,
+            via = proxy,
             whitelist = ipv4_only
         );
     }
