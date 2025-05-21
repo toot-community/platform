@@ -25,11 +25,6 @@ worker_nodes = [
   { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax31", },
 ]
 
-whitelist_admins = [
-  "86.93.122.193/32",
-  "86.86.243.190/32",
-]
-
 mastodon_s3_buckets = [
   { name = "microblog-network-assets" }
 ]

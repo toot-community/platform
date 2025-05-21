@@ -34,6 +34,7 @@ After taking ownership:
 - [x] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
 - [ ] Database index inconsistency: /usr/local/bundle/gems/activerecord-7.1.5.1/lib/active_record/connection_adapters/postgresql/database_statements.rb:55:in `exec': ERROR:  index row requires 22576 bytes, maximum size is 8191 (PG::ProgramLimitExceeded) (tootctl status remove)
 - [x] Was bezig met S3 gateway, werkt niet. Conn refused vanuit ingress. Was template aan 't mounten om echte melding te zien. 
+- [ ] [HTST fixen](https://hstspreload.org/?domain=toot.community#submission-form)
 
 Stage 2 after ownership:
 
