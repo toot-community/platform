@@ -10,6 +10,7 @@ varnish:
     
     # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
     include "hit-miss.vcl";
+    import dynamic;
     
     backend proxy {
       .host = "{{ .Values.onload.host }}";
