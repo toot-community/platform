@@ -16,6 +16,8 @@ varnish:
       .host = "{{ .Values.onload.host }}";
       .port = "{{ .Values.onload.port }}";
     }
+    
+    acl ipv4_only { "0.0.0.0"/0; }
 
     # backend default {
     #   .host = "{{ .Values.backend.host }}";
@@ -26,8 +28,9 @@ varnish:
     sub vcl_init {
         new d = dynamic.director(
             port = "{{ .Values.backend.port }}",
-            ttl = 30s
+            ttl = 60s
             via = proxy
+            whitelist = ipv4_only
         );
     }
     
