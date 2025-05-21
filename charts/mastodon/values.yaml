@@ -211,6 +211,8 @@ ingress:
     upstreamProxyTimeout: 120
     ingressClassName: nginx
     host: toot.community
+    serviceNameOverride: ~
+    servicePortOverride: ~
     annotations: 
       cert-manager.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/ssl-redirect: "true"

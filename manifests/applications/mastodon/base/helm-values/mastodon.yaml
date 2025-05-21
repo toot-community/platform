@@ -7,3 +7,8 @@ configuration:
     timeouts:
       open: 10
       read: 10
+
+ingress:
+  web:
+    serviceNameOverride: varnish-for-app
+    servicePortOverride: 80

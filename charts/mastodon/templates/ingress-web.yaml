@@ -27,9 +27,17 @@ spec:
         paths:
           - backend:
               service:
+                {{- if .Values.ingress.web.serviceNameOverride }}
+                name: {{ .Values.ingress.web.serviceNameOverride }}
+                {{- else }}
                 name: {{ include "mastodon.fullname" . }}-web
+                {{- end }}
                 port:
+                  {{- if .Values.ingress.web.servicePortOverride }}
+                  number: {{ .Values.ingress.web.servicePortOverride }}
+                  {{- else }}
                   number: 3000
+                  {{- end }}
             path: /
             pathType: ImplementationSpecific
   tls:
