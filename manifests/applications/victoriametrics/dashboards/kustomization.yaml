@@ -14,3 +14,7 @@ configMapGenerator:
     files:
       - argocd.json
     options: *options
+  - name: redis
+    files:
+      - redis.json
+    options: *options

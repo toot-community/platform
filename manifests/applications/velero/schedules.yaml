@@ -1,7 +1,7 @@
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
-  name: daily
+  name: daily-cluster-backup
 spec:
   schedule: 0 2 * * *
   template:
@@ -13,8 +13,13 @@ spec:
       - victoriametrics
       - victorialogs
     includeClusterResources: true
+    includedNamespaces:
+      - "*"
+    labelSelector:
+      matchLabels:
+        velero.io/backup: "true"
     itemOperationTimeout: 4h
-    ttl: 744h # 30d+1d
+    ttl: 336h # 14 days
     uploaderConfig:
       parallelFilesUpload: 10
   useOwnerReferencesInBackup: false
