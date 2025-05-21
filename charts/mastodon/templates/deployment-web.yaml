@@ -11,7 +11,7 @@ metadata:
   {{- end }}
   name: {{ include "mastodon.fullname" . }}-web
 spec:
-  replicas: {{ .Values.web.replicaCount | default 3 }}
+  replicas: {{ .Values.web.replicaCount | default 2 }}
   selector:
     matchLabels:
       {{- include "mastodon.selectorLabels" . | nindent 6 }}
