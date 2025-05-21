@@ -12,11 +12,11 @@ After taking ownership:
 - [x] Set up Dex using the GitHub organization
 - [x] Configure ArgoCD to use OIDC with Dex
 - [x] Configure Grafana to use OIDC with Dex
-- [ ] Create a migration plan for PostgreSQL, Redis
+- [x] Create a migration plan for PostgreSQL, Redis
 - [x] Install the Elastic Operator for search
-- [ ] To drop Fastly, we need a good Varnish configuration
+- [x] To drop Fastly, we need a good Varnish configuration
   - [x] For web
-  - [ ] For static
+  - [x] For static
     - [ ] Test special purging from Mastodon for suspended accounts
   - Look at Fastly TF module for inspiration
 - [ ] DeepL no longer free?
@@ -35,6 +35,9 @@ After taking ownership:
 - [ ] Database index inconsistency: /usr/local/bundle/gems/activerecord-7.1.5.1/lib/active_record/connection_adapters/postgresql/database_statements.rb:55:in `exec': ERROR:  index row requires 22576 bytes, maximum size is 8191 (PG::ProgramLimitExceeded) (tootctl status remove)
 - [x] Was bezig met S3 gateway, werkt niet. Conn refused vanuit ingress. Was template aan 't mounten om echte melding te zien. 
 - [ ] [HTST fixen](https://hstspreload.org/?domain=toot.community#submission-form)
+- [ ] Prepare secrets and values file for toot.commmunity
+- [x] Rotate nodes to bigger ones
+- [ ] Increase resources for DB, tune values/resources for Mastodon
 
 Stage 2 after ownership:
 

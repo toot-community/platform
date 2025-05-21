@@ -20,9 +20,9 @@ controlplane_nodes = [
 
 worker_image = "238071418"
 worker_nodes = [
-  { name = "worker-1", ip = "10.0.1.6", location = "fsn1", type = "cax31", },
-  { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax31", },
-  { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax31", },
+  { name = "worker-1", ip = "10.0.1.6", location = "fsn1", type = "cax41", },
+  { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax41", },
+  { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax41", },
 ]
 
 mastodon_s3_buckets = [
