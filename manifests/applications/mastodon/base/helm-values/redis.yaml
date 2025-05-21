@@ -6,15 +6,15 @@ auth:
 
 replica:
   replicaCount: 3
-
-sentinel:
-  enabled: true
   resources:
     requests:
       cpu: 100m
       memory: 512Mi
     limits:
       memory: 512Mi
+
+sentinel:
+  enabled: true
 
 metrics: 
   enabled: &metricsEnabled true
