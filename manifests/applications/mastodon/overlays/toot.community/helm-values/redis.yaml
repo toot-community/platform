@@ -1,4 +1,4 @@
-replica:
-  externalMaster:
-    enabled: true
-    host: 195.201.28.10
+# replica:
+#   externalMaster:
+#     enabled: true
+#     host: 195.201.28.10
