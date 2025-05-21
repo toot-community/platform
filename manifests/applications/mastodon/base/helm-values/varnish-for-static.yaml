@@ -4,6 +4,16 @@ onload:
   
 varnish:
   size: 256M
+  removeResponseHeaders:
+    - "x-amz-request-id" # hetzner
+    - "x-debug-bucket" # hetzner
+    - "x-rgw-object-type" # hetzner
+    - "x-amz-id-2" # wasabi
+    - "x-amz-meta-btime" # wasabi
+    - "x-amz-meta-fl-original-last-modified" # wasabi
+    - "x-amz-meta-mtime" # wasabi
+    - "x-wasabi-cm-reference-id" # wasabi
+  
   configuration: |
     |-
     vcl 4.1;
@@ -19,12 +29,6 @@ varnish:
     
     acl ipv4_only { "0.0.0.0"/0; }
 
-    # backend default {
-    #   .host = "{{ .Values.backend.host }}";
-    #   .port = "{{ .Values.backend.port }}";
-    #   .via = proxy;
-    # }
-    
     sub vcl_init {
         new d = dynamic.director(
             port = "{{ .Values.backend.port }}",
@@ -39,9 +43,10 @@ varnish:
     }
     
     sub vcl_deliver {
-      unset resp.http.x-amz-request-id;
-      unset resp.http.x-debug-bucket;
-      unset resp.http.x-rgw-object-type;
+      # Remove headers that are not needed
+      {{ range $header := .Values.varnish.removeResponseHeaders }}
+        unset resp.http.{{ $header }};
+      {{ end }}
     }
     
     sub vcl_recv {

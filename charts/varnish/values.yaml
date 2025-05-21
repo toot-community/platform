@@ -123,6 +123,7 @@ affinity: {}
 
 varnish:
   size: 256M
+  removeResponseHeaders: []
   configuration: ""
   
 backend:
