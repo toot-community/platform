@@ -1,5 +1,7 @@
 sentinel:
   enabled: true
+  image:
+    debug: true
   
 image:
   debug: true
