@@ -11,15 +11,23 @@ varnish:
     # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
     include "hit-miss.vcl";
     
-    backend onload {
+    backend proxy {
       .host = "{{ .Values.onload.host }}";
       .port = "{{ .Values.onload.port }}";
     }
 
-    backend default {
-      .host = "{{ .Values.backend.host }}";
-      .port = "{{ .Values.backend.port }}";
-      .via = onload;
+    # backend default {
+    #   .host = "{{ .Values.backend.host }}";
+    #   .port = "{{ .Values.backend.port }}";
+    #   .via = proxy;
+    # }
+    
+    sub vcl_init {
+        new d = dynamic.director(
+            port = "{{ .Values.backend.port }}",
+            ttl = 30s
+            via = proxy
+        );
     }
     
     sub vcl_backend_fetch {
@@ -33,6 +41,8 @@ varnish:
     }
     
     sub vcl_recv {
+      set req.backend_hint = d.backend("{{ .Values.backend.host }}");
+      
       if (req.url == "/__health") {
           return (synth(200, "OK"));
       }
