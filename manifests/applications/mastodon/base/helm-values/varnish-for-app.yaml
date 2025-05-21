@@ -22,17 +22,18 @@ varnish:
             return (synth(200, "OK"));
         }
 
-        {{- if .Values.varnish.cachePublicInstanceEndpoints }}
+
         if (
+            {{- if .Values.varnish.cachePublicInstanceEndpoints }}
             req.url ~ "^/api/v1/custom_emojis$" ||
             req.url ~ "^/api/v(1|2)/instance$" ||
             req.url ~ "^/api/v1/instance/translation_languages$" ||
+            {{- end }}
             req.url ~ "\.(css|js)$"
         ) {
             unset req.http.Authorization;
             unset req.http.Cookie;
         }
-        {{- end }}
 
         if (req.method == "PRI") {
             /* This will never happen in properly formed traffic (see: RFC7540) */
@@ -77,16 +78,16 @@ varnish:
     }
 
     sub vcl_backend_response {
-        {{- if .Values.varnish.cachePublicInstanceEndpoints }}
         if (
+            {{- if .Values.varnish.cachePublicInstanceEndpoints }}
             bereq.url ~ "^/api/v1/custom_emojis$" ||
             bereq.url ~ "^/api/v(1|2)/instance$" ||
             bereq.url ~ "^/api/v1/instance/translation_languages$" ||
+            {{- end }}
             bereq.url ~ "\.(css|js)$"
         ) {
             unset beresp.http.set-cookie;
         }
-        {{- end }}
 
         if (bereq.uncacheable) {
             return (deliver);
