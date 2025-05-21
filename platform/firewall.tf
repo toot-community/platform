@@ -19,12 +19,6 @@ resource "hcloud_firewall" "controlplane" {
     port       = "any"
     source_ips = [var.vpc_cidr]
   }
-  rule {
-    direction  = "in"
-    protocol   = "tcp"
-    port       = "any"
-    source_ips = var.whitelist_admins
-  } # FIXME: is this one needed?
 
   rule {
     direction  = "in"

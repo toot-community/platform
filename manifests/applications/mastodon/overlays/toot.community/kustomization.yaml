@@ -10,6 +10,14 @@ resources:
   - secrets.yaml
 
 helmCharts:
+  - name: redis
+    version: "21.1.5"
+    releaseName: redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/redis.yaml
+    additionalValuesFiles:
+      - helm-values/redis.yaml
+    repo: oci://registry-1.docker.io/bitnamicharts
   - name: varnish
     version: "0.0.0"
     releaseName: varnish-for-static

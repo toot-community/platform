@@ -165,7 +165,7 @@ streaming:
     enabled: true
     minAvailable: 1
   podMonitor:
-    enabled: false # FIXME: enable after observability is set up
+    enabled: true
     interval: 30s
     scrapeTimeout: 10s
     path: /metrics

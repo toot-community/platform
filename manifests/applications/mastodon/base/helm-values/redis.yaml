@@ -11,6 +11,6 @@ sentinel:
   enabled: true
 
 metrics: 
-  enabled: &metricsEnabled false
+  enabled: &metricsEnabled true
   serviceMonitor: 
     enabled: *metricsEnabled
