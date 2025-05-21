@@ -1,0 +1,19 @@
+backend:
+  host: microblog-network-assets.fsn1.your-objectstorage.com # FIXME: set to wasabi (is this public?)
+  port: 443
+  
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: static.toot.community
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: static.toot.community-tls
+      hosts:
+        - static.toot.community
+      

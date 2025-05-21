@@ -1,0 +1,47 @@
+.instanceDomain: &instanceDomain toot.community
+.streamingDomain: &streamingDomain streaming.toot.community
+.staticDomain: &staticDomain static.toot.community
+
+debug: false
+
+configuration:
+  localDomain: *instanceDomain
+  limitedFederationMode: false
+  authorizedFetch: false
+  
+  s3:
+    aliasHost: *staticDomain
+    bucket: microblog-network-assets # FIXME, update to Wasabi
+    
+  smtp:
+    domain: *instanceDomain
+    fromAddress: toot.community Notifications <support@toot.community>
+    smtpServer: mail.toot.community
+    
+web:
+  domain: *instanceDomain
+  
+streaming:
+  baseURL: wss://streaming.toot.community
+  
+ingress:
+  web:
+    host: *instanceDomain
+    tls:
+      - hosts:
+          - *instanceDomain
+        secretName: ingress-web-tls
+  streaming:
+    host: *streamingDomain
+    tls:
+      - hosts:
+          - *streamingDomain
+        secretName: ingress-streaming-tls
+
+s3Gateway:
+  ingress:
+    host: *staticDomain
+    tls:
+      - hosts:
+          - *staticDomain
+        secretName: ingress-static-tls

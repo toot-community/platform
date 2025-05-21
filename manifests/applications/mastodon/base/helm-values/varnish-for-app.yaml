@@ -22,7 +22,7 @@ varnish:
             return (synth(200, "OK"));
         }
 
-        {{- if and (hasKey .Values.varnish "cachePublicInstanceEndpoints") (not .Values.varnish.cachePublicInstanceEndpoints) }}
+        {{- if .Values.varnish.cachePublicInstanceEndpoints }}
         if (
             req.url ~ "^/api/v1/custom_emojis$" ||
             req.url ~ "^/api/v(1|2)/instance$" ||
@@ -77,7 +77,7 @@ varnish:
     }
 
     sub vcl_backend_response {
-        {{- if and (hasKey .Values.varnish "cachePublicInstanceEndpoints") (not .Values.varnish.cachePublicInstanceEndpoints) }}
+        {{- if .Values.varnish.cachePublicInstanceEndpoints }}
         if (
             bereq.url ~ "^/api/v1/custom_emojis$" ||
             bereq.url ~ "^/api/v(1|2)/instance$" ||
