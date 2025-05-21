@@ -1,7 +1,10 @@
 sentinel:
-  enabled: false
+  enabled: true
   
-replica:
-  externalMaster:
-    enabled: true
-    host: 195.201.28.10
+image:
+  debug: true
+  
+# replica:
+#   externalMaster:
+#     enabled: true
+#     host: 195.201.28.10
