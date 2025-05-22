@@ -38,6 +38,7 @@ After taking ownership:
 - [ ] Prepare secrets and values file for toot.commmunity
 - [x] Rotate nodes to bigger ones
 - [ ] Increase resources for DB, tune values/resources for Mastodon
+- [ ] Patch argo haproxy to allow multiple pods on the same node
 
 Stage 2 after ownership:
 
