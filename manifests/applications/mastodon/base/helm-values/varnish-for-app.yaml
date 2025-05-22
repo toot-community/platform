@@ -21,7 +21,11 @@ varnish:
         if (req.url == "/__health") {
             return (synth(200, "OK"));
         }
-
+        
+        # Bypass cache for Sidekiq dashboard
+        if (req.url ~ "^/sidekiq") {
+            return (pass);
+        }
 
         if (
             {{- if .Values.varnish.cachePublicInstanceEndpoints }}
