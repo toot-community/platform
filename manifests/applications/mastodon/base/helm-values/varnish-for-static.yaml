@@ -13,21 +13,21 @@ varnish:
     - "x-amz-meta-fl-original-last-modified" # wasabi
     - "x-amz-meta-mtime" # wasabi
     - "x-wasabi-cm-reference-id" # wasabi
-  extraArgs:
-    - "-p"
-    - "thread_pool_min=20"
-    - "-p"
-    - "thread_pool_max=200"
-    - "-p"
-    - "thread_pool_stack=128k"
-    - "-p"
-    - "workspace_client=64k"
-    - "-p"
-    - "workspace_backend=64k"
-    - "-p"
-    - "fetch_chunksize=64k"
-    - "-s"
-    - "Transient=malloc,64m"
+  # extraArgs:
+  #   - "-p"
+  #   - "thread_pool_min=20"
+  #   - "-p"
+  #   - "thread_pool_max=200"
+  #   - "-p"
+  #   - "thread_pool_stack=128k"
+  #   - "-p"
+  #   - "workspace_client=64k"
+  #   - "-p"
+  #   - "workspace_backend=64k"
+  #   - "-p"
+  #   - "fetch_chunksize=64k"
+  #   - "-s"
+  #   - "Transient=malloc,64m"
   
   configuration: |
     |-
@@ -76,7 +76,7 @@ varnish:
 
       # Never cache large files (by extension)
       if (req.url ~ "\.(mp4|webm|mkv|avi|mov|zip|tar\.gz)$") {
-        return (pass);
+        return (stream);
       }
 
       # Remove cookies and auth headers to increase cachability
@@ -111,12 +111,4 @@ varnish:
       }
       
       set beresp.grace = 1h;
-    }
-
-    sub vcl_synth {
-        if (resp.status == 200 && req.url == "/__health") {
-            set resp.http.Content-Type = "text/plain";
-            set resp.body = "Varnish is healthy\n";
-            return (deliver);
-        }
     }
