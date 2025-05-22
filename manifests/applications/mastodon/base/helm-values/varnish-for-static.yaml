@@ -26,8 +26,6 @@ varnish:
     - "workspace_backend=64k"
     - "-p"
     - "fetch_chunksize=64k"
-    - "-p"
-    - "feature=+malloc_stats"
   
   configuration: |
     |-

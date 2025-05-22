@@ -43,7 +43,7 @@ spec:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish.size | default "256M" | quote }}
             - name: MALLOC_CONF
-              value: "background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000,thp:never,retain:false,narenas:1tcache:false,lg_chunk:20" # prevents memory fragmentation (leaking)
+              value: "background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000,thp:never,retain:false" # prevents memory fragmentation (leaking)
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}"
