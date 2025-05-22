@@ -90,6 +90,12 @@ varnish:
     sub vcl_deliver {
         unset resp.http.Via;
         unset resp.http.X-Varnish;
+        
+        sub vcl_deliver {
+            if (req.http.X-Forwarded-Proto == "https") {
+                set resp.http.Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload";
+            }
+        }
     }
 
     sub vcl_backend_response {
