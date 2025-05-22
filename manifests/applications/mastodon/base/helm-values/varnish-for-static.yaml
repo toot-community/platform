@@ -83,8 +83,8 @@ varnish:
         return (deliver);
       }
       
-      # Cache 404 for 30s
-      if (beresp.status == 404) {
+      # Cache 4xxx errors for 30s
+      if (beresp.status >= 400 && beresp.status < 500) {
         set beresp.ttl = 30s;
         set beresp.grace = 1m;
         return (deliver);
