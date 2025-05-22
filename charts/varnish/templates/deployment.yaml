@@ -33,18 +33,29 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- if .Values.varnish.extraArgs }}
-          args:
-          {{- range .Values.varnish.extraArgs }}
-          - {{ . }}
-          {{- end }}
-          {{- end }}
+          command:
+            - "varnishd"
+            - "-F"
+            - "-f"
+            - "${VARNISH_VCL_FILE:-/etc/varnish/default.vcl}"
+            - "-a"
+            - "http=:${VARNISH_HTTP_PORT:-80},HTTP"
+            - -a"
+            - "proxy=:${VARNISH_PROXY_PORT:-8443},PROXY"
+            # - "-p"
+            # - "feature=+http2"
+            - "-s"
+            - "malloc,$VARNISH_SIZE"
+            {{- if .Values.varnish.extraArgs }}
+            {{- range .Values.varnish.extraArgs }}
+            - {{ . }}
+            {{- end }}
+            {{- end }}
           env:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish.size | default "256M" | quote }}
-            # Let jemalloc keep its own purge thread and refuse THP
             - name: MALLOC_CONF
-              value: "background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000,thp:never,retain:false"
+              value: "background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000,thp:never,retain:false" # prevents memory fragmentation (leaking)
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}"
