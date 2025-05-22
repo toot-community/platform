@@ -142,3 +142,13 @@ sidekiq:
           memory: 300Mi
         limits:
           memory: 1800Mi
+          
+jobs:
+  removePreviewCards:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 400Mi
+      limits:
+        memory: 2000Mi
+    days: 180
