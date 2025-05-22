@@ -76,7 +76,7 @@ varnish:
 
       # Never cache large files (by extension)
       if (req.url ~ "\.(mp4|webm|mkv|avi|mov|zip|tar\.gz)$") {
-        return (stream);
+        return (pass);
       }
 
       # Remove cookies and auth headers to increase cachability
@@ -104,11 +104,7 @@ varnish:
         set beresp.grace = 2m;
         return (deliver);
       }
-
-      if (beresp.ttl <= 0s) {
-        # Only override if backend didn't provide caching headers
-        set beresp.ttl = 1h;
-      }
       
-      set beresp.grace = 1h;
+      set beresp.ttl = 4h;
+      set beresp.grace = 2h;
     }
