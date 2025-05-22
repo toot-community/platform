@@ -7,7 +7,7 @@ metadata:
     {{- if .Values.ingress.web.annotations }}
     {{- toYaml .Values.ingress.web.annotations | nindent 4 }}
     {{- end }}
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.ingress.web.host }}$request_uri
+    nginx.ingress.kubernetes.io/permanent-redirect:"https://{{ .Values.ingress.web.host }}$request_uri"
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
   name: {{ $fullName }}-web-www-redirect
