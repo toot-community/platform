@@ -8,15 +8,24 @@ configuration:
   localDomain: *instanceDomain
   limitedFederationMode: false
   authorizedFetch: false
-  
+
   s3:
+    endpoint: https://s3.eu-central-2.wasabisys.com
+    hostname: s3.eu-central-2.wasabisys.com
+    region: fsn1
     aliasHost: *staticDomain
-    bucket: microblog-network-assets # FIXME, update to Wasabi
+    bucket: toot-community-assets-production
     
   smtp:
     domain: *instanceDomain
     fromAddress: toot.community Notifications <support@toot.community>
     smtpServer: mail.toot.community
+
+  database:
+    credentials:
+      usernameKey: DB_USER
+      passwordKey: DB_PASS
+      secretName: mastodon-secret-env
     
 web:
   domain: *instanceDomain

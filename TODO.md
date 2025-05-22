@@ -40,6 +40,10 @@ After taking ownership:
 - [ ] Increase resources for DB, tune values/resources for Mastodon
 - [ ] Patch argo haproxy to allow multiple pods on the same node
 
+After migration:
+- [ ] Cleanup PSQL users: barman, datadog, n8n, streaming_barman, toot_rep, v-oidc-CgU-tootcomm-KxwpjS1lCNIzfyIMsI1J-1707073445, v-oidc-CgU-tootcomm-g8Ct2h5EpMzPtBuNGjuu-1707051377, vault
+  - [ ] Remove replication permission from `app` user
+
 Stage 2 after ownership:
 
 - [ ] Adapt the static Varnish config to gracefully handle the S3 migration (fetch hetzer -> 404? -> fetch wasabi)
