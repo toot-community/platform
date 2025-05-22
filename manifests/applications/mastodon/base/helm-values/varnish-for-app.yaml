@@ -14,9 +14,7 @@ varnish:
     
     import dynamic;
 
-    backend default {
-      .host = "";
-    }
+    backend default none;
     
     acl ipv4_only { "0.0.0.0"/0; }
     
