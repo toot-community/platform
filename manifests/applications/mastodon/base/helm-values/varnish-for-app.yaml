@@ -1,5 +1,5 @@
 backend:
-  host: mastodon-web
+  host: mastodon-web-headless
   port: 3000
 
 varnish:
@@ -11,13 +11,26 @@ varnish:
     
     # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
     include "hit-miss.vcl";
+    
+    import dynamic;
 
     backend default {
-      .host = "{{ .Values.backend.host }}";
-      .port = "{{ .Values.backend.port }}";
+      .host = "";
+    }
+    
+    acl ipv4_only { "0.0.0.0"/0; }
+    
+    sub vcl_init {
+        new d = dynamic.director(
+            port = "{{ .Values.backend.port }}",
+            ttl = 1s,
+            whitelist = ipv4_only
+        );
     }
     
     sub vcl_recv {
+        set req.backend_hint = d.backend("{{ .Values.backend.host }}");
+    
         if (req.url == "/__health") {
             return (synth(200, "OK"));
         }
