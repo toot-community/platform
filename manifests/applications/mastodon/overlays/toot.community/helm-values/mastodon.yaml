@@ -25,7 +25,7 @@ configuration:
     credentials:
       usernameKey: DB_USER
       passwordKey: DB_PASS
-      secretName: mastodon-secret-env
+      secretName: mastodon-secrets-env
     
 web:
   domain: *instanceDomain
