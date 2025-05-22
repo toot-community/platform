@@ -46,8 +46,8 @@ spec:
             - name: MALLOC_CONF
               value: |
                 background_thread:true,
-                dirty_decay_ms:5000,
-                muzzy_decay_ms:5000,
+                dirty_decay_ms:1000,
+                muzzy_decay_ms:1000,
                 thp:never
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
