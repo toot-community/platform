@@ -1,0 +1,9 @@
+resources:
+  requests:
+    cpu: 500m
+    memory: 4Gi
+  limits:
+    memory: 4Gi
+    
+varnish:
+  size: 1024m

@@ -1,7 +1,17 @@
 backend:
   host: toot-community-assets-production.s3.eu-central-2.wasabisys.com
   port: 443
-  
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 4Gi
+  limits:
+    memory: 4Gi
+    
+varnish:
+  size: 1024m
+
 ingress:
   enabled: true
   className: nginx
