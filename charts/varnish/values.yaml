@@ -118,8 +118,7 @@ affinity: {}
 
 varnish:
   size: 256M # don't forget to tune .Values.resources.limits.memory
-  removeResponseHeadersFromUpstream: []
-  addResponseHeaders: {}
+  removeResponseHeaders: []
   configuration: ""
   extraArgs: []
   

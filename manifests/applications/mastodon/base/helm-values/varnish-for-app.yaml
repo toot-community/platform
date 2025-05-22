@@ -5,10 +5,6 @@ backend:
 varnish:
   size: 256M
   cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
-  removeResponseHeadersFromUpstream:
-    - Strict-Transport-Security
-  addResponseHeaders:
-    Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   configuration: |
     |-
     vcl 4.1;
@@ -92,15 +88,8 @@ varnish:
     }
 
     sub vcl_deliver {
-        {{ range $header := .Values.varnish.removeResponseHeadersFromUpstream }}
-        unset resp.http.{{ $header }};
-        {{ end }}
-
-        {{- if .Values.varnish.addResponseHeaders }}
-        {{- range $key, $value := .Values.varnish.addResponseHeaders }}
-        set resp.http.{{ $key }} = "{{ $value }}";
-        {{- end }}
-        {{- end }}
+        unset resp.http.Via;
+        unset resp.http.X-Varnish;
     }
 
     sub vcl_backend_response {
