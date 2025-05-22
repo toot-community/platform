@@ -55,15 +55,75 @@ ingress:
 
 sidekiq:
   workers:
-    - name: generic
+    - name: generic-1
       concurrency: 25
-      replicaCount: 4
+      replicaCount: 1
       queues:
         - default
         - mailers
         - ingress
         - push
         - pull
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1000M
+        limits:
+          memory: 2000M
+    - name: generic-2
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - mailers
+        - ingress
+        - push
+        - pull
+        - default
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1000M
+        limits:
+          memory: 2000M
+    - name: generic-3
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - push
+        - pull
+        - default
+        - mailers
+        - ingress
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1000M
+        limits:
+          memory: 2000M
+    - name: generic-4
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - push
+        - pull
+        - default
+        - mailers
+        - ingress
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1000M
+        limits:
+          memory: 2000M
+    - name: generic-5
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - pull
+        - default
+        - mailers
+        - ingress
+        - push
       resources:
         requests:
           cpu: 1000m
