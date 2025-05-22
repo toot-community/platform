@@ -12,7 +12,7 @@ configuration:
   s3:
     endpoint: https://s3.eu-central-2.wasabisys.com
     hostname: s3.eu-central-2.wasabisys.com
-    region: fsn1
+    region: eu-central-2
     aliasHost: *staticDomain
     bucket: toot-community-assets-production
     
