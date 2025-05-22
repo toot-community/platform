@@ -58,3 +58,15 @@ images:
  
 patches:
   - path: database-cluster.yaml
+  - target:
+      name: elasticsearch
+      kind: Elasticsearch
+    patch: |-
+      - op: replace
+        path: /spec/nodeSets/0/podTemplate/spec/containers/0/resources
+        value: 
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            memory: 4Gi
