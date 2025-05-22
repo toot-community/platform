@@ -96,11 +96,11 @@ varnish:
         unset resp.http.{{ $header }};
         {{ end }}
 
-        {%- if .Values.varnish.addResponseHeaders %}
-        {%- range $key, $value := .Values.varnish.addResponseHeaders %}
+        {{- if .Values.varnish.addResponseHeaders }}
+        {{- range $key, $value := .Values.varnish.addResponseHeaders }}
         set resp.http.{{ $key }} = "{{ $value }}";
-        {%- endrange %}
-        {% endif %}
+        {{- end }}
+        {{- end }}
     }
 
     sub vcl_backend_response {
