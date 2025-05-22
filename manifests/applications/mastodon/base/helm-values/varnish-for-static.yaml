@@ -15,11 +15,9 @@ varnish:
     - "x-wasabi-cm-reference-id" # wasabi
   extraArgs:
     - "-p"
-    - "thread_pool_min=10"
+    - "thread_pool_min=100"
     - "-p"
-    - "thread_pool_max=100"
-    - "-p"
-    - "thread_pool_stack=256k"
+    - "thread_pool_max=750"
   
   configuration: |
     |-
