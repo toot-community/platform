@@ -24,8 +24,6 @@ varnish:
     - "workspace_client=64k"
     - "-p"
     - "workspace_backend=64k"
-    - "-s"
-    - "transient,64m"
   
   configuration: |
     |-
