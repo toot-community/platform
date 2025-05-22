@@ -33,28 +33,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - "/bin/sh"
-            - "-c"
+          {{- if .Values.varnish.extraArgs }}
           args:
-            - "exec"
-            - "varnishd"
-            - "-F"
-            - "-f"
-            - "/etc/varnish/default.vcl"
-            - "-a"
-            - "http=:80,HTTP"
-            - "-a"
-            - "proxy=:8443,PROXY"
-            # - "-p"
-            # - "feature=+http2"
-            - "-s"
-            - "malloc,$VARNISH_SIZE"
-            {{- if .Values.varnish.extraArgs }}
-            {{- range .Values.varnish.extraArgs }}
-            - {{ . }}
-            {{- end }}
-            {{- end }}
+          {{- range .Values.varnish.extraArgs }}
+          - {{ . }}
+          {{- end }}
+          {{- end }}
           env:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish.size | default "256M" | quote }}
