@@ -6,7 +6,7 @@ helmGlobals:
   chartHome: ../../../../../charts
   
 resources:
-  - ../../base/database-cluster.yaml
+  - ../../base
   - secrets.yaml
 
 helmCharts:
