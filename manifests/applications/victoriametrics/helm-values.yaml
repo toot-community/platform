@@ -81,7 +81,6 @@ grafana:
           type: victoriametrics-logs-datasource
           access: proxy
           url: http://vl-victoria-logs-single-server.victorialogs.svc.cluster.local:9428
-          isDefault: true
 
 defaultDashboards:
   dashboards:
