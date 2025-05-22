@@ -69,6 +69,19 @@ grafana:
       auto_login: true
       use_pkce: false
       use_refresh_token: true
+    
+  plugins:
+    - victoriametrics-logs-datasource
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: VictoriaLogs
+          type: victoriametrics-logs-datasource
+          access: proxy
+          url: http://vl-victoria-logs-single-server.victorialogs.svc.cluster.local:9428
+          isDefault: true
 
 defaultDashboards:
   dashboards:
