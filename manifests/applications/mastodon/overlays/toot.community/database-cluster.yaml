@@ -12,27 +12,27 @@ spec:
 
   # https://cloudnative-pg.io/documentation/1.16/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
   # https://cloudnative-pg.io/documentation/1.16/replica_cluster/
-  bootstrap:
-    pg_basebackup:
-      source: fhf
+  # bootstrap:
+  #   pg_basebackup:
+  #     source: fhf
       
-  replica:
-    enabled: true
-    source: fhf
+  # replica:
+  #   enabled: true
+  #   source: fhf
           
   storage:
     size: 500Gi
           
-  externalClusters:
-    - name: fhf
-      connectionParameters:
-        host: 5.75.132.246
-        user: app
-        dbname: app
-        sslmode: disable
-      password:
-        name: fhf-db-credentials
-        key: password
+  # externalClusters:
+  #   - name: fhf
+  #     connectionParameters:
+  #       host: 5.75.132.246
+  #       user: app
+  #       dbname: app
+  #       sslmode: disable
+  #     password:
+  #       name: fhf-db-credentials
+  #       key: password
         
   postgresql:
     parameters:
