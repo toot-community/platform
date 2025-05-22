@@ -32,10 +32,8 @@ After taking ownership:
 - [ ] iftas sync?
 - [x] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
 - [x] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
-- [ ] Database index inconsistency: /usr/local/bundle/gems/activerecord-7.1.5.1/lib/active_record/connection_adapters/postgresql/database_statements.rb:55:in `exec': ERROR:  index row requires 22576 bytes, maximum size is 8191 (PG::ProgramLimitExceeded) (tootctl status remove)
 - [x] Was bezig met S3 gateway, werkt niet. Conn refused vanuit ingress. Was template aan 't mounten om echte melding te zien. 
-- [ ] [HTST fixen](https://hstspreload.org/?domain=toot.community#submission-form)
-- [ ] Prepare secrets and values file for toot.commmunity
+- [x] Prepare secrets and values file for toot.commmunity
 - [x] Rotate nodes to bigger ones
 - [ ] Increase resources for DB, tune values/resources for Mastodon
 - [ ] Patch argo haproxy to allow multiple pods on the same node
@@ -43,6 +41,8 @@ After taking ownership:
 After migration:
 - [ ] Cleanup PSQL users: barman, datadog, n8n, streaming_barman, toot_rep, v-oidc-CgU-tootcomm-KxwpjS1lCNIzfyIMsI1J-1707073445, v-oidc-CgU-tootcomm-g8Ct2h5EpMzPtBuNGjuu-1707051377, vault
   - [ ] Remove replication permission from `app` user
+- [ ] [HTST fixen](https://hstspreload.org/?domain=toot.community#submission-form)
+- [ ] Database index inconsistency: /usr/local/bundle/gems/activerecord-7.1.5.1/lib/active_record/connection_adapters/postgresql/database_statements.rb:55:in `exec': ERROR:  index row requires 22576 bytes, maximum size is 8191 (PG::ProgramLimitExceeded) (tootctl status remove)
 
 Stage 2 after ownership:
 
