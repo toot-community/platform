@@ -40,7 +40,7 @@ spec:
             - "/etc/varnish/default.vcl"
             - "-a"
             - "http=:80,HTTP"
-            - -a"
+            - "-a"
             - "proxy=:8443,PROXY"
             # - "-p"
             # - "feature=+http2"
