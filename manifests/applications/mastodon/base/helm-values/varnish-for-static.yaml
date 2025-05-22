@@ -13,6 +13,13 @@ varnish:
     - "x-amz-meta-fl-original-last-modified" # wasabi
     - "x-amz-meta-mtime" # wasabi
     - "x-wasabi-cm-reference-id" # wasabi
+  extraArgs:
+    - "-p"
+    - "thread_pool_min=10"
+    - "-p"
+    - "thread_pool_max=100"
+    - "-p"
+    - "thread_pool_stack=256k"
   
   configuration: |
     |-
@@ -51,10 +58,49 @@ varnish:
     
     sub vcl_recv {
       set req.backend_hint = d.backend("{{ .Values.backend.host }}");
-      
+
+      # Health check
       if (req.url == "/__health") {
-          return (synth(200, "OK"));
+        return (synth(200, "OK"));
       }
+
+      # Never cache large files (by extension)
+      if (req.url ~ "\.(mp4|webm|mkv|avi|mov|zip|tar\.gz)$") {
+        return (pass);
+      }
+
+      # Remove cookies and auth headers to increase cachability
+      unset req.http.Cookie;
+      unset req.http.Authorization;
+    }
+    
+    sub vcl_backend_response {
+      # Do not cache large responses
+      if (beresp.http.Content-Length && std.integer(beresp.http.Content-Length, 0) > 50000000) {
+        set beresp.uncacheable = true;
+        return (deliver);
+      }
+      
+      # Cache 404 for 30s
+      if (beresp.status == 404) {
+        set beresp.ttl = 30s;
+        set beresp.grace = 1m;
+        return (deliver);
+      }
+
+      # Cache 5xx errors for 60s
+      if (beresp.status >= 500 && beresp.status <= 599) {
+        set beresp.ttl = 60s;
+        set beresp.grace = 2m;
+        return (deliver);
+      }
+
+      if (beresp.ttl <= 0s) {
+        # Only override if backend didn't provide caching headers
+        set beresp.ttl = 1h;
+      }
+      
+      set beresp.grace = 1h;
     }
 
     sub vcl_synth {

@@ -120,6 +120,7 @@ varnish:
   size: 256M # don't forget to tune .Values.resources.limits.memory
   removeResponseHeaders: []
   configuration: ""
+  extraArgs: []
   
 backend:
   host: localhost
