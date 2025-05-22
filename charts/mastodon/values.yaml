@@ -158,10 +158,10 @@ streaming:
     failureThreshold: 30
   resources:
     requests:
-      cpu: 6m
-      memory: 202M
+      cpu: 10m
+      memory: 256Mi
     limits:
-      memory: 202M
+      memory: 256Mi
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
@@ -193,7 +193,7 @@ sidekiq:
           cpu: 500m
           memory: 1000M
         limits:
-          memory: 1800M
+          memory: 2000M
     - name: scheduler
       concurrency: 25
       replicaCount: 1
@@ -242,7 +242,7 @@ jobs:
   cleanupMedia:
     enabled: true
     schedule: "0 5 * * *" # every day at 5am
-    days: 7
+    days: 14
     resources:
       requests:
         cpu: 250m
@@ -262,7 +262,7 @@ jobs:
   cleanupMediaProfiles:
     enabled: true
     schedule: "0 5 * * *" # every day at 5am
-    days: 7
+    days: 14
     resources:
       requests:
         cpu: 1000m
@@ -270,7 +270,7 @@ jobs:
       limits:
         memory: 721M
   accountsPrune:
-    enabled: true
+    enabled: false # FIXME: needs to fix indexes before enabling this
     schedule: "0 2 * * 1" # every monday at 2am
     resources:
       requests:

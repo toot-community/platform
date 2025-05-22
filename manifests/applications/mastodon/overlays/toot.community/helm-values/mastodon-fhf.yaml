@@ -1,0 +1,15 @@
+configuration:
+  redis:
+    host: 195.201.28.10
+  database:
+    host: 5.75.132.246
+    dbMigrations:
+      host: 5.75.132.246
+    sslmode: prefer
+    
+search:
+  enabled: false
+  
+streaming:
+  redis:
+    url: redis://195.201.28.10:6379

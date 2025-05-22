@@ -29,6 +29,12 @@ configuration:
     
 web:
   domain: *instanceDomain
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      memory: 4Gi
   
 streaming:
   baseURL: wss://streaming.toot.community
