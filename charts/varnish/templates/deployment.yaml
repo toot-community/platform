@@ -34,8 +34,11 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           command:
-            - "varnishd"
+            - "/bin/sh"
+            - "-c"
           args:
+            - "exec"
+            - "varnishd"
             - "-F"
             - "-f"
             - "/etc/varnish/default.vcl"
