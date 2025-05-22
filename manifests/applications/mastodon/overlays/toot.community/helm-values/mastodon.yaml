@@ -53,10 +53,31 @@ ingress:
           - *streamingDomain
         secretName: ingress-streaming-tls
 
-s3Gateway:
-  ingress:
-    host: *staticDomain
-    tls:
-      - hosts:
-          - *staticDomain
-        secretName: ingress-static-tls
+sidekiq:
+  workers:
+    - name: generic
+      concurrency: 25
+      replicaCount: 4
+      queues:
+        - default
+        - mailers
+        - ingress
+        - push
+        - pull
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1000M
+        limits:
+          memory: 2000M
+    - name: scheduler
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - scheduler
+      resources:
+        requests:
+          cpu: 100m
+          memory: 300Mi
+        limits:
+          memory: 1800Mi
