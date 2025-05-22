@@ -18,6 +18,28 @@ helmCharts:
     additionalValuesFiles:
       - helm-values/redis.yaml
     repo: oci://registry-1.docker.io/bitnamicharts
+  - name: haproxy
+    version: "1.24.0"
+    releaseName: haproxy-redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/haproxy.yaml
+    additionalValuesFiles:
+      - helm-values/haproxy.yaml
+    repo: https://haproxytech.github.io/helm-charts
+  # - name: mastodon
+  #   version: "0.0.0"
+  #   releaseName: mastodon
+  #   namespace: *namespace
+  #   valuesFile: ../../base/helm-values/mastodon.yaml
+  #   additionalValuesFiles:
+  #     - helm-values/mastodon.yaml
+  # - name: varnish
+  #   version: "0.0.0"
+  #   releaseName: varnish-for-app
+  #   namespace: *namespace
+  #   valuesFile: ../../base/helm-values/varnish-for-app.yaml
+  #   additionalValuesFiles:
+  #     - helm-values/varnish-for-app.yaml
   - name: varnish
     version: "0.0.0"
     releaseName: varnish-for-static
