@@ -35,7 +35,7 @@ After taking ownership:
 - [x] Was bezig met S3 gateway, werkt niet. Conn refused vanuit ingress. Was template aan 't mounten om echte melding te zien. 
 - [x] Prepare secrets and values file for toot.commmunity
 - [x] Rotate nodes to bigger ones
-- [ ] Increase resources for DB, tune values/resources for Mastodon
+- [x] Increase resources for DB, tune values/resources for Mastodon
 - [ ] Patch argo haproxy to allow multiple pods on the same node
 
 After migration:

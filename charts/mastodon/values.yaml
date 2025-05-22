@@ -225,6 +225,8 @@ ingress:
       - hosts:
           - toot.community
         secretName: toot.community-tls
+    wwwRedirect:
+      enabled: true
   streaming:
     host: streaming.toot.community
     ingressClassName: nginx
