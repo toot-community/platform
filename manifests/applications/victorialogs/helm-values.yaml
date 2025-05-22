@@ -1,0 +1,27 @@
+serviceAccount: 
+  create: true
+  
+server:
+  retentionDiskSpaceUsage: "40"
+  
+  persistentVolume:
+    enabled: true
+    size: 50Gi
+    
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      memory: 4Gi
+      
+  vmServiceScrape:
+    enabled: true
+    
+vector:
+  enabled: true
+  
+dashboards:
+  enabled: true
+  labels:
+    grafana_dashboard: "1"
