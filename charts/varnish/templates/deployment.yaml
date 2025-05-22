@@ -42,6 +42,13 @@ spec:
           env:
             - name: VARNISH_SIZE
               value: {{ .Values.varnish.size | default "256M" | quote }}
+            # Let jemalloc keep its own purge thread and refuse THP
+            - name: MALLOC_CONF
+              value: |
+                background_thread:true,
+                dirty_decay_ms:5000,
+                muzzy_decay_ms:5000,
+                thp:never
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}"

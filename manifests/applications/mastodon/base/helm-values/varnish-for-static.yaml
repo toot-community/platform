@@ -24,6 +24,8 @@ varnish:
     - "workspace_client=64k"
     - "-p"
     - "workspace_backend=64k"
+    - "-p"
+    - "fetch_chunksize=64k"
   
   configuration: |
     |-
