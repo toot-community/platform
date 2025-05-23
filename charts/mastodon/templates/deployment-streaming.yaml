@@ -58,7 +58,7 @@ spec:
             - name: PORT
               value: "4000"
             - name: DB_SSLMODE
-              value: "no-verify"
+              value: "prefer"
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
