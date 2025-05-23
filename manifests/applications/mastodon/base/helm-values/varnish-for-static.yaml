@@ -14,6 +14,10 @@ varnish:
     - "x-amz-meta-mtime" # wasabi
     - "x-wasabi-cm-reference-id" # wasabi
     - "x-amz-replication-status" # wasabi
+  purge:
+    enabled: true
+    requiredHeader: Fastly-Key
+    requiredPassword: zAUGqX5F-M2vIAzrwUYnYA8Nw1RBdttb
 
   configuration: |
     |-
@@ -31,6 +35,9 @@ varnish:
     }
     
     acl ipv4_only { "0.0.0.0"/0; }
+    acl purge_clients {
+        "10.0.0.0"/16;
+    }
 
     sub vcl_init {
         new d = dynamic.director(
@@ -59,6 +66,20 @@ varnish:
       if (req.url == "/__health") {
         return (synth(200, "OK"));
       }
+      
+      {{- if .Values.varnish.purge.enabled -}}
+      if (req.method == "PURGE") {
+          if (!(client.ip ~ purge_clients)) {
+              return (synth(403, "Forbidden: client not whitelisted"));
+          }
+          
+          if (req.http.{{ .Values.varnish.purge.requiredHeader }} != "{{ .Values.varnish.purge.requiredPassword }}") {
+              return (synth(403, "Forbidden: bad or missing Purge-Secret-Header-Key"));
+          }
+
+          return (purge);
+      }
+      {{- end -}}
 
       # Never cache large files (by extension)
       if (req.url ~ "\.(mp4|webm|mkv|avi|mov|zip|tar\.gz)$") {
@@ -91,6 +112,6 @@ varnish:
         return (deliver);
       }
       
-      set beresp.ttl = 4h;
-      set beresp.grace = 2h;
+      set beresp.ttl = 1h;
+      set beresp.grace = 30m;
     }

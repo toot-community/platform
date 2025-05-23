@@ -121,6 +121,10 @@ varnish:
   removeResponseHeaders: []
   configuration: ""
   extraArgs: []
+  purge:
+    enabled: false
+    requiredHeader: Secret-Purge-Header-Key
+    requiredPassword: Secret-Purge-Header-Value
   
 backend:
   host: localhost
