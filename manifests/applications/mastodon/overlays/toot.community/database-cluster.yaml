@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: database
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.8 # TODO: renovate annotation
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.9 # TODO: renovate annotation
 
   backup:
     barmanObjectStore:
