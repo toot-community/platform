@@ -5,9 +5,9 @@ backend:
 resources:
   requests:
     cpu: 100m
-    memory: 4Gi
+    memory: 5Gi
   limits:
-    memory: 4Gi
+    memory: 5Gi
     
 varnish:
   size: 1024m

@@ -107,7 +107,7 @@ varnish:
 
         # 1. Path-based policy
         if (bereq.url ~ "^/cache/") {
-            set beresp.ttl   = 15m;
+            set beresp.ttl   = 30m;
             set beresp.grace = 2m;
             set beresp.keep  = 8m;
 
