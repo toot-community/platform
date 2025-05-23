@@ -69,8 +69,12 @@ varnish:
       
       {{- if .Values.varnish.purge.enabled -}}
       if (req.method == "PURGE") {
-          if (!(client.ip ~ purge_clients)) {
-              return (synth(403, "Forbidden: client not whitelisted"));
+          if (client.ip ~ trusted_proxies && req.http.X-Forwarded-For) {
+              if (!(std.ip(regsub(req.http.X-Forwarded-For, "^[ ]*([^, ]+).*", "\1"), "0.0.0.0") ~ purge_clients)) {
+                  return (synth(403,"Forbidden – client not whitelisted"));
+              }
+          } else if (!(client.ip ~ purge_clients)) {
+              return (synth(403,"Forbidden – client not whitelisted"));
           }
           
           if (req.http.{{ .Values.varnish.purge.requiredHeader }} != "{{ .Values.varnish.purge.requiredPassword }}") {
