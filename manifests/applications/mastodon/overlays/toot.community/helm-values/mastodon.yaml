@@ -29,7 +29,7 @@ configuration:
     
 web:
   domain: *instanceDomain
-  replicaCount: 4
+  replicaCount: 3
   resources:
     requests:
       cpu: 500m
