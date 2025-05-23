@@ -99,26 +99,28 @@ varnish:
     }
     
     sub vcl_backend_response {
-      # Do not cache large responses
-      if (beresp.http.Content-Length && std.integer(beresp.http.Content-Length, 0) > 50000000) {
-        set beresp.uncacheable = true;
-        return (deliver);
-      }
-      
-      # Cache 4xxx errors for 30s
-      if (beresp.status >= 400 && beresp.status < 500) {
-        set beresp.ttl = 30s;
-        set beresp.grace = 1m;
-        return (deliver);
-      }
+        # bypass really big files (>50 MB)
+        if (beresp.http.Content-Length &&
+            std.integer(beresp.http.Content-Length, 0) > 50_000_000) {
+            set beresp.uncacheable = true;
+            return (deliver);
+        }
 
-      # Cache 5xx errors for 60s
-      if (beresp.status >= 500 && beresp.status <= 599) {
-        set beresp.ttl = 60s;
-        set beresp.grace = 2m;
-        return (deliver);
-      }
-      
-      set beresp.ttl = 1h;
-      set beresp.grace = 30m;
+        # treat all 2xx/3xx objects the same, regardless of Cache-Control
+        set beresp.ttl   = 5m;      # enough to catch ~90 % of re-uses
+        set beresp.grace = 30s;     # serve slightly stale while refreshing
+        set beresp.keep  = 2m;      # hit-for-miss window (needs hit-miss.vcl)
+
+        # short-lived caching for client errors
+        if (beresp.status >= 400 && beresp.status < 500) {
+            set beresp.ttl = 30s;
+            return (deliver);
+        }
+
+        # slightly longer for origin errors (to shield flaps)
+        if (beresp.status >= 500) {
+            set beresp.ttl   = 60s;
+            set beresp.grace = 2m;
+            return (deliver);
+        }
     }
