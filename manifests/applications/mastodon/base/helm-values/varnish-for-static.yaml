@@ -101,7 +101,7 @@ varnish:
     sub vcl_backend_response {
         # bypass really big files (>50 MB)
         if (beresp.http.Content-Length &&
-            std.integer(beresp.http.Content-Length, 0) > 50_000_000) {
+            std.integer(beresp.http.Content-Length, 0) > 50000000) {
             set beresp.uncacheable = true;
             return (deliver);
         }
