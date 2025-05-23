@@ -16,8 +16,8 @@ varnish:
     - "x-amz-replication-status" # wasabi
   purge:
     enabled: true
-    requiredHeader: Fastly-Key
-    requiredPassword: zAUGqX5F-M2vIAzrwUYnYA8Nw1RBdttb
+    requiredHeader: X-TC-Purge-Key
+    requiredPassword: ThisIsNotVerySecret
 
   configuration: |
     |-
@@ -74,14 +74,14 @@ varnish:
       if (req.method == "PURGE") {
           if (client.ip ~ trusted_proxies && req.http.X-Forwarded-For) {
               if (!(std.ip(regsub(req.http.X-Forwarded-For, "^[ ]*([^, ]+).*", "\1"), "0.0.0.0") ~ purge_clients)) {
-                  return (synth(403,"Forbidden – client not whitelisted: " + regsub(req.http.X-Forwarded-For, "^[ ]*([^, ]+).*", "\1")));
+                  return (synth(403, "Forbidden"));
               }
           } else if (!(client.ip ~ purge_clients)) {
-              return (synth(403,"Forbidden – client not whitelisted"));
+              return (synth(403, "Forbidden"));
           }
           
           if (req.http.{{ .Values.varnish.purge.requiredHeader }} != "{{ .Values.varnish.purge.requiredPassword }}") {
-              return (synth(403, "Forbidden: bad or missing Purge-Secret-Header-Key"));
+              return (synth(403, "Forbidden"));
           }
 
           return (purge);
