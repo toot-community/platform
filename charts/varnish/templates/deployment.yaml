@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/vcl: {{ include (print $.Template.BasePath "/configuration.vcl.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }} 
