@@ -57,8 +57,8 @@ spec:
                   name: {{ .Values.configuration.database.credentials.secretName }}
             - name: PORT
               value: "4000"
-            - name: DB_SSLMODE
-              value: "prefer"
+            # - name: DB_SSLMODE
+            #   value: "no-verify"
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
