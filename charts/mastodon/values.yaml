@@ -74,7 +74,7 @@ configuration:
     fromAddress: toot.community Notifications <notifications@toot.community>
     smtpServer: smtp.server
   search:
-    enabled: true
+    enabled: false
     host: elasticsearch-es-http
     port: 9200
     scheme: http

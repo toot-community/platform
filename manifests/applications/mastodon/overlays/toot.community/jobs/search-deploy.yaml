@@ -50,7 +50,7 @@ spec:
         name: search-deploy
         resources:
           limits:
-            memory: 2Gi
+            memory: 6Gi
           requests:
             cpu: "4"
-            memory: 2Gi
+            memory: 6Gi

@@ -7,6 +7,7 @@ helmGlobals:
   
 resources:
   - ../../base
+  - ../../base/search-cluster.yaml
   - secrets.yaml
 
 helmCharts:
