@@ -12,7 +12,7 @@ replica:
       memory: 512Mi
     limits:
       memory: 512Mi
-  podAnnotations:
+  podLabels:
     velero.io/backup: "true"
 
 sentinel:
