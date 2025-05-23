@@ -11,6 +11,7 @@ replica:
       cpu: 100m
       memory: 512Mi
     limits:
+      cpu: ~ # no limit, overwrite parent chart
       memory: 512Mi
   podLabels:
     velero.io/backup: "true"
