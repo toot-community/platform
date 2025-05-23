@@ -99,25 +99,46 @@ varnish:
     }
     
     sub vcl_backend_response {
-        # bypass really big files (>50 MB)
+        # 0. Bypass >50 MB
         if (beresp.http.Content-Length &&
-            std.integer(beresp.http.Content-Length, 0) > 50000000) {
-            set beresp.uncacheable = true;
+            std.integer(beresp.http.Content-Length,0) > 50000000) {
             return (deliver);
         }
 
-        # treat all 2xx/3xx objects the same, regardless of Cache-Control
-        set beresp.ttl   = 5m;      # enough to catch ~90 % of re-uses
-        set beresp.grace = 30s;     # serve slightly stale while refreshing
-        set beresp.keep  = 2m;      # hit-for-miss window (needs hit-miss.vcl)
+        # 1. Path-based policy
+        if (bereq.url ~ "^/cache/") {
+            set beresp.ttl   = 5m;
+            set beresp.grace = 30s;
+            set beresp.keep  = 2m;
 
-        # short-lived caching for client errors
+        } else if (bereq.url ~ "^/media_attachments/") {
+            set beresp.ttl   = 60m;
+            set beresp.grace = 10m;
+            set beresp.keep  = 5m;
+
+        } else if (bereq.url ~ "^/(accounts/(avatars|headers)/|custom_emojis/|site_uploads/)") {
+            if (bereq.url ~ "^/site_uploads/") {
+                set beresp.ttl = 24h;
+                set beresp.grace = 4h;
+                set beresp.keep  = 6h;
+            } else {
+                set beresp.ttl = 12h;
+                set beresp.grace = 2h;
+                set beresp.keep  = 4h;
+            }
+
+        } else {
+            # default
+            set beresp.ttl   = 15m;
+            set beresp.grace = 60s;
+            set beresp.keep  = 3m;
+        }
+
+        # 2. Cache 4xx/5xx briefly so errors aren't hammered
         if (beresp.status >= 400 && beresp.status < 500) {
             set beresp.ttl = 30s;
             return (deliver);
         }
-
-        # slightly longer for origin errors (to shield flaps)
         if (beresp.status >= 500) {
             set beresp.ttl   = 60s;
             set beresp.grace = 2m;
