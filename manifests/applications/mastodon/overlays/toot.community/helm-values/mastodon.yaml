@@ -21,11 +21,11 @@ configuration:
     fromAddress: toot.community Notifications <support@toot.community>
     smtpServer: mail.toot.community
 
-  database:
-    credentials:
-      usernameKey: DB_USER
-      passwordKey: DB_PASS
-      secretName: mastodon-secrets-env
+  # database:
+  #   credentials:
+  #     usernameKey: DB_USER
+  #     passwordKey: DB_PASS
+  #     secretName: mastodon-secrets-env
     
 web:
   domain: *instanceDomain
