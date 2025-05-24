@@ -10,7 +10,7 @@ resources:
     memory: 5Gi
     
 varnish:
-  size: 1024m
+  size: 2048m
 
 ingress:
   enabled: true

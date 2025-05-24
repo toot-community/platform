@@ -107,31 +107,24 @@ varnish:
 
         # 1. Path-based policy
         if (bereq.url ~ "^/cache/") {
-            set beresp.ttl   = 30m;
-            set beresp.grace = 2m;
-            set beresp.keep  = 8m;
+            set beresp.ttl   = 60m;
+            set beresp.grace = 20m;
+            set beresp.keep  = 10m;
 
         } else if (bereq.url ~ "^/media_attachments/") {
-            set beresp.ttl   = 60m;
-            set beresp.grace = 10m;
-            set beresp.keep  = 5m;
+            set beresp.ttl   = 180m;
+            set beresp.grace = 20m;
+            set beresp.keep  = 10m;
 
         } else if (bereq.url ~ "^/(accounts/(avatars|headers)/|custom_emojis/|site_uploads/)") {
-            if (bereq.url ~ "^/site_uploads/") {
-                set beresp.ttl = 24h;
-                set beresp.grace = 4h;
-                set beresp.keep  = 6h;
-            } else {
-                set beresp.ttl = 12h;
-                set beresp.grace = 2h;
-                set beresp.keep  = 4h;
-            }
-
+            set beresp.ttl = 24h;
+            set beresp.grace = 4h;
+            set beresp.keep  = 6h;
         } else {
             # default
-            set beresp.ttl   = 15m;
-            set beresp.grace = 60s;
-            set beresp.keep  = 3m;
+            set beresp.ttl   = 30m;
+            set beresp.grace = 5m;
+            set beresp.keep  = 5m;
         }
 
         # 2. Cache 4xx/5xx briefly so errors aren't hammered
