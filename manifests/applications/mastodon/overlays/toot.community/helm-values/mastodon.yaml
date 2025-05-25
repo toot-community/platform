@@ -97,8 +97,7 @@ sidekiq:
         - default
         - mailers
         - ingress
-      resources:
-        requests: *genericJobRunnerResources
+      resources: *genericJobRunnerResources
     - name: generic-5
       concurrency: 25
       replicaCount: 1
