@@ -244,7 +244,7 @@ jobs:
   cleanupMedia:
     enabled: true
     schedule: "0 5 * * *" # every day at 5am
-    days: 14
+    days: 7
     resources:
       requests:
         cpu: 250m
