@@ -55,15 +55,15 @@ sidekiq:
   workers:
     - name: default
       concurrency: 25
-      replicaCount: 2
+      replicaCount: 1
       queues:
         - default
       resources:
         requests:
           cpu: 700m
-          memory: 4Gi
+          memory: 2Gi
         limits:
-          memory: 6Gi
+          memory: 6Gi # burstable for media processing
     - name: mailers
       concurrency: 25
       replicaCount: 1
@@ -77,7 +77,7 @@ sidekiq:
           memory: 1Gi
     - name: push
       concurrency: 25
-      replicaCount: 2
+      replicaCount: 1
       queues:
         - push
       resources: 
@@ -88,7 +88,7 @@ sidekiq:
           memory: 2Gi
     - name: ingress
       concurrency: 25
-      replicaCount: 2
+      replicaCount: 1
       queues:
         - ingress
       resources: 
@@ -99,7 +99,7 @@ sidekiq:
           memory: 6Gi
     - name: generic-5
       concurrency: 25
-      replicaCount: 2
+      replicaCount: 1
       queues:
         - pull
       resources: 
