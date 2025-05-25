@@ -29,8 +29,8 @@ web:
   replicaCount: 3
   resources:
     requests:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 600m
+      memory: 1500Mi
     limits:
       memory: 4Gi
   
@@ -62,12 +62,12 @@ sidekiq:
         - ingress
         - push
         - pull
-      resources:
+      resources: &genericJobRunnerResources
         requests:
-          cpu: 1000m
-          memory: 1000M
+          cpu: 700m
+          memory: 1900Mi
         limits:
-          memory: 2000M
+          memory: 1900Mi
     - name: generic-2
       concurrency: 25
       replicaCount: 1
@@ -77,12 +77,7 @@ sidekiq:
         - push
         - pull
         - default
-      resources:
-        requests:
-          cpu: 1000m
-          memory: 1000M
-        limits:
-          memory: 2000M
+      resources: **genericJobRunnerResources
     - name: generic-3
       concurrency: 25
       replicaCount: 1
@@ -92,12 +87,7 @@ sidekiq:
         - default
         - mailers
         - ingress
-      resources:
-        requests:
-          cpu: 1000m
-          memory: 1000M
-        limits:
-          memory: 2000M
+      resources: *genericJobRunnerResources
     - name: generic-4
       concurrency: 25
       replicaCount: 1
@@ -108,11 +98,7 @@ sidekiq:
         - mailers
         - ingress
       resources:
-        requests:
-          cpu: 1000m
-          memory: 1000M
-        limits:
-          memory: 2000M
+        requests: *genericJobRunnerResources
     - name: generic-5
       concurrency: 25
       replicaCount: 1
@@ -122,12 +108,7 @@ sidekiq:
         - mailers
         - ingress
         - push
-      resources:
-        requests:
-          cpu: 1000m
-          memory: 1000M
-        limits:
-          memory: 2000M
+      resources: *genericJobRunnerResources
     - name: scheduler
       concurrency: 25
       replicaCount: 1
