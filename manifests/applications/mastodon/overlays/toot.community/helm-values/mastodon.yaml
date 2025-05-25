@@ -67,7 +67,7 @@ sidekiq:
           cpu: 700m
           memory: 2Gi
         limits:
-          memory: 4Gi
+          memory: 6Gi
     - name: generic-2
       concurrency: 25
       replicaCount: 1
