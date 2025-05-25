@@ -53,61 +53,61 @@ ingress:
 
 sidekiq:
   workers:
-    - name: generic-1
+    - name: default
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 2
       queues:
         - default
-        - mailers
-        - ingress
-        - push
-        - pull
-      resources: &genericJobRunnerResources
+      resources:
         requests:
           cpu: 700m
-          memory: 2Gi
+          memory: 4Gi
         limits:
           memory: 6Gi
-    - name: generic-2
+    - name: mailers
       concurrency: 25
       replicaCount: 1
       queues:
         - mailers
-        - ingress
-        - push
-        - pull
-        - default
-      resources: *genericJobRunnerResources
-    - name: generic-3
+      resources: 
+        requests:
+          cpu: 100m
+          memory: 1Gi
+        limits:
+          memory: 1Gi
+    - name: push
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 2
       queues:
         - push
-        - pull
-        - default
-        - mailers
-        - ingress
-      resources: *genericJobRunnerResources
-    - name: generic-4
+      resources: 
+        requests:
+          cpu: 100m
+          memory: 2Gi
+        limits:
+          memory: 2Gi
+    - name: ingress
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 2
       queues:
-        - push
-        - pull
-        - default
-        - mailers
         - ingress
-      resources: *genericJobRunnerResources
+      resources: 
+        requests:
+          cpu: 1000m
+          memory: 4Gi
+        limits:
+          memory: 6Gi
     - name: generic-5
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 2
       queues:
         - pull
-        - default
-        - mailers
-        - ingress
-        - push
-      resources: *genericJobRunnerResources
+      resources: 
+        requests:
+          cpu: 500m
+          memory: 2Gi
+        limits:
+          memory: 4Gi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
