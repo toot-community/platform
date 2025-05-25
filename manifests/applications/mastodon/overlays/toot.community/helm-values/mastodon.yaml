@@ -65,9 +65,9 @@ sidekiq:
       resources: &genericJobRunnerResources
         requests:
           cpu: 700m
-          memory: 1900Mi
+          memory: 2Gi
         limits:
-          memory: 1900Mi
+          memory: 4Gi
     - name: generic-2
       concurrency: 25
       replicaCount: 1
