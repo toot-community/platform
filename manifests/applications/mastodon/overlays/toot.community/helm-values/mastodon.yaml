@@ -77,7 +77,7 @@ sidekiq:
         - push
         - pull
         - default
-      resources: **genericJobRunnerResources
+      resources: *genericJobRunnerResources
     - name: generic-3
       concurrency: 25
       replicaCount: 1
