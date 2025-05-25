@@ -55,7 +55,7 @@ sidekiq:
   workers:
     - name: default
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 3
       queues:
         - default
       resources:
@@ -97,7 +97,7 @@ sidekiq:
           memory: 4Gi
         limits:
           memory: 6Gi
-    - name: generic-5
+    - name: pull
       concurrency: 25
       replicaCount: 1
       queues:
