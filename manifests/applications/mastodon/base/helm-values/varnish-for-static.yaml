@@ -99,9 +99,9 @@ varnish:
     }
     
     sub vcl_backend_response {
-        # 0. Bypass >50 MB
+        # 0. Bypass >100 MB
         if (beresp.http.Content-Length &&
-            std.integer(beresp.http.Content-Length,0) > 50000000) {
+            std.integer(beresp.http.Content-Length,0) > 100000000) {
             return (deliver);
         }
 
