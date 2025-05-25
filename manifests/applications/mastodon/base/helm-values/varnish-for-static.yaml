@@ -88,11 +88,6 @@ varnish:
       }
       {{- end -}}
 
-      # Never cache large files (by extension)
-      if (req.url ~ "\.(mp4|webm|mkv|avi|mov|zip|tar\.gz)$") {
-        return (pass);
-      }
-
       # Remove cookies and auth headers to increase cachability
       unset req.http.Cookie;
       unset req.http.Authorization;
