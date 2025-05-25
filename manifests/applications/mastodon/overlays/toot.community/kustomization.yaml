@@ -69,7 +69,10 @@ patches:
         path: /spec/nodeSets/0/podTemplate/spec/containers/0/resources
         value: 
           requests:
-            cpu: '1'
+            cpu: '300m'
             memory: 4Gi
           limits:
             memory: 4Gi
+      - op: replace
+        path: /spec/nodeSets/0/volumeClaimTemplates/0/spec/resources/requests/storage
+        value: 25Gi

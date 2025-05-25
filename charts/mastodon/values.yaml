@@ -59,7 +59,7 @@ configuration:
     hostname: hostname.of.s3
     region: region
     protocol: https
-    multipartThreshold: 1024000000 # 1GB (essentially disabling multipart uploads)
+    multipartThreshold: "1024000000" # 1GB (essentially disabling multipart uploads)
     timeouts:
       open: 10
       read: 10

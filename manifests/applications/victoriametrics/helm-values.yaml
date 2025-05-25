@@ -91,6 +91,13 @@ defaultDashboards:
 
 vmsingle:
   enabled: true
+  spec:
+    resources:
+      requests:
+        cpu: 350m
+        memory: 2Gi
+      limits:
+        memory: 2Gi
 
 vmcluster:
   enabled: false
