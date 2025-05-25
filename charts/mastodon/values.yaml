@@ -193,7 +193,7 @@ sidekiq:
           cpu: 500m
           memory: 1000M
         limits:
-          memory: 2000M
+          memory: 4Gi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
