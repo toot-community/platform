@@ -1,2 +1,0 @@
-varnish:
-  cachePublicInstanceEndpoints: false # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
