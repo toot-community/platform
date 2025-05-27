@@ -98,7 +98,13 @@ spec:
       labels:
         app: database-pooler-rw
     spec:
-      containers: []
+      containers:
+        - resources:
+            requests:
+              cpu: 206m
+              memory: 100Mi
+            limits:
+              memory: 100Mi
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
