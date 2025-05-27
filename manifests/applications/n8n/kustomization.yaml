@@ -14,4 +14,4 @@ resources:
 
 images:
   - name: n8nio/n8n
-    newTag: 1.94.0@sha256:82ef2eab8eae7a796cca7ce1f6f5443dbf96f9606e7714773aaccf0e920ce803
+    newTag: 1.95.1@sha256:ea6f3a249fbca9e999fcfc21ba7f02a1345ee330014b503782fc08128be1cb4a
