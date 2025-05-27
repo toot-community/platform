@@ -205,9 +205,10 @@ alertmanager:
           - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
             send_resolved: true
     route:
+      receiver: 'robusta'
       routes:
       - receiver: 'robusta'
-        group_by: [ 'namespace' ]
+        group_by: ['namespace']
         group_wait: 1s
         group_interval: 1s
         matchers:
