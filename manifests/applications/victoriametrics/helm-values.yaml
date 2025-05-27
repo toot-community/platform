@@ -197,8 +197,24 @@ coreDns:
 
 alertmanager:
   spec:
-    replicaCount: 1
-  
+    replicaCount: 2
+  config:
+    receivers:
+      - name: 'robusta'
+        webhook_configs:
+          - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
+            send_resolved: true
+    route:
+      routes:
+      - receiver: 'robusta'
+        group_by: [ 'namespace' ]
+        group_wait: 1s
+        group_interval: 1s
+        matchers:
+        - severity =~ ".*"
+        repeat_interval: 4h
+        continue: true
+
 kube-state-metrics:
   vmScrape:
     spec:
