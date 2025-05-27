@@ -128,9 +128,9 @@ vmagent:
     resources:
       requests:
         cpu: 125m
-        memory: 150Mi
+        memory: 500Mi
       limits:
-        memory: 150Mi
+        memory: 500Mi
 
 kubeEtcd:
   endpoints: *api-endpoints
