@@ -1,0 +1,22 @@
+clusterName: tootcommunity-prod
+enableHolmesGPT: true
+enablePlatformPlaybooks: true
+enablePrometheusStack: false
+enabledManagedConfiguration: true
+
+globalConfig:
+  account_id: 66d481d2-8003-4a88-8e7f-afc887cacf6a
+  signing_key: 34c7b1d6-cccb-432c-bf01-a3ad57d0114d
+
+holmes:
+  additionalEnvVars:
+  - name: ROBUSTA_AI
+    value: "true"
+
+runner:
+  sendAdditionalTelemetry: true
+
+sinksConfig:
+- robusta_sink:
+    name: robusta_ui_sink
+    token: eyJhY2NvdW50X2lkIjogIjY2ZDQ4MWQyLTgwMDMtNGE4OC04ZTdmLWFmYzg4N2NhY2Y2YSIsICJhcGlfa2V5IjogImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUp5YjJ4bElqb2lZVzV2YmlJc0ltbGhkQ0k2TVRZeU5ERTNNalF5TkN3aVpYaHdJam94T1RNNU56UTROREkwZlEuaFJMdjZQQW54MWNhdkR3bC1pWXlnQXJINHFBMERWSFluckQ3MUFzcXFQdyIsICJzdG9yZV91cmwiOiAiaHR0cHM6Ly9zcC5yb2J1c3RhLmRldiIsICJlbWFpbCI6ICJhcGl1c2VyLXRvb3QtY29tbXVuaXR5LTQ3NDY3NkByb2J1c3RhLmRldiIsICJwYXNzd29yZCI6ICIxMTdlZmMyZS03ZGVjLTQ2NmEtOTQ1Yy0xZGJmYWUwYzU5MzUifQ==
