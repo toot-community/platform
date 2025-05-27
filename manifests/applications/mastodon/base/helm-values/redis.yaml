@@ -17,6 +17,12 @@ replica:
 
 sentinel:
   enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
 
 metrics: 
   enabled: &metricsEnabled true
