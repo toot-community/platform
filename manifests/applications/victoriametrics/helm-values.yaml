@@ -114,10 +114,10 @@ vmalert:
     replicaCount: 1
     resources:
       requests:
-        cpu: 125m
-        memory: 150Mi
+        cpu: 25m
+        memory: 100Mi
       limits:
-        memory: 150Mi
+        memory: 100Mi
 
 vmagent:
   spec:
@@ -125,6 +125,12 @@ vmagent:
     extraArgs:
       promscrape.dropOriginalLabels: "true"
       promscrape.streamParse: "true"
+    resources:
+      requests:
+        cpu: 125m
+        memory: 150Mi
+      limits:
+        memory: 150Mi
 
 kubeEtcd:
   endpoints: *api-endpoints
