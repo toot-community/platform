@@ -28,6 +28,13 @@ configuration:
 
 deployNodeAgent: true
 
+resources:
+  requests:
+    cpu: 17m
+    memory: 347Mi
+  limits:
+    memory: 347Mi
+
 initContainers:
   - name: velero-plugin-for-aws
     image: velero/velero-plugin-for-aws
