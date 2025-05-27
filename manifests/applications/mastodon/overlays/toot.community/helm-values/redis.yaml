@@ -1,8 +1,8 @@
 replica:
   resources:
     requests:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 254m
+      memory: 1200Mi
     limits:
-      memory: 2Gi
-  disableCommands: [] # remove me after migration
+      memory: 1200Mi
+  # disableCommands: [] # remove me after migration
