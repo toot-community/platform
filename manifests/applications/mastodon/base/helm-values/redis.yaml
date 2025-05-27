@@ -28,3 +28,9 @@ metrics:
   enabled: &metricsEnabled true
   serviceMonitor: 
     enabled: *metricsEnabled
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
