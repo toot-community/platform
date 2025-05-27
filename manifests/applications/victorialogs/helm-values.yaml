@@ -10,10 +10,10 @@ server:
     
   resources:
     requests:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 33m
+      memory: 3Gi
     limits:
-      memory: 4Gi
+      memory: 3Gi
       
   vmServiceScrape:
     enabled: true
