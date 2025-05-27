@@ -197,7 +197,7 @@ coreDns:
 
 alertmanager:
   spec:
-    replicaCount: 2
+    replicaCount: 1
   config:
     receivers:
       - name: 'robusta'
