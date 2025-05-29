@@ -5,7 +5,8 @@ metadata:
   name: {{ include "mastodon.fullname" . }}-cleanup-unused-media
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
-spec:
+spec: 
+  concurrencyPolicy: Forbid
   schedule: {{ .Values.jobs.cleanupMedia.schedule | quote }}
   jobTemplate:
     spec:
