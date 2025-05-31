@@ -48,6 +48,7 @@ Stage 2 after ownership:
 
 - [ ] Adapt the static Varnish config to gracefully handle the S3 migration (fetch hetzer -> 404? -> fetch wasabi)
 - [ ] Migrate S3 to Hetzner. 
+  - [ ] https://flexify.io/migration
 
 At some point
 - [ ] Ko-fi aankleden met plaatjes en tekst
