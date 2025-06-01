@@ -26,5 +26,5 @@ worker_nodes = [
 ]
 
 mastodon_s3_buckets = [
-  { name = "microblog-network-assets" }
+  { name = "toot-community-assets" }
 ]
