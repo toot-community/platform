@@ -12,5 +12,6 @@ resources:
   - secrets.yaml
 
 patches:
-  - path: argocd-cm.yaml
-  - path: argocd-rbac-cm.yaml
+  - path: patches/argocd-cm.yaml
+  - path: patches/argocd-rbac-cm.yaml
+  - path: patches/redis-ha-haproxy-affinity-patch.yaml
