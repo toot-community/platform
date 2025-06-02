@@ -5,11 +5,6 @@ metadata:
 spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9 # TODO: renovate annotation
 
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://tc-prod-cnpg-toot-community
-      endpointURL: https://s3.jorijn.com
-
   # https://cloudnative-pg.io/documentation/1.16/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
   # https://cloudnative-pg.io/documentation/1.16/replica_cluster/
   # bootstrap:
@@ -69,3 +64,10 @@ spec:
       cpu: "4"
     limits:
       memory: "16Gi"
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: database-backup
+spec:
+  destinationPath: s3://tc-prod-cnpg-toot-community

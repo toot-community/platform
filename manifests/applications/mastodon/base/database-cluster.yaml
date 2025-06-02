@@ -43,21 +43,12 @@ spec:
       min_wal_size: "2GB"
       max_wal_size: "8GB"
 
-  backup:
-    barmanObjectStore:
-      # destinationPath: patch-me
-      endpointURL: https://s3.jorijn.com
-      s3Credentials:
-        accessKeyId:
-          name: database-s3-credentials
-          key: ACCESS_KEY_ID
-        secretAccessKey:
-          name: database-s3-credentials
-          key: ACCESS_SECRET_KEY
-      wal:
-        compression: gzip
-    retentionPolicy: "30d"
-
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: database-backup
+      
   resources:
     requests:
       memory: "2Gi"
@@ -78,6 +69,9 @@ spec:
   backupOwnerReference: self
   cluster:
     name: database
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
@@ -105,6 +99,7 @@ spec:
               memory: 100Mi
             limits:
               memory: 100Mi
+          name: pgbouncer
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -148,3 +143,21 @@ spec:
 #                     values:
 #                       - database-pooler-ro
 #               topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: database-backup
+spec:
+  configuration:
+    endpointURL: https://s3.jorijn.com
+    s3Credentials:
+      accessKeyId:
+        name: database-s3-credentials
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: database-s3-credentials
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+  retentionPolicy: "30d"

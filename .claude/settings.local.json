@@ -1,0 +1,12 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(kustomize build:*)",
+      "Bash(git add:*)",
+      "Bash(grep:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": []
+  }
+}
