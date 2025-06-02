@@ -50,6 +50,17 @@
       ],
       "addLabels": [
         "dependency::postgresql"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/postgresql"
+      ],
+      "matchFileNames": [
+        "manifests/applications/mastodon/overlays/toot.community/database-cluster.yaml"
       ],
       "allowedVersions": "~16"
     }
