@@ -49,31 +49,12 @@ spec:
             {{- end }}
             - -c
             - {{ .concurrency | quote }}
+          envFrom:
+            {{- include "mastodon.commonEnvFrom" $context | nindent 12 }}
           env:
             - name: DB_POOL
               value: {{ .concurrency | quote }}
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  key: {{ $context.Values.configuration.database.credentials.usernameKey }}
-                  name: {{ $context.Values.configuration.database.credentials.secretName }}
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  key: {{ $context.Values.configuration.database.credentials.passwordKey }}
-                  name: {{ $context.Values.configuration.database.credentials.secretName }}
-            {{- if $context.Values.configuration.search.enabled }}
-            - name: ES_PASS
-              valueFrom:
-                secretKeyRef:
-                  key: {{ $context.Values.configuration.search.password.secretKeyRef.key }}
-                  name: {{ $context.Values.configuration.search.password.secretKeyRef.name }}
-            {{- end }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "mastodon.fullname" $context }}-env
-            - secretRef:
-                name: {{ include "mastodon.fullname" $context }}-secrets-env
+            {{- include "mastodon.commonEnv" $context | nindent 12 }}
           image: "{{ $context.Values.image.repository }}:{{ $context.Values.image.tag | default $context.Chart.AppVersion }}"
           imagePullPolicy: {{ $context.Values.image.pullPolicy }}
           name: mastodon
