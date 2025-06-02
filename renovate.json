@@ -6,6 +6,18 @@
   "labels": [
     "renovate"
   ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^manifests/applications/mastodon/.*/database-cluster\\.yaml$"
+      ],
+      "matchStrings": [
+        "imageName: (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[0-9]+\\.[0-9]+).*# TODO: renovate annotation"
+      ],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://ghcr.io"
+    }
+  ],
   "packageRules": [
     {
       "matchManagers": [
@@ -27,6 +39,17 @@
       ],
       "matchFileNames": [
         "platform/**/*.tf"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/postgresql"
+      ],
+      "addLabels": [
+        "dependency::postgresql"
       ]
     }
   ]
