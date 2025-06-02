@@ -12,7 +12,7 @@
         "^manifests/applications/mastodon/.*/database-cluster\\.yaml$"
       ],
       "matchStrings": [
-        "imageName: (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[0-9]+\\.[0-9]+).*# TODO: renovate annotation"
+        "imageName: (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[0-9]+\\.[0-9]+)"
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://ghcr.io"
