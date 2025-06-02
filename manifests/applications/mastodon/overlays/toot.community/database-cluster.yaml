@@ -70,4 +70,5 @@ kind: ObjectStore
 metadata:
   name: database-backup
 spec:
-  destinationPath: s3://tc-prod-cnpg-toot-community
+  configuration:
+    destinationPath: s3://tc-prod-cnpg-toot-community
