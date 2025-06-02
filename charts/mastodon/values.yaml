@@ -181,6 +181,7 @@ streaming:
   redis:
     url: redis://haproxy-redis:6379
   baseURL: wss://streaming.toot.community
+  databaseSslMode: no-verify
 
 sidekiq:
   workers:

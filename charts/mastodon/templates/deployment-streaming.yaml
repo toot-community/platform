@@ -57,6 +57,8 @@ spec:
                   name: {{ .Values.configuration.database.credentials.secretName }}
             - name: PORT
               value: {{ .Values.streaming.port | quote }}
+            - name: DB_SSLMODE
+              value: {{ .Values.streaming.databaseSslMode | quote }}
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env

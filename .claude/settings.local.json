@@ -5,7 +5,10 @@
       "Bash(kustomize build:*)",
       "Bash(git add:*)",
       "Bash(grep:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

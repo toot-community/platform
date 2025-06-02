@@ -22,21 +22,22 @@ After taking ownership:
 - [ ] DeepL no longer free?
 - [x] Translation endpoint is causing 500s
 - [x] Source IP isn't correctly passed on in the chain
-- [ ] Set up MC mirror of Toot assets to NAS (Minio)
+- [x] Set up MC mirror of Toot assets to NAS (Minio)
 - [x] N8N workflows?
 - [x] [](https://toot.community/notifications/requests/114508118978012662)
 - [x] IMAP migrate support@toot.community
 - [x] DNSsec voor toot.c
 - [x] es resolving werkt nog niet
 - [x] email werkt nog niet
-- [ ] iftas sync?
+- [x] iftas sync?
 - [x] Talos netkit support [text](https://github.com/siderolabs/talos/issues/9181)
 - [x] Velero restore -> first restore PV/pod, then Elastic/DB cluster manager resources
 - [x] Was bezig met S3 gateway, werkt niet. Conn refused vanuit ingress. Was template aan 't mounten om echte melding te zien. 
 - [x] Prepare secrets and values file for toot.commmunity
 - [x] Rotate nodes to bigger ones
 - [x] Increase resources for DB, tune values/resources for Mastodon
-- [ ] Patch argo haproxy to allow multiple pods on the same node
+- [x] Patch argo haproxy to allow multiple pods on the same node
+- [ ] Set up Flexify for S3 sync pipeline
 
 After migration:
 - [ ] Cleanup PSQL users: barman, datadog, n8n, streaming_barman, toot_rep, v-oidc-CgU-tootcomm-KxwpjS1lCNIzfyIMsI1J-1707073445, v-oidc-CgU-tootcomm-g8Ct2h5EpMzPtBuNGjuu-1707051377, vault
@@ -54,4 +55,4 @@ At some point
 - [ ] Ko-fi aankleden met plaatjes en tekst
 - [ ] Patreon aankleden met plaatjes en tekst
 - [ ] Eigen PayPal voor toot.c
-- [ ] kennismaken met solarbranka
+- [x] kennismaken met solarbranka
