@@ -17,6 +17,8 @@ podSecurityContext:
   runAsGroup: 991
   runAsUser: 991
 
+terminationGracePeriodSeconds: 30
+
 securityContext:
   allowPrivilegeEscalation: false
   capabilities:
@@ -92,6 +94,7 @@ web:
   domain: toot.community
   concurrency: 2
   maxThreads: 5
+  port: 3000
   resources:
     requests:
       cpu: 500m
@@ -136,6 +139,8 @@ streaming:
     pullPolicy: IfNotPresent
     tag: v4.3.8@sha256:9c258e83c69b7e6219425b1867e5851ffd53c9029e19e831bd31be8d80c5b42a
   replicaCount: 2
+  clusterNum: 1
+  port: 4000
   strategy:
     rollingUpdate:
       maxSurge: 25%

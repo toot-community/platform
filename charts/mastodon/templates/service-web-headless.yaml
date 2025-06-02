@@ -8,7 +8,7 @@ spec:
   clusterIP: None
   ports:
     - name: http
-      port: 3000
+      port: {{ .Values.web.port }}
       targetPort: http
   selector:
     app.kubernetes.io/component: web

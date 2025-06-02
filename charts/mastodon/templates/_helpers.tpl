@@ -172,7 +172,7 @@ template:
       {{- end }}
     spec:
       {{- include "mastodon.podSpec" . | nindent 6 }}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
         - name: {{ include "mastodon.fullname" . }}-db-migrate
           {{- include "mastodon.containerBase" . | nindent 10 }}

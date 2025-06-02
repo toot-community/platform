@@ -44,13 +44,13 @@ spec:
             {{- include "mastodon.commonEnvFrom" . | nindent 12 }}
           env:
             - name: PORT
-              value: "3000"
+              value: {{ .Values.web.port | quote }}
             {{- include "mastodon.commonEnv" . | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: web
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.web.port }}
               name: http
               protocol: TCP
           readinessProbe:
@@ -65,4 +65,4 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

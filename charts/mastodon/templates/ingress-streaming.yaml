@@ -20,7 +20,7 @@ spec:
               service:
                 name: {{ include "mastodon.fullname" . }}-streaming
                 port:
-                  number: 4000
+                  number: {{ .Values.streaming.port }}
             path: /api/v1/streaming
             pathType: ImplementationSpecific
   tls:

@@ -56,9 +56,7 @@ spec:
                   key: {{ .Values.configuration.database.credentials.passwordKey }}
                   name: {{ .Values.configuration.database.credentials.secretName }}
             - name: PORT
-              value: "4000"
-            - name: DB_SSLMODE
-              value: "disable" # TODO: set to no-verify (or empty)
+              value: {{ .Values.streaming.port | quote }}
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
@@ -66,7 +64,7 @@ spec:
           imagePullPolicy: {{ .Values.streaming.image.pullPolicy }}
           name: streaming
           ports:
-            - containerPort: 4000
+            - containerPort: {{ .Values.streaming.port }}
               name: streaming
               protocol: TCP
           readinessProbe:
@@ -81,4 +79,4 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

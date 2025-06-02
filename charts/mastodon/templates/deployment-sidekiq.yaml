@@ -68,5 +68,5 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" $context }}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ $context.Values.terminationGracePeriodSeconds }}
 {{- end }}

@@ -32,7 +32,7 @@ spec:
             - while true; do sleep 30; done
           env:
             - name: PORT
-              value: "3000"
+              value: {{ .Values.web.port | quote }}
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -64,5 +64,5 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- end -}}

@@ -38,7 +38,7 @@ data:
   SMTP_FROM_ADDRESS: {{ .Values.configuration.smtp.fromAddress }}
   SMTP_SERVER: {{ .Values.configuration.smtp.smtpServer }}
   SMTP_TLS: "true"
-  STREAMING_CLUSTER_NUM: "1"
+  STREAMING_CLUSTER_NUM: {{ .Values.streaming.clusterNum | quote }}
   WEB_DOMAIN: {{ .Values.web.domain }}
   WEB_CONCURRENCY: {{ .Values.web.concurrency | quote }}
   MAX_THREADS: {{ .Values.web.maxThreads | quote }}

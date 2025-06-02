@@ -36,7 +36,7 @@ spec:
                   {{- if .Values.ingress.web.servicePortOverride }}
                   number: {{ .Values.ingress.web.servicePortOverride }}
                   {{- else }}
-                  number: 3000
+                  number: {{ .Values.web.port }}
                   {{- end }}
             path: /
             pathType: ImplementationSpecific
