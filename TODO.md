@@ -6,7 +6,7 @@
 
 After taking ownership:
 
-- [ ] Run a full recount on all Redis metrics, follower counts, etc. are incorrect (tootctl cache recount)
+- [x] Run a full recount on all Redis metrics, follower counts, etc. are incorrect (tootctl cache recount)
 - [x] Check streaming
 - [x] Set up Kubernetes access using OIDC with Dex
 - [x] Set up Dex using the GitHub organization
