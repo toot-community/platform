@@ -96,15 +96,6 @@ varnish:
       {{ end }}
     }
     
-    {{- if .Values.migration.enabled }}
-    sub vcl_backend_retry {
-      # On retry, switch to secondary backend
-      if (bereq.retries == 1) {
-        set bereq.http.X-Varnish-Backend = "secondary";
-      }
-    }
-    {{- end }}
-    
     sub vcl_recv {
       set req.backend_hint = d.backend("{{ .Values.backend.host }}");
 
@@ -139,7 +130,8 @@ varnish:
     sub vcl_backend_response {
         {{- if .Values.migration.enabled }}
         # Migration mode: retry with secondary backend on any non-OK status
-        if (beresp.status >= 400 && bereq.http.X-Varnish-Backend != "secondary") {
+        if (beresp.status >= 400 && bereq.http.X-Varnish-Backend != "secondary" && bereq.retries == 0) {
+            set bereq.http.X-Varnish-Backend = "secondary";
             return (retry);
         }
         
