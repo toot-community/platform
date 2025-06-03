@@ -10,11 +10,11 @@ configuration:
   authorizedFetch: false
 
   s3:
-    endpoint: https://s3.eu-central-2.wasabisys.com
-    hostname: s3.eu-central-2.wasabisys.com
-    region: eu-central-2
+    endpoint: https://fsn1.your-objectstorage.com
+    hostname: fsn1.your-objectstorage.com
+    region: fsn1
     aliasHost: *staticDomain
-    bucket: toot-community-assets-production
+    bucket: toot-community-assets
     
   smtp:
     domain: *instanceDomain
