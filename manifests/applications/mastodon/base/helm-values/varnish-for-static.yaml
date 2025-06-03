@@ -1,6 +1,13 @@
 onload: 
   host: haproxy-onload.haproxy-onload.svc.cluster.local
   port: 8080
+
+# Migration mode configuration
+migration:
+  enabled: false
+  secondary:
+    host: secondary-bucket.example.com
+    port: 443
   
 varnish:
   size: 256M
@@ -49,18 +56,54 @@ varnish:
             via = proxy,
             whitelist = ipv4_only
         );
+        {{- if .Values.migration.enabled }}
+        new d_secondary = dynamic.director(
+            port = "{{ .Values.migration.secondary.port }}",
+            ttl = 60s,
+            via = proxy,
+            whitelist = ipv4_only
+        );
+        {{- end }}
     }
     
     sub vcl_backend_fetch {
+      {{- if .Values.migration.enabled }}
+      if (bereq.http.X-Varnish-Backend == "secondary") {
+        set bereq.backend = d_secondary.backend("{{ .Values.migration.secondary.host }}");
+        set bereq.http.Host = "{{ .Values.migration.secondary.host }}";
+        set bereq.http.X-Backend-Source = "secondary";
+      } else {
+        set bereq.http.Host = "{{ .Values.backend.host }}";
+        set bereq.http.X-Backend-Source = "primary";
+      }
+      {{- else }}
       set bereq.http.Host = "{{ .Values.backend.host }}";
+      set bereq.http.X-Backend-Source = "primary";
+      {{- end }}
     }
     
     sub vcl_deliver {
+      {{- if .Values.migration.enabled }}
+      # Add header to show which backend served the content
+      if (resp.http.X-Backend-Source) {
+        set resp.http.X-Served-By = resp.http.X-Backend-Source;
+      }
+      {{- end }}
+      
       # Remove headers that are not needed
       {{ range $header := .Values.varnish.removeResponseHeaders }}
         unset resp.http.{{ $header }};
       {{ end }}
     }
+    
+    {{- if .Values.migration.enabled }}
+    sub vcl_backend_retry {
+      # On retry, switch to secondary backend
+      if (bereq.retries == 1) {
+        set bereq.http.X-Varnish-Backend = "secondary";
+      }
+    }
+    {{- end }}
     
     sub vcl_recv {
       set req.backend_hint = d.backend("{{ .Values.backend.host }}");
@@ -94,6 +137,18 @@ varnish:
     }
     
     sub vcl_backend_response {
+        {{- if .Values.migration.enabled }}
+        # Migration mode: retry with secondary backend on any non-OK status
+        if (beresp.status >= 400 && bereq.http.X-Varnish-Backend != "secondary") {
+            return (retry);
+        }
+        
+        # Copy backend source info to response for client visibility
+        if (bereq.http.X-Backend-Source) {
+            set beresp.http.X-Backend-Source = bereq.http.X-Backend-Source;
+        }
+        {{- end }}
+        
         # 0. Bypass >100 MB
         if (beresp.http.Content-Length &&
             std.integer(beresp.http.Content-Length,0) > 100000000) {

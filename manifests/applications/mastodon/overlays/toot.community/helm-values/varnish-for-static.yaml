@@ -1,6 +1,13 @@
 backend:
-  host: toot-community-assets-production.s3.eu-central-2.wasabisys.com
+  host: toot-community-assets.fsn1.your-objectstorage.com
   port: 443
+
+# Enable migration mode with secondary S3 bucket
+migration:
+  enabled: true
+  secondary:
+    host: toot-community-assets-production.s3.eu-central-2.wasabisys.com
+    port: 443
 
 resources:
   requests:
