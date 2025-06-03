@@ -78,7 +78,6 @@ varnish:
       }
       {{- else }}
       set bereq.http.Host = "{{ .Values.backend.host }}";
-      set bereq.http.X-Backend-Source = "primary";
       {{- end }}
     }
     
