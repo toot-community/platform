@@ -9,7 +9,6 @@ server:
     loggerFormat: json
     httpListenAddr: :9428
     http.shutdownDelay: 15s
-    loki.disableMessageParsing: true
   
   persistentVolume:
     enabled: true
