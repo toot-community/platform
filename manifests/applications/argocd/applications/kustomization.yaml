@@ -11,6 +11,7 @@ resources:
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
   - metrics-server.yaml
+  - microblog-network.yaml
   - talos-ccm.yaml
   - velero.yaml
   - victoriametrics.yaml
