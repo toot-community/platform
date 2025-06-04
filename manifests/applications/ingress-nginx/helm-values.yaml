@@ -25,7 +25,7 @@ controller:
     # proxy-real-ip-cidr: "10.0.0.0/16"
     use-proxy-protocol: "true"
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#block-user-agents
-    block-user-agents: "^meta-externalagent.*"
+    block-user-agents: "meta-externalagent"
 
   metrics:
     enabled: true
