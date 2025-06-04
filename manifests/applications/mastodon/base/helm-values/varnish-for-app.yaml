@@ -133,8 +133,7 @@ varnish:
         
         if (resp.status == 200 && req.url == "/robots.txt") {
             set resp.http.Content-Type = "text/plain; charset=utf-8";
-            synthetic({"\
-    User-agent: GPTBot
+            synthetic({"User-agent: GPTBot
     Disallow: /
     
     User-agent: meta-externalagent
