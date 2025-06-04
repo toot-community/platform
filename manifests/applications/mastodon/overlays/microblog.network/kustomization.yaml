@@ -11,7 +11,7 @@ resources:
 
 helmCharts:
   - name: redis
-    version: "21.1.6"
+    version: "21.1.11"
     releaseName: redis
     namespace: *namespace
     valuesFile: ../../base/helm-values/redis.yaml
