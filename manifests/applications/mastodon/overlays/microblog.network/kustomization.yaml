@@ -50,7 +50,7 @@ helmCharts:
 
 images:
   - name: ghcr.io/mastodon/mastodon
-    newTag: "v4.4.0-beta.1@sha256:d3feba9760122510043d3b0fe83d63bcfe06ca70000062bec03934560cd167aa"
+    newTag: "v4.4.0-beta.1@sha256:49d58b37ff8a1e282e6bef2eae2ea9e0c1d7f39dc62d7e2595b06949fec25c4d"
   - name: ghcr.io/mastodon/mastodon-streaming
     newTag: "v4.4.0-beta.1@sha256:68f13a267be257e64ace7a366e80debce4753eb8719a175a9b98705c926f29a1"
   - name: varnish
