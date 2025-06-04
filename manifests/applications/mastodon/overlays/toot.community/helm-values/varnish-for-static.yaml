@@ -4,7 +4,7 @@ backend:
 
 # Enable migration mode with secondary S3 bucket
 migration:
-  enabled: true
+  enabled: false
   secondary:
     host: toot-community-assets-production.s3.eu-central-2.wasabisys.com
     port: 443
