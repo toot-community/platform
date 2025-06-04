@@ -17,6 +17,9 @@ victoria-metrics-operator:
       enabled: true
 
   replicaCount: 1
+  enabled: true
+  serviceMonitor:
+    enabled: true
 
 grafana:
   vmScrape:
