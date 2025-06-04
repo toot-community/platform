@@ -33,6 +33,10 @@ varnish:
             return (synth(200, "OK"));
         }
         
+        if (req.url == "/robots.txt") {
+            return (synth(200, "robots"));
+        }
+        
         # Bypass cache for Sidekiq dashboard
         if (req.url ~ "^/sidekiq") {
             return (pass);
@@ -124,6 +128,23 @@ varnish:
         if (resp.status == 200 && req.url == "/__health") {
             set resp.http.Content-Type = "text/plain";
             set resp.body = "Varnish is healthy\n";
+            return (deliver);
+        }
+        
+        if (resp.status == 200 && req.url == "/robots.txt") {
+            set resp.http.Content-Type = "text/plain";
+            set resp.body = "User-agent: GPTBot
+        Disallow: /
+        
+        User-agent: meta-externalagent
+        Disallow: /
+        
+        User-agent: *
+        Disallow: /media_proxy/
+        Disallow: /interact/
+        Disallow: /api/v1/instance/domain_blocks
+        ";
+
             return (deliver);
         }
     }
