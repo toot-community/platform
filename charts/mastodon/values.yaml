@@ -248,7 +248,7 @@ ingress:
 jobs:
   annotations: ~
   cleanupMedia:
-    enabled: true
+    enabled: false
     schedule: "0 5 * * *" # every day at 5am
     days: 7
     resources:
@@ -258,7 +258,7 @@ jobs:
       limits:
         memory: 750M
   statusesRemove:
-    enabled: true
+    enabled: false
     schedule: "5 4 * * 6"
     days: 90
     resources:
@@ -268,7 +268,7 @@ jobs:
       limits:
         memory: 1500M
   cleanupMediaProfiles:
-    enabled: true
+    enabled: false
     schedule: "0 5 * * *" # every day at 5am
     days: 14
     resources:
@@ -287,7 +287,7 @@ jobs:
       limits:
         memory: 584M
   removePreviewCards:
-    enabled: true
+    enabled: false
     schedule: "0 5 * * 1" # every monday at 5am
     resources:
       requests:
