@@ -1,6 +1,9 @@
 backend:
   host: microblog-network-assets.fsn1.your-objectstorage.com
   port: 443
+
+persistence:
+  size: 6Gi  # 5G file + overhead
   
 ingress:
   enabled: true

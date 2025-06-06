@@ -13,8 +13,6 @@ varnish:
     - -p
     - thread_pool_max=2000
     - -p
-    - thread_pool_stack=48k
-    - -p
     - workspace_client=128k
     - -p
     - workspace_backend=128k
