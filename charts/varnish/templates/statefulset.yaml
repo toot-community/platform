@@ -1,6 +1,6 @@
-{{- if eq .Values.deploymentType "deployment" }}
+{{- if eq .Values.deploymentType "statefulset" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "varnish.fullname" . }}
   labels:
@@ -9,9 +9,13 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  serviceName: {{ include "varnish.fullname" . }}
   selector:
     matchLabels:
       {{- include "varnish.selectorLabels" . | nindent 6 }}
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       annotations:
@@ -81,6 +85,10 @@ spec:
               mountPath: /etc/varnish/default.vcl
               subPath: configuration.vcl
               readOnly: true
+            {{- if .Values.persistence.enabled }}
+            - name: varnish-storage
+              mountPath: /var/cache/varnish
+            {{- end }}
       volumes:
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
@@ -103,4 +111,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: varnish-storage
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+  {{- end }}
 {{- end }}

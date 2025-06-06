@@ -1,3 +1,46 @@
+deploymentType: statefulset
+
+persistence:
+  enabled: true
+  size: 6Gi  # 5G file + overhead
+
+initContainers:
+  - name: storage-init
+    image: busybox
+    command: 
+      - 'sh'
+      - '-c'
+      - |
+        if [ ! -f /var/cache/varnish/storage.bin ]; then
+          echo "Creating varnish storage file with size ${VARNISH_SIZE:-5G}..."
+          # Convert size to bytes for fallocate (remove G suffix and multiply by 1024^3)
+          SIZE_IN_BYTES=$(echo "${VARNISH_SIZE:-5G}" | sed 's/G$//' | awk '{print int($1 * 1024 * 1024 * 1024)}')
+          fallocate -l $SIZE_IN_BYTES /var/cache/varnish/storage.bin
+          echo "Storage file created successfully"
+        else
+          echo "Storage file already exists, skipping creation"
+        fi
+    env:
+      - name: VARNISH_SIZE
+        value: "{{ .Values.varnish.size }}"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: ["ALL"]
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+    volumeMounts:
+    - name: varnish-storage
+      mountPath: /var/cache/varnish
+
 onload: 
   host: haproxy-onload.haproxy-onload.svc.cluster.local
   port: 8080
@@ -10,7 +53,7 @@ migration:
     port: 443
   
 varnish:
-  size: 256M
+  size: 5G
   removeResponseHeaders:
     - "x-amz-request-id" # hetzner
     - "x-debug-bucket" # hetzner
@@ -25,6 +68,15 @@ varnish:
     enabled: true
     requiredHeader: X-TC-Purge-Key
     requiredPassword: ThisIsNotVerySecret
+  extraArgs:
+    - -s
+    - file,/var/cache/varnish/storage.bin,$VARNISH_SIZE,granularity=1M,advice=sequentia
+    - -p
+    - thread_pools=2
+    - -p
+    - thread_pool_min=200
+    - -p
+    - thread_pool_max==3000
 
   configuration: |
     |-
@@ -101,6 +153,15 @@ varnish:
       # Health check
       if (req.url == "/__health") {
         return (synth(200, "OK"));
+      }
+      
+      # Backend health check - returns backend health status
+      if (req.url == "/__backend_health") {
+        if (std.healthy(req.backend_hint)) {
+          return (synth(200, "Backend healthy"));
+        } else {
+          return (synth(503, "Backend unhealthy"));
+        }
       }
       
       {{- if .Values.varnish.purge.enabled -}}

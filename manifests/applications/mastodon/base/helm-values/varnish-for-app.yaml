@@ -5,6 +5,21 @@ backend:
 varnish:
   size: 256M
   cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
+  extraArgs:
+    - -s
+    - malloc,$VARNISH_SIZE
+    - -p
+    - thread_pool_min=100
+    - -p
+    - thread_pool_max==2000
+    - -p
+    - thread_pool_stack=48k
+    - -p
+    - workspace_client=128k
+    - -p
+    - workspace_backend=128k
+    - -p
+    - http_req_hdr_len=16k
   configuration: |
     |-
     vcl 4.1;
@@ -13,6 +28,7 @@ varnish:
     include "hit-miss.vcl";
     
     import dynamic;
+    import std;
 
     backend default none;
     
@@ -31,6 +47,15 @@ varnish:
     
         if (req.url == "/__health") {
             return (synth(200, "OK"));
+        }
+        
+        # Backend health check - returns backend health status
+        if (req.url == "/__backend_health") {
+            if (std.healthy(req.backend_hint)) {
+                return (synth(200, "Backend healthy"));
+            } else {
+                return (synth(503, "Backend unhealthy"));
+            }
         }
         
         # Bypass cache for Sidekiq dashboard

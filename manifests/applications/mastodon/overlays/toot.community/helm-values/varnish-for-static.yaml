@@ -17,7 +17,47 @@ resources:
     memory: 4Gi
     
 varnish:
-  size: 1700m
+  size: 10G
+
+persistence:
+  size: 12Gi  # 10G file + overhead
+
+initContainers:
+  - name: storage-init
+    image: busybox
+    command: 
+      - 'sh'
+      - '-c'
+      - |
+        if [ ! -f /var/cache/varnish/storage.bin ]; then
+          echo "Creating varnish storage file with size ${VARNISH_SIZE:-5G}..."
+          # Convert size to bytes for fallocate (remove G suffix and multiply by 1024^3)
+          SIZE_IN_BYTES=$(echo "${VARNISH_SIZE:-5G}" | sed 's/G$//' | awk '{print int($1 * 1024 * 1024 * 1024)}')
+          fallocate -l $SIZE_IN_BYTES /var/cache/varnish/storage.bin
+          echo "Storage file created successfully"
+        else
+          echo "Storage file already exists, skipping creation"
+        fi
+    env:
+      - name: VARNISH_SIZE
+        value: "{{ .Values.varnish.size }}"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: ["ALL"]
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+    volumeMounts:
+    - name: varnish-storage
+      mountPath: /var/cache/varnish
 
 ingress:
   enabled: true

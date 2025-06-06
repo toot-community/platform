@@ -60,3 +60,25 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate varnish command with extraArgs
+*/}}
+{{- define "varnish.command" -}}
+{{- if .Values.varnish.extraArgs }}
+command:
+  - varnishd
+  - -F
+  - -f
+  - /etc/varnish/default.vcl
+  - -a
+  - http=:{{ .Values.service.port }},HTTP
+  - -a
+  - proxy=:8443,PROXY
+  - -p
+  - feature=+http2
+  {{- range .Values.varnish.extraArgs }}
+  - {{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}

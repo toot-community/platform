@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# This sets the deployment type: "deployment" or "statefulset"
+deploymentType: deployment
+
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 2
 
@@ -109,6 +112,16 @@ volumes:
 volumeMounts:
   - name: varnish-cache
     mountPath: /var/lib/varnish
+
+# Persistence configuration (only used when deploymentType is "statefulset")
+persistence:
+  enabled: false
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 20Gi
+  
+# Additional init containers to run before the main container
+initContainers: []
 
 nodeSelector: {}
 
