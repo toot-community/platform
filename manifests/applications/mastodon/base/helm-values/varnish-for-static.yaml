@@ -70,7 +70,7 @@ varnish:
     requiredPassword: ThisIsNotVerySecret
   extraArgs:
     - -s
-    - file,/var/cache/varnish/storage.bin,$VARNISH_SIZE,granularity=1M,advice=sequentia
+    - file,/var/cache/varnish/storage.bin,{{ .Values.varnish.size }},granularity=1M,advice=sequential
     - -p
     - thread_pools=2
     - -p

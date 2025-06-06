@@ -78,7 +78,7 @@ command:
   - -p
   - feature=+http2
   {{- range .Values.varnish.extraArgs }}
-  - {{ . }}
+  - {{ tpl . $ }}
   {{- end }}
 {{- end }}
 {{- end }}

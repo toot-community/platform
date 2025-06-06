@@ -7,7 +7,7 @@ varnish:
   cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
   extraArgs:
     - -s
-    - malloc,$VARNISH_SIZE
+    - malloc,{{ .Values.varnish.size }}
     - -p
     - thread_pool_min=100
     - -p
