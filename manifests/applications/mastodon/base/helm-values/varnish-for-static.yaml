@@ -76,7 +76,7 @@ varnish:
     - -p
     - thread_pool_min=200
     - -p
-    - thread_pool_max==3000
+    - thread_pool_max=3000
 
   configuration: |
     |-

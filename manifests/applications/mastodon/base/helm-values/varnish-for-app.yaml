@@ -11,7 +11,7 @@ varnish:
     - -p
     - thread_pool_min=100
     - -p
-    - thread_pool_max==2000
+    - thread_pool_max=2000
     - -p
     - thread_pool_stack=48k
     - -p
