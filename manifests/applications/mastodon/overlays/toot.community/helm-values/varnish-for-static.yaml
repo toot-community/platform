@@ -12,15 +12,15 @@ migration:
 resources:
   requests:
     cpu: 10m
-    memory: 4Gi
+    memory: 2Gi
   limits:
-    memory: 4Gi
+    memory: 2Gi
     
 varnish:
-  size: 10G
+  size: 50G
 
 persistence:
-  size: 12Gi  # 10G file + overhead
+  size: 55Gi
 
 initContainers:
   - name: storage-init
