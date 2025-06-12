@@ -71,4 +71,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    destinationPath: s3://tc-prod-cnpg-toot-community
+    endpointURL: https://fsn1.your-objectstorage.com
+    destinationPath: s3://toot-community-cnpg-storage
