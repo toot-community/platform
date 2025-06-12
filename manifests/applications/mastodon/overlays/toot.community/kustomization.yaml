@@ -57,7 +57,7 @@ images:
     newTag: "v4.4.0-beta.1@sha256:68f13a267be257e64ace7a366e80debce4753eb8719a175a9b98705c926f29a1"
   - name: varnish
     # newName: jorijn/test-varnish-arm-jemalloc
-    newTag: "7.7.1@sha256:97bbe53b53547f8ae5325a40f1bef1b302f919f6124cd9ac84c1f332ad3cefbd"
+    newTag: "7.7.1@sha256:38d0b83c25baac223b6028240d2f7f11ec56a5c1d1aaa0b9dea488dbe7f29089"
  
 patches:
   - path: database-cluster.yaml
