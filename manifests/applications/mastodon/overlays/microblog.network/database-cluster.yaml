@@ -11,4 +11,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    destinationPath: s3://tc-prod-cnpg-microblog-network
+    endpointURL: https://s3.storage.jorijn.com
+    destinationPath: s3://microblog-network-cnpg-storage/
