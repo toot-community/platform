@@ -71,5 +71,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://fsn1.your-objectstorage.com
+    endpointURL: https://s3.storage.jorijn.com
     destinationPath: s3://toot-community-cnpg-storage
