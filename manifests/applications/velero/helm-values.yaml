@@ -2,13 +2,13 @@
   prefix: backups
   region: us-east-1
   s3ForcePathStyle: "true"
-  s3Url: https://s3.jorijn.com
-  publicUrl: https://s3.jorijn.com
+  s3Url: https://s3.storage.jorijn.com
+  publicUrl: https://s3.storage.jorijn.com
 
 .backupLocation: &backupLocation
   provider: aws
   default: true
-  bucket: tc-prod-velero
+  bucket: toot-community-velero
   credential:
     name: velero-s3-credentials
     key: credentials
