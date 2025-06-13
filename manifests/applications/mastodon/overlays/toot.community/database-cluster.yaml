@@ -72,4 +72,4 @@ metadata:
 spec:
   configuration:
     endpointURL: https://s3.storage.jorijn.com
-    destinationPath: s3://toot-community-cnpg-storage
+    destinationPath: s3://toot-community-cnpg-storage/database
