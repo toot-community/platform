@@ -11,10 +11,10 @@ migration:
 
 resources:
   requests:
-    cpu: 10m
-    memory: 2Gi
+    cpu: 13m
+    memory: 512Mi
   limits:
-    memory: 2Gi
+    memory: 512Mi
     
 varnish:
   size: 50G

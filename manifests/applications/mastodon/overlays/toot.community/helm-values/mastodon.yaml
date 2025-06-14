@@ -29,8 +29,8 @@ web:
   replicaCount: 3
   resources:
     requests:
-      cpu: 600m
-      memory: 1500Mi
+      cpu: 866m
+      memory: 2403Mi
     limits:
       memory: 4Gi
   
