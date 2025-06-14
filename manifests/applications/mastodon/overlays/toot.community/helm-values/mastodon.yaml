@@ -115,10 +115,10 @@ sidekiq:
         - scheduler
       resources:
         requests:
-          cpu: 438m
-          memory: 841Mi
+          cpu: 144m
+          memory: 437Mi
         limits:
-          memory: 841Mi
+          memory: 700Mi
           
 jobs:
   removePreviewCards:
