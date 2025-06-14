@@ -8,10 +8,10 @@ replica:
   replicaCount: 3
   resources:
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 39m
+      memory: 100Mi
     limits:
-      memory: 512Mi
+      memory: 100Mi
   podLabels:
     velero.io/backup: "true"
 

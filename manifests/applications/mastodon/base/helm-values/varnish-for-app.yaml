@@ -2,6 +2,13 @@ backend:
   host: mastodon-web-headless
   port: 3000
 
+resources:
+  requests:
+    cpu: 11m
+    memory: 192Mi
+  limits:
+    memory: 192Mi
+
 varnish:
   size: 256M
   cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled

@@ -97,10 +97,10 @@ web:
   port: 3000
   resources:
     requests:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 275m
+      memory: 1045Mi
     limits:
-      memory: 4Gi # higher due to the need to convert big images using ImageMagick
+      memory: 1045Mi
   startupProbe:
     httpGet:
       port: http
@@ -196,10 +196,10 @@ sidekiq:
         - pull
       resources:
         requests:
-          cpu: 500m
-          memory: 1000M
+          cpu: 110m
+          memory: 3853Mi
         limits:
-          memory: 4Gi
+          memory: 3853Mi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
@@ -207,10 +207,10 @@ sidekiq:
         - scheduler
       resources:
         requests:
-          cpu: 100m
-          memory: 300Mi
+          cpu: 144m
+          memory: 437Mi
         limits:
-          memory: 1800Mi
+          memory: 437Mi
 
 ingress:
   web:
