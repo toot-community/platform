@@ -7,6 +7,7 @@ resources:
   - cilium.yaml
   - cloudnative-pg.yaml
   - dex.yaml
+  - n8n.yaml
   - elastic-operator.yaml
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
