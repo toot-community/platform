@@ -128,4 +128,4 @@ jobs:
         memory: 400Mi
       limits:
         memory: 2000Mi
-    days: 180
+    days: 30
