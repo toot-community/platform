@@ -16,16 +16,22 @@ server:
     
   resources:
     requests:
-      cpu: 33m
-      memory: 3Gi
+      cpu: 46m
+      memory: 2860Mi
     limits:
-      memory: 3Gi
+      memory: 2860Mi
       
   vmServiceScrape:
     enabled: true
     
 vector:
   enabled: true
+  resources:
+    requests:
+      cpu: 91m
+      memory: 525Mi
+    limits:
+      memory: 525Mi
   
 dashboards:
   enabled: true
