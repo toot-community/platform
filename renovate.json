@@ -10,7 +10,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^manifests/applications/mastodon/.*/database-cluster\\.yaml$/"
+        "\\.yaml$/"
       ],
       "matchStrings": [
         "imageName: (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[0-9]+\\.[0-9]+)"
