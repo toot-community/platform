@@ -34,10 +34,10 @@ spec:
           runAsNonRoot: true
         resources:
           requests:
-            cpu: 451m
-            memory: 310Mi
+            cpu: 10m
+            memory: 312Mi
           limits:
-            memory: 310Mi
+            memory: 312Mi
         livenessProbe:
           failureThreshold: 3
           httpGet:
