@@ -76,7 +76,7 @@ controller:
 
   resources:
     requests:
-      cpu: 170m
-      memory: 1461Mi
+      cpu: 256m
+      memory: 956Mi
     limits:
-      memory: 1461Mi
+      memory: 956Mi
