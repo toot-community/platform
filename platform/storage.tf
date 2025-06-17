@@ -27,3 +27,10 @@ resource "minio_s3_bucket_policy" "public_read" {
     ]
   })
 }
+
+resource "minio_s3_bucket" "generic_buckets" {
+  for_each = { for bucket in var.generic_s3_buckets : bucket.name => bucket }
+
+  bucket = each.value.name
+  acl    = "private"
+}

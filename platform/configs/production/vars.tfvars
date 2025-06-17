@@ -29,3 +29,7 @@ mastodon_s3_buckets = [
   { name = "toot-community-assets" },
   { name = "microblog-network-assets" }
 ]
+
+generic_s3_buckets = [
+  { name = "toot-community-cnpg-storage" }
+]

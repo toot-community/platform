@@ -131,6 +131,14 @@ variable "mastodon_s3_buckets" {
   default = []
 }
 
+variable "generic_s3_buckets" {
+  description = "List of S3 buckets for generic purposes"
+  type = list(object({
+    name = string,
+  }))
+  default = []
+}
+
 variable "s3_server" {
   description = "S3 server URL"
   type        = string
