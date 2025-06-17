@@ -52,11 +52,10 @@ helmCharts:
 
 images:
   - name: ghcr.io/mastodon/mastodon
-    newTag: "v4.4.0-beta.1@sha256:49d58b37ff8a1e282e6bef2eae2ea9e0c1d7f39dc62d7e2595b06949fec25c4d"
+    newTag: "v4.4.0-beta.2@sha256:fa7e05f64c1a2b7f06c9457f4847fbaf694645561431ca49c5d0791c69e27dbd"
   - name: ghcr.io/mastodon/mastodon-streaming
-    newTag: "v4.4.0-beta.1@sha256:68f13a267be257e64ace7a366e80debce4753eb8719a175a9b98705c926f29a1"
+    newTag: "v4.4.0-beta.2@sha256:dfb2876d60160309261f2014421894af0c76a1037998fd5ce8063f7213be8ace"
   - name: varnish
-    # newName: jorijn/test-varnish-arm-jemalloc
     newTag: "7.7.1@sha256:38d0b83c25baac223b6028240d2f7f11ec56a5c1d1aaa0b9dea488dbe7f29089"
  
 patches:
