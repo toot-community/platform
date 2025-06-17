@@ -62,6 +62,7 @@ sidekiq:
         - ingress
         - push
         - pull
+        - fasp
       resources: &genericJobRunnerResources
         requests:
           cpu: 700m
@@ -76,6 +77,7 @@ sidekiq:
         - ingress
         - push
         - pull
+        - fasp
         - default
       resources: *genericJobRunnerResources
     - name: generic-3
@@ -85,6 +87,7 @@ sidekiq:
         - push
         - pull
         - default
+        - fasp
         - mailers
         - ingress
       resources: *genericJobRunnerResources
@@ -94,6 +97,7 @@ sidekiq:
       queues:
         - push
         - pull
+        - fasp
         - default
         - mailers
         - ingress
@@ -103,6 +107,7 @@ sidekiq:
       replicaCount: 1
       queues:
         - pull
+        - fasp
         - default
         - mailers
         - ingress
