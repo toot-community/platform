@@ -15,8 +15,8 @@ configuration:
     
   smtp:
     domain: *instanceDomain
-    fromAddress: microblog.network Notifications <notifications@microblog.network>
-    smtpServer: mail.microblog.network
+    fromAddress: microblog.network Notifications <notifications@ses.microblog.network>
+    smtpServer: email-smtp.eu-west-1.amazonaws.com
     
 web:
   domain: *instanceDomain
