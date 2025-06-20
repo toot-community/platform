@@ -19,8 +19,7 @@ controller:
 
   config:
     use-http2: "true"
-    # enable-real-ip: "true"
-    # proxy-real-ip-cidr: "10.0.0.0/16"
+    use-geoip2: "true"
     use-proxy-protocol: "true"
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#block-user-agents
     block-user-agents: "~*^meta-externalagent.*"
