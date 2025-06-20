@@ -4,7 +4,7 @@ namespace: ingress-nginx
 
 resources:
   - namespace.yaml
-  - secrets.yaml
+  # - secrets.yaml
 
 helmCharts:
   - name: ingress-nginx

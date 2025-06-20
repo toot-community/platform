@@ -44,11 +44,11 @@ ingress:
       - hosts:
           - *instanceDomain
         secretName: ingress-web-tls
-    annotations:
-      nginx.ingress.kubernetes.io/server-snippet: |
-        if ($is_spammy_country$is_signup_url = "11") {
-          return 403;
-        }
+    # annotations:
+    #   nginx.ingress.kubernetes.io/server-snippet: |
+    #     if ($is_spammy_country$is_signup_url = "11") {
+    #       return 403;
+    #     }
   streaming:
     host: *streamingDomain
     tls:
