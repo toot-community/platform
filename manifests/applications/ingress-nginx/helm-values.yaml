@@ -39,15 +39,15 @@ controller:
     #     "POST /auth"            1;
     #   }
 
-  extraEnvs:
-    - name: MAXMIND_LICENSE_KEY
-      valueFrom:
-        secretKeyRef:
-          name: maxmind-license-key
-          key: license
+  # extraEnvs:
+  #   - name: MAXMIND_LICENSE_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: maxmind-license-key
+  #         key: license
 
   extraArgs:
-    maxmind-license-key: $(MAXMIND_LICENSE_KEY)
+    # maxmind-license-key: $(MAXMIND_LICENSE_KEY)
     enable-ssl-passthrough: ""
 
   metrics:
