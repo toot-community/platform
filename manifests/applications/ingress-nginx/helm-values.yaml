@@ -3,9 +3,6 @@ controller:
   kind: DaemonSet
   hostNetwork: true
 
-  extraArgs:
-    enable-ssl-passthrough: ""
-
   service:
     type: LoadBalancer
     annotations:
@@ -26,6 +23,17 @@ controller:
     use-proxy-protocol: "true"
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#block-user-agents
     block-user-agents: "~*^meta-externalagent.*"
+
+  extraEnvs:
+    - name: MAXMIND_LICENSE_KEY
+      valueFrom:
+        secretKeyRef:
+          name: maxmind-license-key
+          key: license
+
+  extraArgs:
+    maxmind-license-key: $(MAXMIND_LICENSE_KEY)
+    enable-ssl-passthrough: ""
 
   metrics:
     enabled: true
