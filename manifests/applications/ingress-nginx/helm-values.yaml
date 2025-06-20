@@ -18,6 +18,7 @@ controller:
   allowSnippetAnnotations: true # this is a private cluster, so we can use this
 
   config:
+    annotations-risk-level: "Critical"
     use-http2: "true"
     use-geoip2: "true"
     use-proxy-protocol: "true"
