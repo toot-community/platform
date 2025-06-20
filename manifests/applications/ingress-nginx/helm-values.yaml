@@ -31,7 +31,6 @@ controller:
         IN 1;
         PH 1;
       }
-
       map "$request_method $uri" $is_signup_url {
         default 0;
         "POST /api/v1/accounts" 1;

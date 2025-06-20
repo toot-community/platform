@@ -50,6 +50,11 @@ ingress:
       - hosts:
           - *streamingDomain
         secretName: ingress-streaming-tls
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      if ($is_spammy_country$is_signup_url = "11") {
+        return 403;
+      }
 
 sidekiq:
   workers:
