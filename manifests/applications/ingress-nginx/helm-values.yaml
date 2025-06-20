@@ -15,6 +15,7 @@ controller:
       load-balancer.hetzner.cloud/private-ipv4: 10.0.1.2
       load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
     externalTrafficPolicy: Local
+  allowSnippetAnnotations: true # this is a private cluster, so we can use this
 
   config:
     use-http2: "true"
@@ -23,6 +24,21 @@ controller:
     use-proxy-protocol: "true"
     # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#block-user-agents
     block-user-agents: "~*^meta-externalagent.*"
+    # flag the sign up URLs from countries that only produce spam
+    http-snippet: |
+      map $geoip2_country_code $is_spammy_country {
+        default 0;
+        VN 1;
+        IN 1;
+        PH 1;
+      }
+
+      map "$request_method $uri" $is_signup_url {
+        default 0;
+        "POST /api/v1/accounts" 1;
+        "GET /auth/sign_up"     1;
+        "POST /auth"            1;
+      }
 
   extraEnvs:
     - name: MAXMIND_LICENSE_KEY
