@@ -31,12 +31,14 @@ ingress:
       - hosts:
           - *instanceDomain
         secretName: ingress-web-tls
+    ingressClassName: traefik
   streaming:
     host: *streamingDomain
     tls:
       - hosts:
           - *streamingDomain
         secretName: ingress-streaming-tls
+    ingressClassName: traefik
 
 s3Gateway:
   ingress:
