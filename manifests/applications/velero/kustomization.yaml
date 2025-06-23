@@ -9,7 +9,7 @@ resources:
 
 helmCharts:
   - name: velero
-    version: "10.0.5"
+    version: "10.0.7"
     releaseName: velero
     namespace: velero
     valuesFile: helm-values.yaml
