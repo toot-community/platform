@@ -2,7 +2,7 @@ cluster_name    = "tootcommunity-prod"
 resource_prefix = "tc-prod-"
 architecture    = "arm64"
 
-talos_version      = "v1.10.1"
+talos_version      = "v1.10.4"
 kubernetes_version = "v1.33.1"
 
 vpc_name         = "cluster-network"
