@@ -21,6 +21,13 @@
   ],
   "packageRules": [
     {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true,
+      "requiredStatusChecks": null
+    },
+    {
       "matchManagers": [
         "kustomize",
         "helmv3",
