@@ -163,10 +163,10 @@ streaming:
     failureThreshold: 30
   resources:
     requests:
-      cpu: 10m
-      memory: 256Mi
+      cpu: 41m
+      memory: 100Mi
     limits:
-      memory: 256Mi
+      memory: 100Mi
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
@@ -196,10 +196,10 @@ sidekiq:
         - pull
       resources:
         requests:
-          cpu: 110m
-          memory: 3853Mi
+          cpu: 125m
+          memory: 541Mi
         limits:
-          memory: 3853Mi
+          memory: 541Mi
     - name: scheduler
       concurrency: 25
       replicaCount: 1

@@ -36,6 +36,12 @@ web:
   
 streaming:
   baseURL: wss://streaming.toot.community
+  resources:
+    requests:
+      cpu: 21m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
   
 ingress:
   web:
