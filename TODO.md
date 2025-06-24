@@ -56,3 +56,10 @@ At some point
 - [ ] Patreon aankleden met plaatjes en tekst
 - [ ] Eigen PayPal voor toot.c
 - [x] kennismaken met solarbranka
+
+-- FIX
+
+- Add hostname to machineconfig
+- Somehow restore the secrets from the backup, or at least look into the proces of rotating the secrets like Terraform wants
+  - Context: They were recreated during Talos OS upgrade
+- Finish the upgrade from 1.10.2 to 1.10.4

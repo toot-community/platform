@@ -8,13 +8,13 @@ cluster:
 machine:
   network:
     interfaces:
-    - interface: eth0
+    - interface: enp1s0
       dhcp: true
       vip:
         ip: ${ipv4_vip_addr}
         hcloud:
             apiToken: ${hcloud_token}
-    - interface: eth1
+    - interface: enp7s0
       dhcp: true
   features:
     kubernetesTalosAPIAccess:
