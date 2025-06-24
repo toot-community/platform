@@ -63,3 +63,6 @@ At some point
 - Somehow restore the secrets from the backup, or at least look into the proces of rotating the secrets like Terraform wants
   - Context: They were recreated during Talos OS upgrade
 - Finish the upgrade from 1.10.2 to 1.10.4
+- TF: Add lifecycle ignore to the secrets resource, they don't need to be recreated during an upgrade
+- Perform surgery on the statefile to revert to the correct secrets
+- Enable versioning on the state bucket
