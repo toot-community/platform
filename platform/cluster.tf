@@ -1,5 +1,11 @@
 resource "talos_machine_secrets" "machine_secrets" {
   talos_version = var.talos_version
+
+  lifecycle {
+    ignore_changes = [
+      talos_version,
+    ]
+  }
 }
 
 data "talos_image_factory_urls" "this" {
@@ -51,6 +57,13 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
       ipv4_vip_addr : hcloud_floating_ip.api.ip_address,
       hcloud_token : var.hcloud_token,
       vpc_subnet_cidr : var.vpc_subnet_cidr
+    }),
+    yamlencode({
+      machine = {
+        network = {
+          hostname = "${var.resource_prefix}${each.key}"
+        }
+      }
     })
   ]
 
@@ -74,6 +87,13 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
     }),
     templatefile("${path.module}/talos/patches/worker.yaml", {
       vpc_subnet_cidr : var.vpc_subnet_cidr
+    }),
+    yamlencode({
+      machine = {
+        network = {
+          hostname = "${var.resource_prefix}${each.key}"
+        }
+      }
     })
   ]
 
