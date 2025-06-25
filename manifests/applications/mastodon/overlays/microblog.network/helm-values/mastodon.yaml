@@ -20,7 +20,7 @@ configuration:
     
 web:
   domain: *instanceDomain
-  concurrency: 1
+  replicaCount: 1
   
 streaming:
   baseURL: wss://streaming.microblog.network
