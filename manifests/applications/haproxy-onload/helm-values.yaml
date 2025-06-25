@@ -9,11 +9,10 @@ PodDisruptionBudget:
   
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 10m
+    memory: 100Mi
   limits:
-    cpu: 200m
-    memory: 350Mi
+    memory: 100Mi
 
 config: |
   global
