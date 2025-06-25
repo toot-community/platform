@@ -12,6 +12,19 @@ holmes:
   additionalEnvVars:
   - name: ROBUSTA_AI
     value: "true"
+  # - name: ARGOCD_AUTH_TOKEN
+  #   value: "foo"
+  # - name: ARGOCD_SERVER
+  #   value: "argocd.toot.community"
+  toolsets:
+    # argocd/core:
+    #   enabled: true
+    prometheus/metrics:
+      enabled: true
+      config:
+        prometheus_url: http://vmsingle-vm.victoriametrics.svc.cluster.local.:8429
+    kubernetes/live-metrics:
+      enabled: true
 
 runner:
   sendAdditionalTelemetry: true
@@ -20,3 +33,7 @@ sinksConfig:
 - robusta_sink:
     name: robusta_ui_sink
     token: eyJhY2NvdW50X2lkIjogIjY2ZDQ4MWQyLTgwMDMtNGE4OC04ZTdmLWFmYzg4N2NhY2Y2YSIsICJhcGlfa2V5IjogImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUp5YjJ4bElqb2lZVzV2YmlJc0ltbGhkQ0k2TVRZeU5ERTNNalF5TkN3aVpYaHdJam94T1RNNU56UTROREkwZlEuaFJMdjZQQW54MWNhdkR3bC1pWXlnQXJINHFBMERWSFluckQ3MUFzcXFQdyIsICJzdG9yZV91cmwiOiAiaHR0cHM6Ly9zcC5yb2J1c3RhLmRldiIsICJlbWFpbCI6ICJhcGl1c2VyLXRvb3QtY29tbXVuaXR5LTQ3NDY3NkByb2J1c3RhLmRldiIsICJwYXNzd29yZCI6ICIxMTdlZmMyZS03ZGVjLTQ2NmEtOTQ1Yy0xZGJmYWUwYzU5MzUifQ==
+- mail_sink:
+    name: mail_sink
+    mailto: "mailtos://AKIA4XREBEBVZB3QR7P7:BKhoAcQG1LWoKWV6tVjNBecgJ4tIJiusHz6tjEWWqjpK@email-smtp.eu-west-1.amazonaws.com?from=robusta@ses.jorijn.com&to=jorijn@jorijn.com"
+    # mailto: "ses://robusta@ses.jorijn.com/AKIA4XREBEBVZB3QR7P7/BKhoAcQG1LWoKWV6tVjNBecgJ4tIJiusHz6tjEWWqjpK/eu-west-2/jorijn@jorijn.com"
