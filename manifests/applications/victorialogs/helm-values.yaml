@@ -31,7 +31,7 @@ vector:
       cpu: 85m
       memory: 233Mi
     limits:
-      memory: 233Mi
+      memory: 512Mi # OOMKill if set to less than 512Mi
   
 dashboards:
   enabled: true
