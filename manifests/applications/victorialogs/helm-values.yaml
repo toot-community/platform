@@ -28,10 +28,10 @@ vector:
   enabled: true
   resources:
     requests:
-      cpu: 91m
-      memory: 525Mi
+      cpu: 85m
+      memory: 233Mi
     limits:
-      memory: 525Mi
+      memory: 233Mi
   
 dashboards:
   enabled: true
