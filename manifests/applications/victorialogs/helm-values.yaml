@@ -16,10 +16,10 @@ server:
     
   resources:
     requests:
-      cpu: 46m
-      memory: 2860Mi
+      cpu: 45m
+      memory: 1664Mi
     limits:
-      memory: 2860Mi
+      memory: 1664Mi
       
   vmServiceScrape:
     enabled: true
