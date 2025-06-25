@@ -96,10 +96,10 @@ jobs:
   removePreviewCards:
     resources:
       requests:
-        cpu: 500m
-        memory: 400Mi
+        cpu: 1201m
+        memory: 643Mi
       limits:
-        memory: 2000Mi
+        memory: 643Mi
     days: 30
   cleanupMedia:
     resources:
