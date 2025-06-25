@@ -20,3 +20,4 @@ ingress:
       hosts:
         - static.microblog.network
       
+replicaCount: 1
