@@ -29,10 +29,10 @@ web:
   replicaCount: 3
   resources:
     requests:
-      cpu: 866m
-      memory: 2403Mi
+      cpu: 683m
+      memory: 2271Mi
     limits:
-      memory: 4Gi
+      memory: 2750Mi
   
 streaming:
   baseURL: wss://streaming.toot.community
@@ -102,6 +102,13 @@ jobs:
         memory: 643Mi
     days: 30
   cleanupMedia:
+    resources:
+      requests:
+        cpu: 1221m
+        memory: 665Mi
+      limits:
+        memory: 665Mi
+  cleanupMediaProfiles:
     resources:
       requests:
         cpu: 1757m
