@@ -101,3 +101,10 @@ jobs:
       limits:
         memory: 2000Mi
     days: 30
+  cleanupMedia:
+    resources:
+      requests:
+        cpu: 1757m
+        memory: 510Mi
+      limits:
+        memory: 510Mi
