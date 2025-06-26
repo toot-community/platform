@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: database
 spec:
-  instances: 2
+  instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9
 
   # https://cloudnative-pg.io/documentation/1.16/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
@@ -60,6 +60,10 @@ spec:
       cpu: "2"
     limits:
       memory: "8Gi"
+      
+  nodeMaintenanceWindow:
+    reusePVC: true
+    inProgress: true
 ---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
