@@ -5,6 +5,13 @@ metadata:
 spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17.5
 ---
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: database-pooler-rw
+spec:
+  instances: 1
+---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:

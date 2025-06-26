@@ -29,10 +29,10 @@ web:
   replicaCount: 3
   resources:
     requests:
-      cpu: 866m
-      memory: 2403Mi
+      cpu: 683m
+      memory: 2271Mi
     limits:
-      memory: 4Gi
+      memory: 2750Mi
   
 streaming:
   baseURL: wss://streaming.toot.community
@@ -64,66 +64,22 @@ ingress:
 
 sidekiq:
   workers:
-    - name: generic-1
+    - name: generic
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 3
       queues:
         - default
         - mailers
-        - ingress
         - push
-        - pull
+        - ingress
         - fasp
-      resources: &genericJobRunnerResources
+        - pull
+      resources:
         requests:
-          cpu: 700m
-          memory: 2Gi
+          cpu: 1111m
+          memory: 2078Mi
         limits:
-          memory: 6Gi
-    - name: generic-2
-      concurrency: 25
-      replicaCount: 1
-      queues:
-        - mailers
-        - ingress
-        - push
-        - pull
-        - fasp
-        - default
-      resources: *genericJobRunnerResources
-    - name: generic-3
-      concurrency: 25
-      replicaCount: 1
-      queues:
-        - push
-        - pull
-        - default
-        - fasp
-        - mailers
-        - ingress
-      resources: *genericJobRunnerResources
-    - name: generic-4
-      concurrency: 25
-      replicaCount: 1
-      queues:
-        - push
-        - pull
-        - fasp
-        - default
-        - mailers
-        - ingress
-      resources: *genericJobRunnerResources
-    - name: generic-5
-      concurrency: 25
-      replicaCount: 1
-      queues:
-        - pull
-        - fasp
-        - default
-        - mailers
-        - ingress
-        - push
-      resources: *genericJobRunnerResources
+          memory: 2078Mi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
@@ -131,17 +87,31 @@ sidekiq:
         - scheduler
       resources:
         requests:
-          cpu: 144m
-          memory: 437Mi
+          cpu: 317m
+          memory: 633Mi
         limits:
-          memory: 700Mi
+          memory: 633Mi
           
 jobs:
   removePreviewCards:
     resources:
       requests:
-        cpu: 500m
-        memory: 400Mi
+        cpu: 1201m
+        memory: 643Mi
       limits:
-        memory: 2000Mi
+        memory: 643Mi
     days: 30
+  cleanupMedia:
+    resources:
+      requests:
+        cpu: 1221m
+        memory: 665Mi
+      limits:
+        memory: 665Mi
+  cleanupMediaProfiles:
+    resources:
+      requests:
+        cpu: 1757m
+        memory: 510Mi
+      limits:
+        memory: 510Mi

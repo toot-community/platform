@@ -16,10 +16,10 @@ server:
     
   resources:
     requests:
-      cpu: 46m
-      memory: 2860Mi
+      cpu: 45m
+      memory: 1664Mi
     limits:
-      memory: 2860Mi
+      memory: 1664Mi
       
   vmServiceScrape:
     enabled: true
@@ -28,10 +28,10 @@ vector:
   enabled: true
   resources:
     requests:
-      cpu: 91m
-      memory: 525Mi
+      cpu: 85m
+      memory: 233Mi
     limits:
-      memory: 525Mi
+      memory: 512Mi # OOMKill if set to less than 512Mi
   
 dashboards:
   enabled: true
