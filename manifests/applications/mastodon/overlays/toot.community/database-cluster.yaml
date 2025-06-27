@@ -6,34 +6,11 @@ spec:
   instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9
 
-  # https://cloudnative-pg.io/documentation/1.16/bootstrap/#bootstrap-from-a-live-cluster-pg_basebackup
-  # https://cloudnative-pg.io/documentation/1.16/replica_cluster/
-  # bootstrap:
-  #   pg_basebackup:
-  #     source: fhf
-      
-  # replica:
-  #   enabled: true
-  #   source: fhf
-          
   storage:
     size: 500Gi
-          
-  # externalClusters:
-  #   - name: fhf
-  #     connectionParameters:
-  #       host: 5.75.132.246
-  #       user: app
-  #       dbname: app
-  #       sslmode: disable
-  #     password:
-  #       name: fhf-db-credentials
-  #       key: password
         
   postgresql:
     parameters:
-      max_connections: "600"
-      
       # pgtune
       # DB Version: 16
       # OS Type: linux
@@ -41,6 +18,7 @@ spec:
       # Total Memory (RAM): 8 GB
       # CPUs num: 2
       # Data Storage: san
+      max_connections: "300"
       shared_buffers: "2GB"
       effective_cache_size: "6GB"
       maintenance_work_mem: "512MB"
@@ -61,9 +39,9 @@ spec:
     limits:
       memory: "8Gi"
       
-  nodeMaintenanceWindow:
-    reusePVC: true
-    inProgress: true
+  # nodeMaintenanceWindow:
+  #   reusePVC: true
+  #   inProgress: true
 ---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
@@ -72,4 +50,4 @@ metadata:
 spec:
   configuration:
     endpointURL: https://fsn1.your-objectstorage.com
-    destinationPath: s3://toot-community-cnpg-storage/
+    destinationPath: s3://toot-community-cnpg-storage/v20250526/

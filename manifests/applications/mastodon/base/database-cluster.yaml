@@ -65,7 +65,8 @@ kind: ScheduledBackup
 metadata:
   name: database-backup
 spec:
-  schedule: "0 0 6 * * 0" # Run once a week on Sunday at 06:00
+  # runs on monday and thursday at 06:00
+  schedule: "0 0 6 * * 1,4"
   backupOwnerReference: self
   cluster:
     name: database
@@ -160,4 +161,4 @@ spec:
         key: ACCESS_SECRET_KEY
     wal:
       compression: gzip
-  retentionPolicy: "14d"
+  retentionPolicy: "10d"
