@@ -21,6 +21,8 @@ configuration:
 web:
   domain: *instanceDomain
   replicaCount: 1
+  podDisruptionBudget:
+    enabled: false
   
 streaming:
   baseURL: wss://streaming.microblog.network
