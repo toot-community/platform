@@ -7,9 +7,11 @@ cd packer
 packer build .
 ```
 
-> Note the image ID, update it in configs/production/vars.tfvars
+> Note the image ID, update it in configs/production.tfvars
 
 ## Create infrastructure
+
+Install [OpenTofu](https://opentofu.org/docs/intro/install/) first.
 
 ```
 task plan
