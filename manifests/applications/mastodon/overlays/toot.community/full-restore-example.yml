@@ -1,0 +1,53 @@
+
+#https://cloudnative-pg.io/plugin-barman-cloud/docs/usage/#restoring-a-cluster 
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: database
+  namespace: toot-community
+spec:
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: kubernetes.io/hostname
+  # bootstrap:
+  #   recovery:
+  #     source: source
+  # enablePDB: true
+  externalClusters:
+  - name: source
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: database-backup
+        serverName: database
+  # imageName: ghcr.io/cloudnative-pg/postgresql:16.9
+  # instances: 2
+  # monitoring:
+  #   enablePodMonitor: true
+  plugins: []
+  # postgresql:
+  #   parameters:
+  #     checkpoint_completion_target: "0.9"
+  #     default_statistics_target: "100"
+  #     effective_cache_size: 6GB
+  #     effective_io_concurrency: "300"
+  #     huge_pages: "off"
+  #     maintenance_work_mem: 512MB
+  #     max_connections: "600"
+  #     max_wal_size: 4GB
+  #     min_wal_size: 1GB
+  #     pg_stat_statements.max: "10000"
+  #     pg_stat_statements.track: all
+  #     random_page_cost: "1.1"
+  #     shared_buffers: 2GB
+  #     wal_buffers: 16MB
+  #     work_mem: 10082kB
+  # primaryUpdateStrategy: unsupervised
+  # resources:
+  #   limits:
+  #     memory: 8Gi
+  #   requests:
+  #     cpu: "2"
+  #     memory: 8Gi
+  # storage:
+  #   size: 500Gi
