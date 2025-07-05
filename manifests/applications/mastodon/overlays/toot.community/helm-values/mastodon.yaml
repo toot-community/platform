@@ -23,6 +23,10 @@ configuration:
     
   search:
     enabled: true
+  
+  database:
+    databaseReplicas:
+      enabled: true
 
 web:
   domain: *instanceDomain

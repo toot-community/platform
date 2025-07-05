@@ -9,6 +9,7 @@ resources:
   - ../../base
   - ../../base/search-cluster.yaml
   - secrets.yaml
+  - database-rw-pooler.yaml
 
 helmCharts:
   - name: redis
