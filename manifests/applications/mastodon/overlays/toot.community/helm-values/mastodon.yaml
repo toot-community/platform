@@ -24,9 +24,8 @@ configuration:
   search:
     enabled: true
   
-  database:
-    databaseReplicas:
-      enabled: true
+  databaseReplicas:
+    enabled: true
 
 web:
   domain: *instanceDomain
