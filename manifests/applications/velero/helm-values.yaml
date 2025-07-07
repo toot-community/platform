@@ -45,9 +45,9 @@ initContainers:
 
 metrics:
   serviceMonitor:
-    enabled: false # TODO: enable me after observability is installed
+    enabled: true
   prometheusRule:
-    enabled: false # TODO: enable me after observability is installed
+    enabled: true
     spec:
       - alert: VeleroBackupPartialFailures
         annotations:
