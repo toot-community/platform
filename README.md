@@ -2,236 +2,265 @@
 
 This repository contains the Infrastructure as Code (IaC) and Kubernetes manifests that power toot.community, a Mastodon instance running on Kubernetes. The infrastructure is designed for high availability, scalability, and operational excellence.
 
-## Overview
+## Architecture Overview
 
-The toot.community platform consists of:
-- **Infrastructure Layer**: Managed with OpenTofu (Terraform) on Hetzner Cloud
-- **Kubernetes Layer**: Running Talos Linux with a GitOps deployment model
-- **Application Layer**: Mastodon and supporting services deployed via ArgoCD
+The toot.community platform is built on three foundational layers:
 
-### Architecture Highlights
+- **Infrastructure Layer**: ARM64-based compute on Hetzner Cloud, managed with OpenTofu
+- **Platform Layer**: Kubernetes running on Talos Linux with GitOps deployment
+- **Application Layer**: Mastodon and supporting services orchestrated by ArgoCD
 
-- **High Availability**: 3 control plane nodes and 3 worker nodes across different availability zones
-- **ARM64 Architecture**: Cost-efficient CAX instances from Hetzner
-- **GitOps Workflow**: All changes deployed through ArgoCD with automatic synchronization
-- **Cloud-Native Storage**: S3-compatible object storage for media and backups
-- **Comprehensive Monitoring**: Full observability stack with metrics, logs, and alerting
+### Key Design Principles
 
-## Infrastructure Details
+- **High Availability**: Multi-node architecture with no single points of failure
+- **Cost Efficiency**: ARM64 instances and intelligent caching strategies
+- **Security First**: Zero-trust networking, encrypted storage, and automated certificate management
+- **Observable by Default**: Comprehensive metrics, logging, and alerting
+- **GitOps Workflow**: All changes tracked in Git and automatically deployed
 
-### Image Building
+## Infrastructure Foundation
 
-The platform uses custom Talos Linux images built with Packer:
+### Compute Resources
 
-- **Image Factory**: Talos Factory service generates custom images with required system extensions
-- **Schematic ID**: `ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515`
-- **Build Process**: Packer provisions a temporary Hetzner instance and writes the Talos image
-- **Output**: Hetzner Cloud snapshot labeled with Talos version
-- **Architecture**: ARM64-specific images for CAX instances
+The platform runs on Hetzner Cloud using ARM64 architecture for cost efficiency:
 
-### Compute Infrastructure
+**Control Plane**
+- 3× CAX11 instances (2 vCPU, 4GB RAM)
+- Distributed across placement groups for fault tolerance
+- Running Talos Linux with custom system extensions
 
-The platform runs on Hetzner Cloud with the following specifications:
+**Worker Nodes**
+- 3× CAX41 instances (16 vCPU, 32GB RAM)
+- Dedicated to application workloads
+- Optimized kernel parameters for high-performance networking
 
-#### Control Plane Nodes
-- **Instance Type**: CAX11 (ARM64, 2 vCPU, 4GB RAM)
-- **Count**: 3 nodes for etcd quorum
-- **Operating System**: Talos Linux
-- **Distribution**: Spread across placement groups for fault tolerance
+### Networking
 
-#### Worker Nodes
-- **Instance Type**: CAX41 (ARM64, 16 vCPU, 32GB RAM)
-- **Count**: 3 nodes for workload distribution
-- **Operating System**: Talos Linux
-- **Role**: Running application workloads
+- **Private Network**: 10.0.0.0/16 (production subnet: 10.0.1.0/24)
+- **Pod Network**: 10.0.16.0/20 via Cilium CNI with eBPF
+- **Service Network**: 10.0.8.0/21
+- **Load Balancing**: Hetzner Load Balancers with floating IP
+- **Ingress**: NGINX controller running as DaemonSet
 
-### Networking Architecture
+### Storage
 
-- **Private Network**: 10.0.0.0/16 with 10.0.1.0/24 subnet
-- **Pod Network**: 10.0.16.0/20 managed by Cilium CNI
-- **Service Network**: 10.0.8.0/21 for Kubernetes services
-- **Load Balancing**: Hetzner Load Balancers with floating IP for API endpoint
-- **Ingress**: NGINX Ingress Controller with DaemonSet deployment
+**Object Storage (S3-Compatible)**
+- Hetzner Object Storage in fsn1 region
+- `toot-community-assets`: Mastodon media files
+- `toot-community-cnpg-storage`: PostgreSQL backups
+- `toot-community-velero`: Kubernetes cluster backups
 
-### Storage Architecture
+**Local Storage**
+- NVMe for etcd on control plane nodes
+- Container images and ephemeral data on workers
 
-#### Object Storage (S3-Compatible)
-- **Provider**: Hetzner Object Storage (fsn1 region)
-- **Buckets**:
-  - `toot-community-assets`: Mastodon media files
-  - `toot-community-cnpg-storage`: PostgreSQL backups
-  - `toot-community-velero`: Kubernetes backups
+## Platform Layer
 
-#### Block Storage
-- **Control Plane**: Local NVMe storage for etcd
-- **Worker Nodes**: Local storage for container images and ephemeral data
+### Kubernetes Foundation
 
-## Kubernetes Platform
+- **Operating System**: Talos Linux - immutable, API-driven, purpose-built for Kubernetes
+- **Container Runtime**: Containerd with system extensions
+- **Network Plugin**: Cilium with eBPF dataplane and network policies
+- **Cloud Integration**: Hetzner CCM for load balancers and node lifecycle
 
-### Core Components
+### GitOps & Automation
 
-#### Cluster Management
-- **Container Runtime**: Containerd with Talos System Extensions
-- **CNI**: Cilium with eBPF dataplane
-- **Cloud Provider**: Hetzner Cloud Controller Manager
-- **Certificate Management**: cert-manager with Let's Encrypt
+- **ArgoCD**: Continuous deployment with automatic synchronization
+- **Kustomize**: Configuration management using base/overlay pattern
+- **Helm**: Third-party application packaging
+- **Renovate**: Automated dependency updates
 
-#### GitOps & Deployment
-- **ArgoCD**: Continuous deployment with automatic sync
-- **Kustomize**: Configuration management with base/overlay pattern
-- **Helm**: Package management for third-party applications
+## Application Architecture
 
-### Application Stack
+### Mastodon Services
 
-#### Mastodon Components
+The Mastodon deployment is composed of four main components:
 
-The Mastodon deployment consists of:
+**1. Web Service**
+- Rails application serving the UI and API
+- 3 replicas with horizontal pod autoscaling
+- Resource limits: 1 CPU, 2Gi memory per pod
 
-1. **Web Service**: Rails application serving the web interface
-   - 3 replicas with horizontal pod autoscaling
-   - Resource limits: 1 CPU, 2Gi memory per pod
-   - Health checks and readiness probes configured
+**2. Streaming Service**
+- WebSocket server for real-time updates
+- 3 replicas with session affinity
+- Dedicated ingress configuration
 
-2. **Streaming Service**: WebSocket server for real-time updates
-   - 3 replicas for high availability
-   - Dedicated ingress for WebSocket traffic
-   - Session affinity enabled
+**3. Background Workers**
+- Sidekiq for job processing
+- 3 generic workers with 25 concurrent threads
+- 1 scheduler for periodic tasks
 
-3. **Sidekiq Workers**: Background job processing
-   - Generic workers: 3 replicas with 25 concurrency
-   - Scheduler: 1 replica for periodic tasks
-   - Separate queues for different job priorities
+**4. Caching Layer**
+- Dual Varnish deployment (detailed below)
 
-4. **Caching Layer**: Varnish cache instances
-   - App cache: Dynamic content caching
-   - Static cache: Asset caching with S3 backend
-   - Cache invalidation on content updates
+### Data Layer
 
-#### Data Layer
+**PostgreSQL**
+- Managed by CloudNative-PG operator
+- 3-node cluster with automatic failover
+- PgBouncer for connection pooling
+- Daily backups with point-in-time recovery
 
-1. **PostgreSQL**: Primary database
-   - **Operator**: CloudNative-PG for lifecycle management
-   - **High Availability**: 3 instances with automatic failover
-   - **Connection Pooling**: PgBouncer for connection management
-   - **Backups**: Automated daily backups to S3 with point-in-time recovery
-   - **Monitoring**: Prometheus metrics and alerts
+**Redis**
+- Bitnami Redis deployment
+- Master with read replicas
+- HAProxy for load distribution
+- Persistent storage with AOF
 
-2. **Redis**: Caching and job queue
-   - **Deployment**: Bitnami Redis chart
-   - **Architecture**: Master with read replicas
-   - **Load Balancing**: HAProxy for connection distribution
-   - **Persistence**: RDB snapshots and AOF logging
+**Elasticsearch** (toot.community only)
+- Elastic Cloud on Kubernetes operator
+- Full-text search capabilities
+- TLS encryption throughout
 
-3. **Elasticsearch**: Full-text search (toot.community only)
-   - **Operator**: Elastic Cloud on Kubernetes (ECK)
-   - **Resources**: Dedicated node pool allocation
-   - **Security**: TLS encryption and authentication
+### Caching Strategy
 
-### Observability Stack
+The platform implements a sophisticated dual-cache architecture:
 
-#### Metrics
-- **VictoriaMetrics**: Time-series database replacing Prometheus
-- **VMAgent**: Metric collection from all components
-- **Grafana**: Visualization with pre-built dashboards
-- **Dashboards**: ArgoCD, NGINX, Redis, PostgreSQL, Kubernetes
+**Application Cache (varnish-for-app)**
+- 256MB in-memory cache for dynamic content
+- Direct backend to Mastodon web service
+- Caches public API endpoints and static assets
+- 100-2000 thread pool for concurrent requests
 
-#### Logging
-- **VictoriaLogs**: Log aggregation and search
-- **Log Sources**: Container logs, system logs, application logs
-- **Retention**: Configurable retention policies
+**Static Asset Cache (varnish-for-static)**
+- 5GB persistent file-based cache
+- Fronts S3 object storage via HAProxy
+- Sophisticated TTL policies by path:
+  - `/cache/`: 2 hours (48h grace)
+  - `/media_attachments/`: 7 days (30d grace)
+  - Avatar and emoji assets: 7 days
+- PURGE support for cache invalidation
+- Migration mode for bucket transitions
 
-#### Alerting
-- **VMAlert**: Alert rule evaluation
+## Observability
+
+### Metrics & Monitoring
+- **VictoriaMetrics**: Time-series database
+- **Grafana**: Visualization with SSO via Dex
+- **Pre-built Dashboards**: ArgoCD, NGINX, Redis, PostgreSQL
+
+### Logging
+- **VictoriaLogs**: Centralized log aggregation
+- **Sources**: Container, system, and application logs
+- **Retention**: Configurable policies per log type
+
+### Alerting
+- **VMAlert**: Rule evaluation engine
 - **Alertmanager**: Alert routing and grouping
-- **Robusta**: Automated troubleshooting and remediation
-- **Alert Coverage**: Infrastructure, application, and security alerts
+- **Robusta**: Automated remediation
+- **Coverage**: Infrastructure, application, and security alerts
 
-### Security & Compliance
+## Security & Compliance
 
-#### Authentication & Authorization
+### Access Control
 - **Dex**: OIDC provider for single sign-on
-- **RBAC**: Role-based access control for Kubernetes
-- **Network Policies**: Cilium-based microsegmentation
+- **RBAC**: Fine-grained Kubernetes permissions
+- **Network Policies**: Cilium-enforced microsegmentation
 
-#### Secrets Management
+### Secrets Management
 - **1Password Connect**: External secret synchronization
-- **Sealed Secrets**: Encrypted secrets in Git
+- **Encrypted Storage**: Secrets encrypted at rest
+- **Automated Rotation**: Regular credential updates
 
-#### Certificate Management
-- **cert-manager**: Automatic TLS certificate provisioning
+### Certificates
+- **cert-manager**: Automated TLS provisioning
 - **Let's Encrypt**: Free SSL certificates
-- **Certificate Rotation**: Automatic renewal before expiration
+- **Auto-renewal**: Before expiration
 
-### Backup & Disaster Recovery
+## Multi-Instance Architecture
 
-#### Velero
-- **Schedule**: Daily backups of Kubernetes resources
-- **Storage**: S3-compatible backend
-- **Retention**: 30-day retention policy
-- **Restore Testing**: Periodic restore verification
+The platform supports multiple Mastodon instances through Kustomize overlays:
 
-#### Database Backups
-- **Frequency**: Daily full backups, continuous WAL archiving
-- **Storage**: Dedicated S3 bucket with encryption
-- **Recovery**: Point-in-time recovery capability
-- **Testing**: Regular backup verification
+**Base Configuration** (`manifests/applications/mastodon/base/`)
+- Shared Helm values and configurations
+- Common resource definitions
+- Default scaling parameters
 
-## Multi-Instance Support
+**Instance Overlays** (`manifests/applications/mastodon/overlays/`)
 
-The infrastructure supports multiple Mastodon instances through Kustomize overlays:
-
-### Base Configuration
-Located in `manifests/applications/mastodon/base/`, containing:
-- Common Helm values
-- Shared database configuration
-- Default resource allocations
-
-### Instance Overlays
-Each instance has its own overlay in `manifests/applications/mastodon/overlays/`:
-
-#### toot.community (Production)
-- Full federation enabled
-- Elasticsearch search
-- 3 web/streaming replicas
+*toot.community*
+- Production instance with full federation
+- Elasticsearch-powered search
+- 3 replicas for all services
 - Premium resource allocations
 
-#### microblog.network (Staging/Testing)
+*microblog.network*
+- Testing environment
 - Limited federation mode
-- No search functionality
-- Single replica deployment
+- Single replica deployments
 - Minimal resource usage
 
-## Operational Workflows
+## Disaster Recovery
 
-### Deployment Process
-1. Code changes pushed to GitHub repository
-2. ArgoCD detects changes and syncs automatically
-3. Kubernetes resources updated in-place
-4. Health checks verify successful deployment
+### Backup Strategy
 
-### Monitoring & Alerting
-- **Metrics Collection**: 15-second scrape interval
-- **Alert Evaluation**: 1-minute evaluation cycle
-- **Notification Channels**: Configured in Alertmanager
-- **On-Call Integration**: Via Robusta platform
+**Cluster Backups (Velero)**
+- Daily snapshots of all Kubernetes resources
+- 30-day retention in S3
+- Regular restore testing
 
-### Maintenance Operations
-- **Database Maintenance**: Automated vacuum and reindexing
-- **Media Cleanup**: Scheduled removal of orphaned files
-- **Certificate Renewal**: Automatic via cert-manager
-- **Security Updates**: Automated via Renovate
+**Database Backups**
+- Continuous WAL archiving
+- Daily full backups
+- Point-in-time recovery capability
+- Encrypted S3 storage
 
-## Infrastructure as Code
+### High Availability Features
+- Multi-zone node distribution
+- Automatic pod rescheduling
+- Database failover automation
+- Floating IP for API endpoint
 
-### OpenTofu Configuration
-The `platform/` directory contains:
-- **Server provisioning**: Compute instances and networking
-- **Storage configuration**: S3 buckets and policies
-- **Firewall rules**: Security group configuration
-- **State management**: Remote state in S3
+## Platform Provisioning
 
-### Talos Machine Configuration
-- **Control plane patches**: API server configuration
-- **Worker patches**: Kubelet optimization
-- **System extensions**: Required kernel modules
-- **Network optimization**: Sysctl tuning for performance
+### Build Pipeline
+
+**1. Image Creation**
+- Custom Talos images built with Packer
+- Talos Factory integration for system extensions
+- Output: Hetzner Cloud snapshots
+
+**2. Infrastructure Deployment**
+- OpenTofu manages cloud resources
+- Task automation for common operations
+- Remote state in S3 backend
+
+**3. Cluster Bootstrap**
+- Initial credential setup via 1Password
+- Kustomize deployment of core components
+- ArgoCD takes over for continuous operations
+
+### Repository Structure
+
+```
+├── packer/              # Talos image building
+├── platform/            # OpenTofu infrastructure code
+│   ├── configs/         # Environment configurations
+│   └── talos/          # Machine customizations
+├── manifests/          # Kubernetes resources
+│   ├── applications/   # Application deployments
+│   └── cluster-bootstrap/ # Initial setup
+└── charts/             # Helm chart dependencies
+```
+
+## Operational Excellence
+
+### Continuous Deployment
+- Git commits trigger ArgoCD synchronization
+- Automated rollouts with health checks
+- Instant rollback capabilities
+
+### Maintenance Automation
+- Database vacuum and reindexing
+- Media file cleanup
+- Certificate renewal
+- Security patching via Renovate
+
+### Performance Optimization
+- Kernel tuning for high connection counts
+- Optimized thread pools
+- Strategic resource limits
+- Intelligent caching policies
+
+This architecture represents a production-grade Kubernetes platform optimized for running Mastodon at scale, with emphasis on reliability, security, and operational excellence. The infrastructure serves as a reference implementation for cloud-native social media platforms.
