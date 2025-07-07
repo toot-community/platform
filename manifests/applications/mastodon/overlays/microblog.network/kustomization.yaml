@@ -11,7 +11,7 @@ resources:
 
 helmCharts:
   - name: redis
-    version: "21.2.5"
+    version: "21.2.7"
     releaseName: redis
     namespace: *namespace
     valuesFile: ../../base/helm-values/redis.yaml
@@ -54,7 +54,7 @@ images:
   - name: ghcr.io/mastodon/mastodon-streaming
     newTag: "v4.4.0-beta.2@sha256:dfb2876d60160309261f2014421894af0c76a1037998fd5ce8063f7213be8ace"
   - name: varnish
-    newTag: "7.7.1@sha256:38d0b83c25baac223b6028240d2f7f11ec56a5c1d1aaa0b9dea488dbe7f29089"
+    newTag: "7.7.1@sha256:6745cc2bd22e5c9d6d3adf59cb60825d4f94091bc57e38f9d4079843a43670ff"
     
 patches:
   - path: database-cluster.yaml

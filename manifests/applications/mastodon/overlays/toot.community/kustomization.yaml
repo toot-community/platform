@@ -9,10 +9,11 @@ resources:
   - ../../base
   - ../../base/search-cluster.yaml
   - secrets.yaml
+  - database-rw-pooler.yaml
 
 helmCharts:
   - name: redis
-    version: "21.2.5"
+    version: "21.2.7"
     releaseName: redis
     namespace: *namespace
     valuesFile: ../../base/helm-values/redis.yaml
@@ -52,11 +53,11 @@ helmCharts:
 
 images:
   - name: ghcr.io/mastodon/mastodon
-    newTag: "v4.4.0-beta.2@sha256:fa7e05f64c1a2b7f06c9457f4847fbaf694645561431ca49c5d0791c69e27dbd"
+    newTag: "v4.4.0-rc.1@sha256:4c934e9bdbfa3565a15100f65d2c13232a5d3a32c2c91a1618c293d1497b3b40"
   - name: ghcr.io/mastodon/mastodon-streaming
-    newTag: "v4.4.0-beta.2@sha256:dfb2876d60160309261f2014421894af0c76a1037998fd5ce8063f7213be8ace"
+    newTag: "v4.4.0-rc.1@sha256:79b8f62feaf56fd68fb82d8bb54365ed15b5cce3dcb5b4a9ba4bdb1bd7820f13"
   - name: varnish
-    newTag: "7.7.1@sha256:38d0b83c25baac223b6028240d2f7f11ec56a5c1d1aaa0b9dea488dbe7f29089"
+    newTag: "7.7.1@sha256:6745cc2bd22e5c9d6d3adf59cb60825d4f94091bc57e38f9d4079843a43670ff"
  
 patches:
   - path: database-cluster.yaml

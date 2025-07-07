@@ -103,6 +103,6 @@ controller:
   resources:
     requests:
       cpu: 256m
-      memory: 956Mi
+      memory: 750Mi # don't KRR
     limits:
-      memory: 956Mi
+      memory: 1500Mi
