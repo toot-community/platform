@@ -3,9 +3,6 @@
 ipam:
   mode: kubernetes
 
-# hostFirewall:
-#   enabled: true
-
 hubble:
   relay:
     enabled: true
@@ -44,30 +41,11 @@ cgroup:
 k8sServiceHost: localhost
 k8sServicePort: "7445"
 
-policyAuditMode: true # FIXME
+policyAuditMode: false
 
 # https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md#how-to-deploy
 routingMode: native
 ipv4NativeRoutingCIDR: 10.0.0.0/8
-
-# bpf:
-#   datapathMode: netkit
-#   masquerade: true
-#   distributedLRU:
-#     enabled: true
-#   mapDynamicSizeRatio: 0.08
   
 ipv4:
   enabled: true
-  
-# ipv6:
-#   enabled: true
-
-# ipv6PodCIDR: fd02:7430:3074::/48
-
-# enableIPv4BIGTCP: true
-# bpfClockProbe: true
-
-# bandwidthManager:
-#   enabled: true
-#   bbr: true
