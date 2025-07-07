@@ -1,5 +1,8 @@
 # toot.community Kubernetes Cluster
 
+> [!NOTE]  
+> The code included in this repository is not meant to be run as-is. It's merely a collection of Terraform code and Kubernetes manifests that are used to deploy the toot.community Kubernetes cluster. You will need to adapt the code to your own needs and environment.
+
 ## Create the template
 
 ```
