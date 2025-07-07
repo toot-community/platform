@@ -1,3 +1,15 @@
+variable "environment" {
+  description = "Environment for which the resources are being created"
+  type        = string
+  default     = "production"
+}
+
+variable "state_bucket_name" {
+  description = "Name of the S3 bucket used for storing Terraform state files."
+  type        = string
+  default     = "tc-tfstate"
+}
+
 variable "hcloud_token" {
   description = "Hetzner Cloud API token used for authentication."
   sensitive   = true
@@ -90,7 +102,7 @@ variable "whitelist_admins" {
 variable "talos_version" {
   description = "Version of Talos Linux to deploy on nodes."
   type        = string
-  default     = "v1.9.5"
+  default     = "v1.10.4"
 }
 
 variable "talos_schematic_id" {
@@ -108,7 +120,7 @@ variable "talos_platform" {
 variable "kubernetes_version" {
   description = "Target Kubernetes version for the cluster."
   type        = string
-  default     = "v1.29.0"
+  default     = "v1.33.2"
 }
 
 variable "resource_prefix" {
