@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   labels:
     kubernetes.io/metadata.name: cert-manager
-    egress.antrea.io/gateway: shared
   name: cert-manager
