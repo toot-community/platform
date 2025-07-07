@@ -37,7 +37,6 @@ spec:
               protocol: TCP
           command:
             - /app/loki
-            # - --dry-run-replies
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

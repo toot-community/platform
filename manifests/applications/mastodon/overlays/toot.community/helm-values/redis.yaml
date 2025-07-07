@@ -5,4 +5,3 @@ replica:
       memory: 1200Mi
     limits:
       memory: 1200Mi
-  # disableCommands: [] # remove me after migration
