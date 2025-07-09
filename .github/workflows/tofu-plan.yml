@@ -1,0 +1,69 @@
+name: OpenTofu Plan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'platform/**'
+      - '.github/workflows/tofu-plan.yml'
+
+env:
+  WORKING_DIR: platform
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.2
+      
+      - name: Initialize OpenTofu
+        run: tofu init
+        working-directory: platform
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+      
+      - name: Generate plan
+        id: plan
+        run: |
+          tofu plan -no-color -var-file=configs/production.tfvars -out=plan.tfplan
+          tofu show -no-color plan.tfplan > plan.txt
+        working-directory: platform
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          TF_VAR_s3_server: ${{ secrets.S3_SERVER }}
+          TF_VAR_s3_access_key: ${{ secrets.S3_ACCESS_KEY }}
+          TF_VAR_s3_secret_key: ${{ secrets.S3_SECRET_KEY }}
+          TF_VAR_s3_region: ${{ secrets.S3_REGION }}
+      
+      - name: Create PR with plan
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: OpenTofu plan for ${{ github.sha }}"
+          title: "OpenTofu Plan - ${{ github.sha }}"
+          body: |
+            ## OpenTofu Plan
+            
+            This PR contains the OpenTofu plan for the changes in commit ${{ github.sha }}.
+            
+            ### Plan Output
+            
+            ```
+            ${{ steps.plan.outputs.stdout }}
+            ```
+            
+            **Important**: Review the plan carefully before merging. Merging this PR will trigger the deployment.
+          branch: tofu-plan-${{ github.sha }}
+          delete-branch: true
+          draft: false
