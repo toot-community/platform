@@ -33,8 +33,14 @@ jobs:
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
+      - name: Download plan file
+        uses: actions/download-artifact@v4
+        with:
+          name: tofu-plan-${{ github.event.pull_request.head.sha }}
+          path: ${{ env.WORKING_DIR }}
+      
       - name: Apply OpenTofu changes
-        run: tofu apply -var-file=configs/production.tfvars -auto-approve
+        run: tofu apply -auto-approve plan.tfplan
         working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
