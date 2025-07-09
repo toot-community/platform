@@ -55,7 +55,7 @@ images:
   - name: ghcr.io/mastodon/mastodon
     newTag: "v4.4.1@sha256:c803d839e5a65e84d848308bbf9ae75de6096b57f385082b5bdea3355975f192"
   - name: ghcr.io/mastodon/mastodon-streaming
-    newTag: "v4.4.0@sha256:f271c83096bc9f02b9da62b407e58a66ca47f88410c0863b1c63fe36a45e208d"
+    newTag: "v4.4.1@sha256:e4b0565e05cf95e6fc1f3b1dd9fba3cd9fa6d1257c3cc362645da2f14a154cc0"
   - name: varnish
     newTag: "7.7.1@sha256:9f57aef81284589ae063257f9d0244ceb1bb0879cd2fff32f8ec9aa0c2432988"
  
