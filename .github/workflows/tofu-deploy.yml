@@ -29,20 +29,18 @@ jobs:
       
       - name: Initialize OpenTofu
         run: tofu init
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
       - name: Apply OpenTofu changes
         run: tofu apply -var-file=configs/production.tfvars -auto-approve
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
           TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_s3_server: ${{ secrets.S3_SERVER }}
           TF_VAR_s3_access_key: ${{ secrets.S3_ACCESS_KEY }}
           TF_VAR_s3_secret_key: ${{ secrets.S3_SECRET_KEY }}
-          TF_VAR_s3_region: ${{ secrets.S3_REGION }}
       
       - name: Comment on PR
         uses: actions/github-script@v7

@@ -28,7 +28,7 @@ jobs:
       
       - name: Initialize OpenTofu
         run: tofu init
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
@@ -37,14 +37,12 @@ jobs:
         run: |
           tofu plan -no-color -var-file=configs/production.tfvars -out=plan.tfplan
           tofu show -no-color plan.tfplan > plan.txt
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
           TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_s3_server: ${{ secrets.S3_SERVER }}
           TF_VAR_s3_access_key: ${{ secrets.S3_ACCESS_KEY }}
           TF_VAR_s3_secret_key: ${{ secrets.S3_SECRET_KEY }}
-          TF_VAR_s3_region: ${{ secrets.S3_REGION }}
       
       - name: Create PR with plan
         uses: peter-evans/create-pull-request@v7
