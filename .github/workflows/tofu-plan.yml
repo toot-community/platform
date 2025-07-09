@@ -28,7 +28,7 @@ jobs:
       
       - name: Initialize OpenTofu
         run: tofu init
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
@@ -39,7 +39,7 @@ jobs:
         run: |
           tofu plan -no-color -var-file=configs/production.tfvars -out=plan.tfplan
           tofu show -no-color plan.tfplan > plan.txt
-        working-directory: platform
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
