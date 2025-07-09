@@ -32,6 +32,8 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_KEY }}
       
       - name: Download plan file
         uses: actions/download-artifact@v4
@@ -44,9 +46,8 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_s3_access_key: ${{ secrets.S3_ACCESS_KEY }}
-          TF_VAR_s3_secret_key: ${{ secrets.S3_SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_KEY }}
       
       - name: Comment on PR
         uses: actions/github-script@v7

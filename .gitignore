@@ -30,5 +30,6 @@ override.tf.json
 terraform.rc
 
 .envrc
+.secrets
 
 manifests/**/charts

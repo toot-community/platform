@@ -28,28 +28,22 @@ jobs:
       
       - name: Initialize OpenTofu
         run: tofu init
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: platform
         env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_KEY }}
       
       - name: Generate plan
         id: plan
         run: |
           tofu plan -no-color -var-file=configs/production.tfvars -out=plan.tfplan
           tofu show -no-color plan.tfplan > plan.txt
-        working-directory: ${{ env.WORKING_DIR }}
+        working-directory: platform
         env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-          TF_VAR_s3_access_key: ${{ secrets.S3_ACCESS_KEY }}
-          TF_VAR_s3_secret_key: ${{ secrets.S3_SECRET_KEY }}
-      
-      - name: Upload plan file as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tofu-plan-${{ github.sha }}
-          path: ${{ env.WORKING_DIR }}/plan.tfplan
-          retention-days: 30
+          hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_KEY }}
       
       - name: Create PR with plan
         uses: peter-evans/create-pull-request@v7
