@@ -1,0 +1,39 @@
+serviceAccount: 
+  create: true
+  
+server:
+  retentionDiskSpaceUsage: "40"
+  extraArgs:
+    envflag.enable: true
+    envflag.prefix: VM_
+    loggerFormat: json
+    httpListenAddr: :9428
+    http.shutdownDelay: 15s
+  
+  persistentVolume:
+    enabled: true
+    size: 50Gi
+    
+  resources:
+    requests:
+      cpu: 45m
+      memory: 1664Mi
+    limits:
+      memory: 1664Mi
+      
+  vmServiceScrape:
+    enabled: true
+    
+vector:
+  enabled: true
+  resources:
+    requests:
+      cpu: 85m
+      memory: 233Mi
+    limits:
+      memory: 1Gi # OOMKill if set to less than 1Gi
+  
+dashboards:
+  enabled: true
+  labels:
+    grafana_dashboard: "1"

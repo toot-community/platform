@@ -1,0 +1,250 @@
+deploymentType: statefulset
+
+persistence:
+  enabled: true
+  size: 6Gi  # 5G file + overhead
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 151Mi
+  limits:
+    memory: 151Mi
+
+initContainers:
+  - name: storage-init
+    image: busybox
+    command: 
+      - 'sh'
+      - '-c'
+      - |
+        if [ ! -f /var/cache/varnish/storage.bin ]; then
+          echo "Creating varnish storage file with size ${VARNISH_SIZE:-5G}..."
+          # Convert size to bytes for fallocate (remove G suffix and multiply by 1024^3)
+          SIZE_IN_BYTES=$(echo "${VARNISH_SIZE:-5G}" | sed 's/G$//' | awk '{print int($1 * 1024 * 1024 * 1024)}')
+          fallocate -l $SIZE_IN_BYTES /var/cache/varnish/storage.bin
+          echo "Storage file created successfully"
+        else
+          echo "Storage file already exists, skipping creation"
+        fi
+    env:
+      - name: VARNISH_SIZE
+        value: "{{ .Values.varnish.size }}"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: ["ALL"]
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+    volumeMounts:
+    - name: varnish-storage
+      mountPath: /var/cache/varnish
+
+onload: 
+  host: haproxy-onload.haproxy-onload.svc.cluster.local
+  port: 8080
+
+# Migration mode configuration
+migration:
+  enabled: false
+  secondary:
+    host: secondary-bucket.example.com
+    port: 443
+  
+varnish:
+  size: 5G
+  removeResponseHeaders:
+    - "x-amz-request-id" # hetzner
+    - "x-debug-bucket" # hetzner
+    - "x-rgw-object-type" # hetzner
+    - "x-amz-id-2" # wasabi
+    - "x-amz-meta-btime" # wasabi
+    - "x-amz-meta-fl-original-last-modified" # wasabi
+    - "x-amz-meta-mtime" # wasabi
+    - "x-wasabi-cm-reference-id" # wasabi
+    - "x-amz-replication-status" # wasabi
+  purge:
+    enabled: true
+    requiredHeader: X-TC-Purge-Key
+    requiredPassword: ThisIsNotVerySecret
+  extraArgs:
+    - -s
+    - file,/var/cache/varnish/storage.bin,{{ .Values.varnish.size }},1M,sequential
+    - -p
+    - thread_pools=2
+    - -p
+    - thread_pool_min=200
+    - -p
+    - thread_pool_max=3000
+
+  configuration: |
+    |-
+    vcl 4.1;
+    
+    # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
+    include "hit-miss.vcl";
+
+    import dynamic;
+    import std;
+    
+    backend proxy {
+      .host = "{{ .Values.onload.host }}";
+      .port = "{{ .Values.onload.port }}";
+    }
+    
+    acl ipv4_only { "0.0.0.0"/0; }
+    acl trusted_proxies { "10.0.0.0"/16; }
+    acl purge_clients {
+        "188.245.120.181"/32; # tc-prod-worker-1
+        "128.140.87.70"/32; # tc-prod-worker-2
+        "91.99.94.115"/32; # tc-prod-worker-3
+    }
+
+    sub vcl_init {
+        new d = dynamic.director(
+            port = "{{ .Values.backend.port }}",
+            ttl = 60s,
+            via = proxy,
+            whitelist = ipv4_only
+        );
+        {{- if .Values.migration.enabled }}
+        new d_secondary = dynamic.director(
+            port = "{{ .Values.migration.secondary.port }}",
+            ttl = 60s,
+            via = proxy,
+            whitelist = ipv4_only
+        );
+        {{- end }}
+    }
+    
+    sub vcl_backend_fetch {
+      {{- if .Values.migration.enabled }}
+      if (bereq.http.X-Varnish-Backend == "secondary") {
+        set bereq.backend = d_secondary.backend("{{ .Values.migration.secondary.host }}");
+        set bereq.http.Host = "{{ .Values.migration.secondary.host }}";
+        set bereq.http.X-Backend-Source = "secondary";
+      } else {
+        set bereq.http.Host = "{{ .Values.backend.host }}";
+        set bereq.http.X-Backend-Source = "primary";
+      }
+      {{- else }}
+      set bereq.http.Host = "{{ .Values.backend.host }}";
+      {{- end }}
+    }
+    
+    sub vcl_deliver {
+      {{- if .Values.migration.enabled }}
+      # Add header to show which backend served the content
+      if (resp.http.X-Backend-Source) {
+        set resp.http.X-Served-By = resp.http.X-Backend-Source;
+      }
+      {{- end }}
+      
+      # Remove headers that are not needed
+      {{ range $header := .Values.varnish.removeResponseHeaders }}
+        unset resp.http.{{ $header }};
+      {{ end }}
+    }
+    
+    sub vcl_recv {
+      set req.backend_hint = d.backend("{{ .Values.backend.host }}");
+
+      # Health check
+      if (req.url == "/__health") {
+        return (synth(200, "OK"));
+      }
+      
+      # Backend health check - returns backend health status
+      if (req.url == "/__backend_health") {
+        if (std.healthy(req.backend_hint)) {
+          return (synth(200, "Backend healthy"));
+        } else {
+          return (synth(503, "Backend unhealthy"));
+        }
+      }
+      
+      {{- if .Values.varnish.purge.enabled -}}
+      if (req.method == "PURGE") {
+          if (client.ip ~ trusted_proxies && req.http.X-Forwarded-For) {
+              if (!(std.ip(regsub(req.http.X-Forwarded-For, "^[ ]*([^, ]+).*", "\1"), "0.0.0.0") ~ purge_clients)) {
+                  return (synth(403, "Forbidden"));
+              }
+          } else if (!(client.ip ~ purge_clients)) {
+              return (synth(403, "Forbidden"));
+          }
+          
+          if (req.http.{{ .Values.varnish.purge.requiredHeader }} != "{{ .Values.varnish.purge.requiredPassword }}") {
+              return (synth(403, "Forbidden"));
+          }
+
+          return (purge);
+      }
+      {{- end -}}
+
+      # Remove cookies and auth headers to increase cachability
+      unset req.http.Cookie;
+      unset req.http.Authorization;
+    }
+    
+    sub vcl_backend_response {
+        {{- if .Values.migration.enabled }}
+        # Migration mode: retry with secondary backend on any non-OK status
+        if (beresp.status >= 400 && bereq.http.X-Varnish-Backend != "secondary" && bereq.retries == 0) {
+            set bereq.http.X-Varnish-Backend = "secondary";
+            return (retry);
+        }
+        
+        # Copy backend source info to response for client visibility
+        if (bereq.http.X-Backend-Source) {
+            set beresp.http.X-Backend-Source = bereq.http.X-Backend-Source;
+        }
+        {{- end }}
+        
+        # 0. Bypass >100 MB
+        if (beresp.http.Content-Length &&
+            std.integer(beresp.http.Content-Length,0) > 100000000) {
+            return (deliver);
+        }
+
+        # 1. Path-based policy
+        if (bereq.url ~ "^/cache/") {
+            set beresp.ttl   = 120m;
+            set beresp.grace = 48h;
+            set beresp.keep  = 24h;
+
+        } else if (bereq.url ~ "^/media_attachments/") {
+            set beresp.ttl   = 7d;
+            set beresp.grace = 30d;
+            set beresp.keep  = 7d;
+
+        } else if (bereq.url ~ "^/(accounts/(avatars|headers)/|custom_emojis/|site_uploads/)") {
+            set beresp.ttl = 7d;
+            set beresp.grace = 14d;
+            set beresp.keep  = 7d;
+        } else {
+            # default
+            set beresp.ttl   = 30m;
+            set beresp.grace = 5m;
+            set beresp.keep  = 5m;
+        }
+
+        # 2. Cache 4xx/5xx briefly so errors aren't hammered
+        if (beresp.status >= 400 && beresp.status < 500) {
+            set beresp.ttl = 30s;
+            return (deliver);
+        }
+        if (beresp.status >= 500) {
+            set beresp.ttl   = 60s;
+            set beresp.grace = 2m;
+            return (deliver);
+        }
+    }
+

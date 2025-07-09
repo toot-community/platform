@@ -1,0 +1,68 @@
+{{- if .Values.debug -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+    app: {{ include "mastodon.fullname" . }}-debug
+    version: {{ .Chart.AppVersion | quote }}
+  name: {{ include "mastodon.fullname" . }}-debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: debug
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configuration.yaml") . | sha256sum }}
+      labels:
+        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: debug
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - command:
+            - bash
+            - -c
+            - while true; do sleep 30; done
+          env:
+            - name: PORT
+              value: {{ .Values.web.port | quote }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.database.credentials.usernameKey }}
+                  name: {{ .Values.configuration.database.credentials.secretName }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.database.credentials.passwordKey }}
+                  name: {{ .Values.configuration.database.credentials.secretName }}
+            {{- if .Values.configuration.search.enabled }}
+            - name: ES_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.search.password.secretKeyRef.key }}
+                  name: {{ .Values.configuration.search.password.secretKeyRef.name }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "mastodon.fullname" . }}-env
+            - secretRef:
+                name: {{ include "mastodon.fullname" . }}-secrets-env
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: debug
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      restartPolicy: Always
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- end -}}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "labels": [
+    "renovate"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "\\.yaml$/"
+      ],
+      "matchStrings": [
+        "imageName: (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[0-9]+\\.[0-9]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://ghcr.io"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true,
+      "automergeType": "branch",
+      "ignoreTests": true
+    },
+    {
+      "matchManagers": [
+        "kustomize",
+        "helmv3",
+        "terraform"
+      ],
+      "matchFileNames": [
+        "manifests/**/*.yaml"
+      ],
+      "additionalBranchPrefix": "{{parentDir}}-",
+      "addLabels": [
+        "dependency::{{depName}}"
+      ]
+    },
+    {
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchFileNames": [
+        "platform/**/*.tf"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/postgresql"
+      ],
+      "addLabels": [
+        "dependency::postgresql"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/postgresql"
+      ],
+      "matchFileNames": [
+        "manifests/applications/mastodon/overlays/toot.community/database-cluster.yaml"
+      ],
+      "allowedVersions": "~16"
+    }
+  ]
+}

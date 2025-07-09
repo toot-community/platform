@@ -1,0 +1,3 @@
+{{ if .Values.jobs.statusesRemove.enabled }}
+{{- include "mastodon.cronJobTemplate" (dict "root" . "name" "statuses-remove" "schedule" .Values.jobs.statusesRemove.schedule "command" (list "bash" "-c" (printf "bin/tootctl statuses remove --days=%v --no-clean-followed --no-compress-database" .Values.jobs.statusesRemove.days)) "resources" .Values.jobs.statusesRemove.resources) }}
+{{ end }}

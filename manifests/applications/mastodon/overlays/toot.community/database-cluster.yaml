@@ -1,0 +1,53 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: database
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.9
+
+  storage:
+    size: 500Gi
+        
+  postgresql:
+    parameters:
+      # pgtune
+      # DB Version: 16
+      # OS Type: linux
+      # DB Type: web
+      # Total Memory (RAM): 8 GB
+      # CPUs num: 2
+      # Data Storage: san
+      max_connections: "300"
+      shared_buffers: "2GB"
+      effective_cache_size: "6GB"
+      maintenance_work_mem: "512MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "300"
+      work_mem: "10082kB"
+      huge_pages: "off"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "2"
+    limits:
+      memory: "8Gi"
+      
+  # nodeMaintenanceWindow:
+  #   reusePVC: true
+  #   inProgress: true
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: database-backup
+spec:
+  configuration:
+    endpointURL: https://fsn1.your-objectstorage.com
+    destinationPath: s3://toot-community-cnpg-storage/v20250526/

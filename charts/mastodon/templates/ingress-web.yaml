@@ -1,0 +1,44 @@
+{{- $fullName := include "mastodon.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ .Values.ingress.web.maxBodySize }}
+    nginx.ingress.kubernetes.io/client-body-buffer-size: {{ .Values.ingress.web.maxBodySize }}
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: {{ .Values.ingress.web.upstreamProxyTimeout | quote }}
+    nginx.ingress.kubernetes.io/proxy-read-timeout: {{ .Values.ingress.web.upstreamProxyTimeout | quote }}
+    nginx.ingress.kubernetes.io/proxy-send-timeout: {{ .Values.ingress.web.upstreamProxyTimeout | quote }}
+    {{- if .Values.ingress.web.verifyClient.enabled }}
+    nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Values.ingress.web.verifyClient.secretName }}
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "false"
+    {{- end }}
+    {{- if .Values.ingress.web.annotations }}
+    {{- toYaml .Values.ingress.web.annotations | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  name: {{ $fullName }}-web
+spec:
+  ingressClassName: {{ .Values.ingress.web.ingressClassName }}
+  rules:
+    - host: {{ .Values.ingress.web.host }}
+      http:
+        paths:
+          - backend:
+              service:
+                {{- if .Values.ingress.web.serviceNameOverride }}
+                name: {{ .Values.ingress.web.serviceNameOverride }}
+                {{- else }}
+                name: {{ include "mastodon.fullname" . }}-web
+                {{- end }}
+                port:
+                  {{- if .Values.ingress.web.servicePortOverride }}
+                  number: {{ .Values.ingress.web.servicePortOverride }}
+                  {{- else }}
+                  number: {{ .Values.web.port }}
+                  {{- end }}
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    {{ .Values.ingress.web.tls | toYaml | nindent 4 }}

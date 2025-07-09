@@ -1,0 +1,129 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: database
+spec:
+  instances: 1
+  # imageName: patch-me
+  primaryUpdateStrategy: unsupervised
+  enablePDB: true
+
+  storage:
+    size: 40Gi
+
+  monitoring:
+    enablePodMonitor: true
+
+  postgresql:
+    parameters:
+      # statistics
+      pg_stat_statements.max: "10000"
+      pg_stat_statements.track: "all"
+
+      # pgtune
+      # DB Version: 17
+      # OS Type: linux
+      # DB Type: oltp
+      # Total Memory (RAM): 2 GB
+      # CPUs num: 1
+      # Data Storage: san
+      max_connections: "300"
+      shared_buffers: "512MB"
+      effective_cache_size: "512MB"
+      maintenance_work_mem: "128MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "300"
+      work_mem: "1702kB"
+      huge_pages: "off"
+      min_wal_size: "2GB"
+      max_wal_size: "8GB"
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: database-backup
+      
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+    limits:
+      memory: "2Gi"
+
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: database-backup
+spec:
+  # runs on monday and thursday at 06:00
+  schedule: "0 0 6 * * 1,4"
+  backupOwnerReference: self
+  cluster:
+    name: database
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: database-pooler-rw
+spec:
+  cluster:
+    name: database
+  instances: 2
+  type: rw
+  pgbouncer:
+    poolMode: transaction
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "125"
+  template:
+    metadata:
+      labels:
+        app: database-pooler-rw
+    spec:
+      containers:
+        - resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+            limits:
+              memory: 100Mi
+          name: pgbouncer
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - database-pooler-rw
+              topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: database-backup
+spec:
+  configuration:
+    endpointURL: https://s3.jorijn.com
+    s3Credentials:
+      accessKeyId:
+        name: database-s3-credentials
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: database-s3-credentials
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+  retentionPolicy: "10d"

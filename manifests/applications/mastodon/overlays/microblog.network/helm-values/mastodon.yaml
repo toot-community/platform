@@ -1,0 +1,51 @@
+.instanceDomain: &instanceDomain microblog.network
+.streamingDomain: &streamingDomain streaming.microblog.network
+.staticDomain: &staticDomain static.microblog.network
+
+debug: false
+
+configuration:
+  localDomain: *instanceDomain
+  limitedFederationMode: true
+  authorizedFetch: false
+  
+  s3:
+    aliasHost: *staticDomain
+    bucket: microblog-network-assets
+    
+  smtp:
+    domain: *instanceDomain
+    fromAddress: microblog.network Notifications <support@microblog.network>
+    smtpServer: mail.jorijn.com
+    
+web:
+  domain: *instanceDomain
+  replicaCount: 1
+  podDisruptionBudget:
+    enabled: false
+  
+streaming:
+  baseURL: wss://streaming.microblog.network
+  replicaCount: 1
+  
+ingress:
+  web:
+    host: *instanceDomain
+    tls:
+      - hosts:
+          - *instanceDomain
+        secretName: ingress-web-tls
+  streaming:
+    host: *streamingDomain
+    tls:
+      - hosts:
+          - *streamingDomain
+        secretName: ingress-streaming-tls
+
+s3Gateway:
+  ingress:
+    host: *staticDomain
+    tls:
+      - hosts:
+          - *staticDomain
+        secretName: ingress-static-tls

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - argocd.yaml
+  - cert-manager.yaml
+  - cilium.yaml
+  - cloudnative-pg.yaml
+  - dex.yaml
+  - n8n.yaml
+  - elastic-operator.yaml
+  - hetzner-ccm.yaml
+  - ingress-nginx.yaml
+  - metrics-server.yaml
+  - microblog-network.yaml
+  - talos-ccm.yaml
+  - velero.yaml
+  - victoriametrics.yaml
+  - toot-community.yaml
+  - victorialogs.yaml
+  - robusta.yaml

@@ -1,0 +1,25 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-cluster-backup
+spec:
+  schedule: 0 2 * * *
+  template:
+    snapshotVolumes: false
+    defaultVolumesToFsBackup: true
+    excludedNamespaces:
+      - kube-system
+      - velero
+      - victoriametrics
+      - victorialogs
+    includeClusterResources: true
+    includedNamespaces:
+      - "*"
+    labelSelector:
+      matchLabels:
+        velero.io/backup: "true"
+    itemOperationTimeout: 4h
+    ttl: 336h # 14 days
+    uploaderConfig:
+      parallelFilesUpload: 10
+  useOwnerReferencesInBackup: false

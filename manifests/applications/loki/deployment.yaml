@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  labels:
+    app.kubernetes.io/instance: loki
+    app.kubernetes.io/name: loki
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: loki
+      app.kubernetes.io/name: loki
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: loki
+        app.kubernetes.io/name: loki
+    spec:
+      serviceAccountName: loki
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+        - name: loki
+          image: ghcr.io/jorijn/loki-v3
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          command:
+            - /app/loki
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          envFrom:
+            - configMapRef:
+                name: loki-env
+            - secretRef:
+                name: loki-secret-env
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: database-app
+                  key: host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: database-app
+                  key: port
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-app
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-app
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-app
+                  key: dbname
+            - name: DB_SSLMODE
+              value: "require"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+            limits:
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3

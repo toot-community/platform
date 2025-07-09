@@ -1,0 +1,78 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace toot-community
+
+helmGlobals:
+  chartHome: ../../../../../charts
+  
+resources:
+  - ../../base
+  - ../../base/search-cluster.yaml
+  - secrets.yaml
+  - database-rw-pooler.yaml
+
+helmCharts:
+  - name: redis
+    version: "21.2.7"
+    releaseName: redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/redis.yaml
+    additionalValuesFiles:
+      - helm-values/redis.yaml
+    repo: oci://registry-1.docker.io/bitnamicharts
+  - name: haproxy
+    version: "1.24.0"
+    releaseName: haproxy-redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/haproxy.yaml
+    additionalValuesFiles:
+      - helm-values/haproxy.yaml
+    repo: https://haproxytech.github.io/helm-charts
+  - name: mastodon
+    version: "0.0.0"
+    releaseName: mastodon
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/mastodon.yaml
+    additionalValuesFiles:
+      - helm-values/mastodon.yaml
+      # - helm-values/mastodon-fhf.yaml
+  - name: varnish
+    version: "0.0.0"
+    releaseName: varnish-for-app
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/varnish-for-app.yaml
+    additionalValuesFiles:
+      - helm-values/varnish-for-app.yaml
+  - name: varnish
+    version: "0.0.0"
+    releaseName: varnish-for-static
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/varnish-for-static.yaml
+    additionalValuesFiles:
+      - helm-values/varnish-for-static.yaml
+
+images:
+  - name: ghcr.io/mastodon/mastodon
+    newTag: "v4.4.0@sha256:0ba627f8f26884d2940e017ef90695c5fe82b2a5d39a66e12210a41ec9cb8e9d"
+  - name: ghcr.io/mastodon/mastodon-streaming
+    newTag: "v4.4.0@sha256:f271c83096bc9f02b9da62b407e58a66ca47f88410c0863b1c63fe36a45e208d"
+  - name: varnish
+    newTag: "7.7.1@sha256:9f57aef81284589ae063257f9d0244ceb1bb0879cd2fff32f8ec9aa0c2432988"
+ 
+patches:
+  - path: database-cluster.yaml
+  - target:
+      name: elasticsearch
+      kind: Elasticsearch
+    patch: |-
+      - op: replace
+        path: /spec/nodeSets/0/podTemplate/spec/containers/0/resources
+        value: 
+          requests:
+            cpu: '300m'
+            memory: 4Gi
+          limits:
+            memory: 4Gi
+      - op: replace
+        path: /spec/nodeSets/0/volumeClaimTemplates/0/spec/resources/requests/storage
+        value: 25Gi

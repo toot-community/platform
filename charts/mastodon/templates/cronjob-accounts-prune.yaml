@@ -1,0 +1,3 @@
+{{ if .Values.jobs.accountsPrune.enabled }}
+{{- include "mastodon.cronJobTemplate" (dict "root" . "name" "accounts-prune" "schedule" .Values.jobs.accountsPrune.schedule "command" (list "bash" "-c" "bin/tootctl accounts prune") "resources" .Values.jobs.accountsPrune.resources) }}
+{{ end }}

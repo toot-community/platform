@@ -1,0 +1,14 @@
+configuration:
+  s3:
+    endpoint: https://fsn1.your-objectstorage.com
+    hostname: fsn1.your-objectstorage.com
+    region: fsn1
+    protocol: https
+    timeouts:
+      open: 10
+      read: 10
+
+ingress:
+  web:
+    serviceNameOverride: varnish-for-app
+    servicePortOverride: 80

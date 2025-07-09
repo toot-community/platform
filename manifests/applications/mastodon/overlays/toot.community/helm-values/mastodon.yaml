@@ -1,0 +1,115 @@
+.instanceDomain: &instanceDomain toot.community
+.streamingDomain: &streamingDomain streaming.toot.community
+.staticDomain: &staticDomain static.toot.community
+
+debug: false
+
+configuration:
+  localDomain: *instanceDomain
+  limitedFederationMode: false
+  authorizedFetch: false
+
+  s3:
+    endpoint: https://fsn1.your-objectstorage.com
+    hostname: fsn1.your-objectstorage.com
+    region: fsn1
+    aliasHost: *staticDomain
+    bucket: toot-community-assets
+    
+  smtp:
+    domain: *instanceDomain
+    fromAddress: toot.community Notifications <support@toot.community>
+    smtpServer: mail.jorijn.com
+    
+  search:
+    enabled: true
+  
+  databaseReplicas:
+    enabled: true
+
+web:
+  domain: *instanceDomain
+  replicaCount: 3
+  resources:
+    requests:
+      cpu: 683m
+      memory: 2271Mi
+    limits:
+      memory: 2750Mi
+  
+streaming:
+  baseURL: wss://streaming.toot.community
+  resources:
+    requests:
+      cpu: 21m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
+  
+ingress:
+  web:
+    host: *instanceDomain
+    tls:
+      - hosts:
+          - *instanceDomain
+        secretName: ingress-web-tls
+  streaming:
+    host: *streamingDomain
+    tls:
+      - hosts:
+          - *streamingDomain
+        secretName: ingress-streaming-tls
+
+sidekiq:
+  workers:
+    - name: generic
+      concurrency: 25
+      replicaCount: 3
+      queues:
+        - default
+        - mailers
+        - push
+        - ingress
+        - fasp
+        - pull
+      resources:
+        requests:
+          cpu: 1111m
+          memory: 2078Mi
+        limits:
+          memory: 3Gi
+    - name: scheduler
+      concurrency: 25
+      replicaCount: 1
+      queues:
+        - scheduler
+      resources:
+        requests:
+          cpu: 317m
+          memory: 633Mi
+        limits:
+          memory: 633Mi
+          
+jobs:
+  removePreviewCards:
+    resources:
+      requests:
+        cpu: 1201m
+        memory: 643Mi
+      limits:
+        memory: 643Mi
+    days: 30
+  cleanupMedia:
+    resources:
+      requests:
+        cpu: 1221m
+        memory: 665Mi
+      limits:
+        memory: 665Mi
+  cleanupMediaProfiles:
+    resources:
+      requests:
+        cpu: 1757m
+        memory: 510Mi
+      limits:
+        memory: 510Mi

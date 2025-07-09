@@ -1,0 +1,3 @@
+{{ if .Values.jobs.removePreviewCards.enabled }}
+{{- include "mastodon.cronJobTemplate" (dict "root" . "name" "remove-preview-cards" "schedule" .Values.jobs.removePreviewCards.schedule "command" (list "bash" "-c" (printf "bin/tootctl preview_cards remove --days=%v" .Values.jobs.removePreviewCards.days)) "resources" .Values.jobs.removePreviewCards.resources) }}
+{{ end }}

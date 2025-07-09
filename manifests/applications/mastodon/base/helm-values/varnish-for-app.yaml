@@ -1,0 +1,159 @@
+backend:
+  host: mastodon-web-headless
+  port: 3000
+
+resources:
+  requests:
+    cpu: 11m
+    memory: 192Mi
+  limits:
+    memory: 192Mi
+
+varnish:
+  size: 256M
+  cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
+  extraArgs:
+    - -s
+    - malloc,{{ .Values.varnish.size }}
+    - -p
+    - thread_pool_min=100
+    - -p
+    - thread_pool_max=2000
+    - -p
+    - workspace_client=128k
+    - -p
+    - workspace_backend=128k
+    - -p
+    - http_req_hdr_len=16k
+  configuration: |
+    |-
+    vcl 4.1;
+    
+    # https://github.com/varnish/toolbox/tree/master/vcls/hit-miss
+    include "hit-miss.vcl";
+    
+    import dynamic;
+    import std;
+
+    backend default none;
+    
+    acl ipv4_only { "0.0.0.0"/0; }
+    
+    sub vcl_init {
+        new d = dynamic.director(
+            port = "{{ .Values.backend.port }}",
+            ttl = 1s,
+            whitelist = ipv4_only
+        );
+    }
+    
+    sub vcl_recv {
+        set req.backend_hint = d.backend("{{ .Values.backend.host }}");
+    
+        if (req.url == "/__health") {
+            return (synth(200, "OK"));
+        }
+        
+        # Backend health check - returns backend health status
+        if (req.url == "/__backend_health") {
+            if (std.healthy(req.backend_hint)) {
+                return (synth(200, "Backend healthy"));
+            } else {
+                return (synth(503, "Backend unhealthy"));
+            }
+        }
+        
+        # Bypass cache for Sidekiq dashboard
+        if (req.url ~ "^/sidekiq") {
+            return (pass);
+        }
+
+        if (
+            {{- if .Values.varnish.cachePublicInstanceEndpoints }}
+            req.url ~ "^/api/v1/custom_emojis$" ||
+            req.url ~ "^/api/v(1|2)/instance$" ||
+            req.url ~ "^/api/v1/instance/translation_languages$" ||
+            {{- end }}
+            req.url ~ "\.(css|js)$"
+        ) {
+            unset req.http.Authorization;
+            unset req.http.Cookie;
+        }
+
+        if (req.method == "PRI") {
+            /* This will never happen in properly formed traffic (see: RFC7540) */
+            return (synth(405));
+        }
+        
+        if (!req.http.host &&
+          req.esi_level == 0 &&
+          req.proto ~ "^(?i)HTTP/1.1") {
+            /* In HTTP/1.1, Host is required. */
+            return (synth(400));
+        }
+        
+        if (req.method != "GET" &&
+          req.method != "HEAD" &&
+          req.method != "PUT" &&
+          req.method != "POST" &&
+          req.method != "TRACE" &&
+          req.method != "OPTIONS" &&
+          req.method != "DELETE" &&
+          req.method != "PATCH") {
+            /* Non-RFC2616 or CONNECT which is weird. */
+            return (pipe);
+        }
+
+        if (req.method != "GET" && req.method != "HEAD") {
+            /* We only deal with GET and HEAD by default */
+            return (pass);
+        }
+        
+        if (req.http.Authorization || req.http.Cookie) {
+            /* Not cacheable by default */
+            return (pass);
+        }
+        
+        return (hash);
+    }
+
+    sub vcl_deliver {
+        unset resp.http.Via;
+        unset resp.http.X-Varnish;
+    }
+
+    sub vcl_backend_response {
+        if (
+            {{- if .Values.varnish.cachePublicInstanceEndpoints }}
+            bereq.url ~ "^/api/v1/custom_emojis$" ||
+            bereq.url ~ "^/api/v(1|2)/instance$" ||
+            bereq.url ~ "^/api/v1/instance/translation_languages$" ||
+            {{- end }}
+            bereq.url ~ "\.(css|js)$"
+        ) {
+            unset beresp.http.set-cookie;
+        }
+
+        if (bereq.uncacheable) {
+            return (deliver);
+        } else if (beresp.ttl <= 0s ||
+          beresp.http.Set-Cookie ||
+          beresp.http.Surrogate-control ~ "(?i)no-store" ||
+          (!beresp.http.Surrogate-Control &&
+            beresp.http.Cache-Control ~ "(?i:no-cache|no-store|private)") ||
+          beresp.http.Vary == "*") {
+            # Mark as "Hit-For-Miss" for the next 2 minutes
+            set beresp.ttl = 120s;
+            set beresp.uncacheable = true;
+        }
+        
+        return (deliver);
+    }
+    
+    sub vcl_synth {
+        if (resp.status == 200 && req.url == "/__health") {
+            set resp.http.Content-Type = "text/plain";
+            set resp.body = "Varnish is healthy\n";
+            return (deliver);
+        }
+    }

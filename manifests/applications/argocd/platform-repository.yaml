@@ -1,0 +1,8 @@
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: tc-github-platform
+  labels:
+    argocd.argoproj.io/secret-type: repository
+spec:
+  itemPath: vaults/toot.community/items/h3yjasirv2iozt5lyfdbdq5hrm

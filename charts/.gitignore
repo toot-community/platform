@@ -1,0 +1,6 @@
+*
+!mastodon/
+!mastodon/**
+!varnish/
+!varnish/**
+!.gitignore

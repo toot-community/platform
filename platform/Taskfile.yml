@@ -1,0 +1,36 @@
+version: "3"
+
+env:
+  ENV: production
+  CONFIG_PATH: ./configs
+
+tasks:
+  init:
+    cmds:
+      - tofu init -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars" -reconfigure
+    internal: true
+
+  plan:
+    deps: [init]
+    cmds:
+      - tofu plan -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars"
+
+  apply:
+    deps: [init]
+    cmds:
+      - tofu apply -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars"
+
+  destroy:
+    deps: [init]
+    cmds:
+      - tofu destroy -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars"
+
+  get-kubeconfig:
+    deps: [init]
+    cmds:
+      - tofu output -raw kubeconfig > "{{.CONFIG_PATH}}/output/kubeconfig-{{.ENV}}.yaml"
+
+  get-talosconfig:
+    deps: [init]
+    cmds:
+      - tofu output -raw talosconfig > "{{.CONFIG_PATH}}/output/talosconfig-{{.ENV}}.yaml"

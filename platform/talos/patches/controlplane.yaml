@@ -1,0 +1,25 @@
+cluster:
+  etcd:
+    advertisedSubnets:
+      - ${vpc_subnet_cidr}
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+
+machine:
+  network:
+    interfaces:
+    - interface: enp1s0
+      dhcp: true
+      vip:
+        ip: ${ipv4_vip_addr}
+        hcloud:
+            apiToken: ${hcloud_token}
+    - interface: enp7s0
+      dhcp: true
+  features:
+    kubernetesTalosAPIAccess:
+      enabled: true
+      allowedRoles:
+        - os:reader
+      allowedKubernetesNamespaces:
+        - kube-system

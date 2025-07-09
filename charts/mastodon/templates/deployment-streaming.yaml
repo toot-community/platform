@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+    app: {{ include "mastodon.fullname" . }}-streaming
+    version: {{ .Chart.AppVersion | quote }}
+  {{- if .Values.streaming.annotations }}
+    annotations:
+      {{- toYaml .Values.streaming.annotations | nindent 4 }}
+  {{- end }}
+  name: {{ include "mastodon.fullname" . }}-streaming
+spec:
+  replicas: {{ .Values.streaming.replicaCount | default 3 }}
+  selector:
+    matchLabels:
+      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: streaming
+  strategy:
+    {{- toYaml .Values.streaming.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: streaming
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configuration.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - command:
+          - node
+          - ./streaming
+          env:
+            {{- if .Values.configuration.databaseReplicas.enabled }}
+            - name: DB_HOST
+              value: {{ .Values.configuration.databaseReplicas.host }}
+            {{- end }}
+            {{- if .Values.streaming.redis }}
+            {{- if .Values.streaming.redis.url }}
+            - name: REDIS_URL
+              value: {{ .Values.streaming.redis.url }}
+            - name: REDIS_HOST
+              value: empty
+            - name: REDIS_PORT
+              value: empty
+            {{- end }}
+            {{- end }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.database.credentials.usernameKey }}
+                  name: {{ .Values.configuration.database.credentials.secretName }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.configuration.database.credentials.passwordKey }}
+                  name: {{ .Values.configuration.database.credentials.secretName }}
+            - name: PORT
+              value: {{ .Values.streaming.port | quote }}
+            - name: DB_SSLMODE
+              value: {{ .Values.streaming.databaseSslMode | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "mastodon.fullname" . }}-env
+          image: "{{ .Values.streaming.image.repository }}:{{ .Values.streaming.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.streaming.image.pullPolicy }}
+          name: streaming
+          ports:
+            - containerPort: {{ .Values.streaming.port }}
+              name: streaming
+              protocol: TCP
+          readinessProbe:
+            {{- toYaml .Values.streaming.readinessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.streaming.startupProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.streaming.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      restartPolicy: Always
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

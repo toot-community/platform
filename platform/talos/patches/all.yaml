@@ -1,0 +1,51 @@
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets:
+        - ${vpc_subnet_cidr}
+    extraArgs:
+      rotate-server-certificates: true
+      cloud-provider: external
+  sysctls:
+    net.core.netdev_max_backlog: 4096
+    fs.file-max: "500000"
+    kernel.pid_max: "4194303"
+    net.core.somaxconn: "32768"
+    net.ipv4.ip_local_port_range: 1024 65535
+    net.ipv4.tcp_fin_timeout: "15"
+    net.ipv4.tcp_tw_reuse: "1"
+    vm.max_map_count: "262144"
+    # vm.nr_hugepages: "1024"
+    vm.swappiness: "10"
+  time:
+    servers:
+      - ntp1.hetzner.de
+      - ntp2.hetzner.com
+      - ntp3.hetzner.net
+      - 0.de.pool.ntp.org
+      - 1.de.pool.ntp.org
+      - time.cloudflare.com
+  install:
+    image: ${installer_image}
+
+cluster:
+  apiServer:
+    extraArgs:
+      bind-address: 0.0.0.0 # Allows VictoriaMetrics to scrape the API server.
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0 # Allows VictoriaMetrics to scrape the controller manager.
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
+  network:
+    cni:
+      name: none
+    podSubnets:
+      - 10.0.16.0/20
+      # - fd02:7430:3074::/48
+    serviceSubnets:
+      - 10.0.8.0/21  
+      # - fd02:7430:5300::/112
+  proxy:
+    disabled: true

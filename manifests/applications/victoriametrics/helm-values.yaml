@@ -1,0 +1,247 @@
+.kubernetes-api-endpoints: &api-endpoints
+  - 10.0.1.3
+  - 10.0.1.4
+  - 10.0.1.5
+
+argocdReleaseOverride: victoriametrics
+fullnameOverride: &instance vm
+
+victoria-metrics-operator:
+  operator:
+    prometheus_converter_add_argocd_ignore_annotations: true
+    enable_converter_ownership: true
+
+  admissionWebhooks:
+    enabled: true
+    certManager:
+      enabled: true
+
+  replicaCount: 1
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+grafana:
+  vmScrape:
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: *instance
+  envFromSecrets:
+    - name: grafana-oidc-credentials
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - monitoring.toot.community
+    tls:
+      - secretName: grafana-mit-intern-tls
+        hosts:
+          - monitoring.toot.community
+
+  sidecar:
+    dashboards:
+      searchNamespace: ALL
+      additionalDashboardAnnotations:
+        argocd.argoproj.io/sync-options: ServerSideApply=true
+
+  grafana.ini:
+    analytics:
+      check_for_updates: true
+      reporting_enabled: true
+    server:
+      root_url: https://monitoring.toot.community
+      enable_gzip: true
+    auth:
+      disable_login_form: true
+    log:
+      mode: console
+      slevel: info
+    auth.generic_oauth:
+      enabled: true
+      name: Dex
+      allow_sign_up: true
+      scopes: profile email groups openid offline_access
+      email_attribute_path: email
+      login_attribute_path: preferred_username
+      name_attribute_path: name
+      role_attribute_path: contains(groups[*], 'toot-community:grafana-admin') && 'Admin'
+      role_attribute_strict: true
+      auto_login: true
+      use_pkce: false
+      use_refresh_token: true
+    
+  plugins:
+    - victoriametrics-logs-datasource
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: VictoriaLogs
+          type: victoriametrics-logs-datasource
+          access: proxy
+          url: http://vl-victoria-logs-single-server.victorialogs.svc.cluster.local:9428
+
+defaultDashboards:
+  dashboards:
+    victoriametrics-vmalert:
+      enabled: true
+    victoriametrics-operator:
+      enabled: true
+
+vmsingle:
+  enabled: true
+  spec:
+    resources:
+      requests:
+        cpu: 350m
+        memory: 2Gi
+      limits:
+        memory: 2Gi
+
+vmcluster:
+  enabled: false
+  retentionPeriod: "30d"
+  spec:
+    storage:
+      resources:
+        requests:
+          storage: 50Gi
+
+vmalert:
+  remoteWriteVMAgent: true
+  spec:
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 25m
+        memory: 100Mi
+      limits:
+        memory: 100Mi
+
+vmagent:
+  spec:
+    replicaCount: 1
+    extraArgs:
+      promscrape.dropOriginalLabels: "true"
+      promscrape.streamParse: "true"
+    resources:
+      requests:
+        cpu: 125m
+        memory: 500Mi
+      limits:
+        memory: 500Mi
+
+kubeEtcd:
+  endpoints: *api-endpoints
+  service:
+    port: 2381
+    targetPort: 2381
+  vmScrape:
+    spec:
+      namespaceSelector:
+        matchNames:
+          - victoriametrics
+      endpoints:
+        - port: http-metrics
+          scheme: http
+
+kubeScheduler:
+  endpoints: *api-endpoints
+  vmScrape:
+    spec:
+      namespaceSelector:
+        matchNames:
+          - victoriametrics
+      endpoints:
+        - tlsConfig:
+            insecureSkipVerify: true
+          port: http-metrics
+          scheme: https
+          bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+kubeControllerManager:
+  endpoints: *api-endpoints
+  vmScrape:
+    spec:
+      namespaceSelector:
+        matchNames:
+          - victoriametrics
+      endpoints:
+        - tlsConfig:
+            insecureSkipVerify: true
+          port: http-metrics
+          scheme: https
+          bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+kubelet:
+  vmScrape:
+    spec:
+      relabelConfigs:
+        # Custom
+        - source_labels: [__name__]
+          regex: "(.*talos.*)"
+          action: labeldrop
+        # From the parent chart, but added here because we don't want to overwrite them
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - sourceLabels: [__metrics_path__]
+          targetLabel: metrics_path
+        - targetLabel: "job"
+          replacement: "kubelet"
+
+coreDns:
+  enabled: true
+  service:
+    enabled: false
+  vmScrape:
+    spec:
+      namespaceSelector:
+        matchNames:
+          - kube-system
+      selector:
+        matchLabels:
+          k8s-app: kube-dns
+      endpoints:
+        - port: metrics
+          scheme: http
+          bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+alertmanager:
+  spec:
+    replicaCount: 1
+  config:
+    receivers:
+      - name: 'robusta'
+        webhook_configs:
+          - url: 'http://robusta-runner.robusta.svc.cluster.local/api/alerts'
+            send_resolved: true
+    route:
+      receiver: 'robusta'
+      routes:
+      - receiver: 'robusta'
+        group_by: ['namespace']
+        group_wait: 1s
+        group_interval: 1s
+        matchers:
+        - severity =~ ".*"
+        repeat_interval: 4h
+        continue: true
+
+kube-state-metrics:
+  vmScrape:
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: *instance
+
+prometheus-node-exporter:
+  vmScrape:
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: *instance

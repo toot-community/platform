@@ -1,0 +1,5 @@
+replicaCount: 2
+
+networking:
+  enabled: true
+  clusterCIDR: 10.0.16.0/20

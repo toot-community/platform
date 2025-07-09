@@ -1,0 +1,12 @@
+# BRINGUP
+export HCLOUD_TOKEN=""
+export TF_VAR_hcloud_token="${HCLOUD_TOKEN}"
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_REQUEST_CHECKSUM_CALCULATION="when_required"
+export AWS_RESPONSE_CHECKSUM_VALIDATION="when_required"
+export TF_VAR_whitelist_admins='["1.2.3.4/32"]'
+
+# OPERATIONS
+export KUBECONFIG="/Users/jorijn/Development/tc/platform/configs/production/output/kubeconfig.yaml"
+export TALOSCONFIG="/Users/jorijn/Development/tc/platform/configs/production/output/talosconfig.yaml"

@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+  - https://github.com/argoproj/argo-cd/manifests/ha/cluster-install?ref=v3.0.9
+  - projects
+  - platform-repository.yaml
+  - ./applications
+  - namespace.yaml
+  - ingress.yaml
+  - secrets.yaml
+
+patches:
+  - path: patches/argocd-cm.yaml
+  - path: patches/argocd-rbac-cm.yaml
+  - path: patches/redis-ha-haproxy-affinity-patch.yaml

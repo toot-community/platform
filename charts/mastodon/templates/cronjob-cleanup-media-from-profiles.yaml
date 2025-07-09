@@ -1,0 +1,4 @@
+{{ if .Values.jobs.cleanupMediaProfiles.enabled }}
+{{- $days := .Values.jobs.cleanupMediaProfiles.days | default 7 }}
+{{- include "mastodon.cronJobTemplate" (dict "root" . "name" "cleanup-unused-media-profiles" "schedule" .Values.jobs.cleanupMediaProfiles.schedule "command" (list "bash" "-c" (printf "bin/tootctl media remove --days=%v --prune-profiles" $days)) "resources" .Values.jobs.cleanupMediaProfiles.resources) }}
+{{ end }}

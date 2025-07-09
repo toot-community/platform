@@ -1,0 +1,40 @@
+clusterName: tootcommunity-prod
+enableHolmesGPT: true
+enablePlatformPlaybooks: true
+enablePrometheusStack: false
+enabledManagedConfiguration: true
+
+runner:
+  sendAdditionalTelemetry: true
+  additional_env_froms:
+    - secretRef:
+        name: robusta-secrets-env
+
+globalConfig:
+  account_id: "{{ env.ROBUSTA_ACCOUNT_ID }}"
+  signing_key: "{{ env.ROBUSTA_SIGNING_KEY }}"
+
+holmes:
+  additionalEnvVars:
+  - name: ROBUSTA_AI
+    value: "true"
+  - name: ROBUSTA_UI_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: robusta-secrets-env
+        key: ROBUSTA_UI_TOKEN
+  toolsets:
+    prometheus/metrics:
+      enabled: true
+      config:
+        prometheus_url: http://vmsingle-vm.victoriametrics.svc.cluster.local.:8429
+    kubernetes/live-metrics:
+      enabled: true
+
+sinksConfig:
+- robusta_sink:
+    name: robusta_ui_sink
+    token: "{{ env.ROBUSTA_UI_TOKEN }}"
+- mail_sink:
+    name: mail_sink
+    mailto: "mailtos://{{ env.ROBUSTA_MAIL_CREDENTIALS }}@email-smtp.eu-west-1.amazonaws.com?from=robusta@ses.jorijn.com&to=jorijn@jorijn.com"
