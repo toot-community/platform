@@ -2,7 +2,7 @@ name: OpenTofu Plan
 
 on:
   push:
-    branches: [main]
+    branches: [task/opentofu-gh-action]
     paths:
       - 'platform/**'
       - '.github/workflows/tofu-plan.yml'
