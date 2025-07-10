@@ -12,7 +12,7 @@ env:
 
 jobs:
   plan:
-    runs-on: arc-tc-org-runner # ubuntu-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
