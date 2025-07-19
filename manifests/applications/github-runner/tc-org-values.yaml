@@ -1,0 +1,6 @@
+githubConfigUrl: https://github.com/toot-community
+githubConfigSecret: tc-org-runner-secret
+
+controllerServiceAccount:
+  namespace: arc-systems
+  name: gha-rs-controller
