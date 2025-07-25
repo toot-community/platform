@@ -7,7 +7,7 @@ resources:
 
 helmCharts:
   - name: robusta
-    version: "0.25.0"
+    version: "0.26.0"
     releaseName: robusta
     namespace: robusta
     valuesFile: helm-values.yaml
