@@ -36,5 +36,9 @@ sinksConfig:
     name: robusta_ui_sink
     token: "{{ env.ROBUSTA_UI_TOKEN }}"
 - mail_sink:
-    name: mail_sink
-    mailto: "mailtos://{{ env.ROBUSTA_MAIL_CREDENTIALS }}@email-smtp.eu-west-1.amazonaws.com?from=robusta@ses.jorijn.com&to=jorijn@jorijn.com"
+    name: ses_mail_sink
+    mailto: "mailtos://jorijn@jorijn.com?to=mijndert@mijndertstuij.nl"
+    use_ses: true
+    aws_region: "eu-west-1"
+    from_email: "robusta-alerts@ses.jorijn.com"
+    with_header: true
