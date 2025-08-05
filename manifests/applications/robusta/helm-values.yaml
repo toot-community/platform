@@ -40,5 +40,5 @@ sinksConfig:
     mailto: "mailtos://jorijn@jorijn.com?to=mijndert@mijndertstuij.nl"
     use_ses: true
     aws_region: "eu-west-1"
-    from_email: "robusta-alerts@jorijn.com"
+    from_email: "robusta-alerts@ses.jorijn.com"
     with_header: true
