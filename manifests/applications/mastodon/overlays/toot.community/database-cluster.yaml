@@ -7,7 +7,7 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9
 
   storage:
-    size: 500Gi
+    size: 550Gi
         
   postgresql:
     parameters:
