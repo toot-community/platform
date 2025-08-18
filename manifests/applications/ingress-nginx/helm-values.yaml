@@ -24,6 +24,11 @@ controller:
     # Disable strict path validation, to work around a bug in ingress-nginx
     # https://github.com/kubernetes/ingress-nginx/issues/11176
     strict-validate-path-type: false
+    # HSTS configuration
+    hsts: "true"
+    hsts-include-subdomains: "true"
+    hsts-preload: "true"
+    hsts-max-age: "63072000" # 2 years
 
   extraArgs:
     enable-ssl-passthrough: ""
