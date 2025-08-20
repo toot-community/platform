@@ -13,9 +13,9 @@ vpc_network_zone = "eu-central"
 
 controlplane_image = "238071418"
 controlplane_nodes = [
-  { name = "cp-1", ip = "10.0.1.3", location = "fsn1", type = "cax11", },
-  { name = "cp-2", ip = "10.0.1.4", location = "fsn1", type = "cax11", },
-  { name = "cp-3", ip = "10.0.1.5", location = "fsn1", type = "cax11", },
+  { name = "cp-1", ip = "10.0.1.3", location = "fsn1", type = "cax21", },
+  { name = "cp-2", ip = "10.0.1.4", location = "fsn1", type = "cax21", },
+  { name = "cp-3", ip = "10.0.1.5", location = "fsn1", type = "cax21", },
 ]
 
 worker_image = "238071418"
