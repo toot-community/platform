@@ -11,7 +11,7 @@ resources:
 
 helmCharts:
   - name: redis
-    version: "22.0.4"
+    version: "22.0.5"
     releaseName: redis
     namespace: *namespace
     valuesFile: ../../base/helm-values/redis.yaml
