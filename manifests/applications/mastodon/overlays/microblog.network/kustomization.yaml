@@ -10,14 +10,14 @@ resources:
   - secrets.yaml
 
 helmCharts:
-  - name: redis
-    version: "22.0.6"
-    releaseName: redis
-    namespace: *namespace
-    valuesFile: ../../base/helm-values/redis.yaml
+  - name: redis-ha
+    valuesFile: ../../base/helm-values/redis-ha.yaml
     additionalValuesFiles:
-      - helm-values/redis.yaml
-    repo: oci://registry-1.docker.io/bitnamicharts
+      - helm-values/redis-ha.yaml
+    releaseName: redis-ha
+    version: 4.33.8
+    namespace: *namespace
+    repo: https://dandydeveloper.github.io/charts
   - name: haproxy
     version: "1.24.0"
     releaseName: haproxy-redis
