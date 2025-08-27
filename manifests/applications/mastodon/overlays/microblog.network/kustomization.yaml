@@ -10,6 +10,14 @@ resources:
   - secrets.yaml
 
 helmCharts:
+  - name: redis-ha
+    valuesFile: ../../base/helm-values/redis-ha.yaml
+    additionalValuesFiles:
+      - helm-values/redis-ha.yaml
+    releaseName: redis-ha
+    version: 4.33.8
+    namespace: *namespace
+    repo: https://dandydeveloper.github.io/charts
   - name: redis
     version: "22.0.6"
     releaseName: redis
