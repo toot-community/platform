@@ -6,7 +6,6 @@ provider "registry.opentofu.org/aminueza/minio" {
   constraints = "~> 3.6.0"
   hashes = [
     "h1:BUwaiZKEySF2cZQPPsRx3XAV5AW1PoPt41WmtFsElcw=",
-    "h1:Unnq1c+2NaYO1XRbOH7rhTsdtKv/dhvcEaSVTbzjZxA=",
     "zh:203348aad870410c38db9acd9b06e4c22f1eb68e185e0056e17afc1d30ca016a",
     "zh:2f2769f549399217511fbb034a4dc439990ce33d826c790057789c95fe9e6e2e",
     "zh:3922cbcdffe6fa4511e881b19b01fb9916657b33854d7762e3db1110ccebc084",
@@ -27,7 +26,6 @@ provider "registry.opentofu.org/hetznercloud/hcloud" {
   constraints = "~> 1.52.0"
   hashes = [
     "h1:4S2sR/8ZMXir6X0/k0f3KJzD9d03KlcYF3z8TL6RSWA=",
-    "h1:8Juiz/B0XWpSCJmIYLBoGqU14R0W9rudwVInfd7jBt0=",
     "zh:1e9bb6b6a2ea5f441638dbae2d60fbe04ff455f58a18c740b8b7913e2197d875",
     "zh:29c122e404ba331cfbadacc7f1294de5a31c9dfd60bdfe3e1b402271fc8e419c",
     "zh:2bd0ae2f0bb9f16b7753f59a08e57ac7230f9c471278d7882f81406b9426c8c7",
@@ -49,7 +47,6 @@ provider "registry.opentofu.org/siderolabs/talos" {
   version     = "0.8.1"
   constraints = "~> 0.8"
   hashes = [
-    "h1:fWms1ojEGxaCDSQ5ezjO2MdpVx0cEIAKNCmkB2vKuUw=",
     "h1:u64GAjDXBOsf26zg/S7stlx2lY526xdL9xlzxbo/HhA=",
     "zh:02aeea4001ea216d37fd948e0760971f2525d31609d75dd1a7871f483e43260d",
     "zh:0bd6d2f9b6daf9cec0e20d1e22cad635983b5c071c106a3bec51be283c9fa254",

@@ -1,0 +1,36 @@
+architecture: replication
+
+auth:
+  enabled: false
+  sentinel: false
+
+replica:
+  replicaCount: 3
+  resources:
+    requests:
+      cpu: 39m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
+  podLabels:
+    velero.io/backup: "true"
+
+sentinel:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
+
+metrics: 
+  enabled: &metricsEnabled true
+  serviceMonitor: 
+    enabled: *metricsEnabled
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      memory: 100Mi
