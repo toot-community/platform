@@ -1,7 +1,7 @@
-redis:
+replica:
   resources:
     requests:
-      cpu: 200m
-      memory: 2Gi
+      cpu: 254m
+      memory: 1200Mi
     limits:
-      memory: 4Gi
+      memory: 1200Mi
