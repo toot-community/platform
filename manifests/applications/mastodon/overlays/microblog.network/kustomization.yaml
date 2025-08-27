@@ -17,6 +17,14 @@ helmCharts:
     releaseName: redis-ha
     version: 4.33.8
     namespace: *namespace
+  - name: redis
+    version: "22.0.6"
+    releaseName: redis
+    namespace: *namespace
+    valuesFile: ../../base/helm-values/redis.yaml
+    additionalValuesFiles:
+      - helm-values/redis.yaml
+    repo: oci://registry-1.docker.io/bitnamicharts
     repo: https://dandydeveloper.github.io/charts
   - name: haproxy
     version: "1.24.0"
