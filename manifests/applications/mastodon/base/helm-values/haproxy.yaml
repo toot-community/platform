@@ -55,5 +55,5 @@ config: |
     tcp-check send info\ replication\r\n
     tcp-check expect string role:master
 
-    # server-template redis-node 3 _tcp-redis._tcp.redis-ha.{{ .Release.Namespace }}.svc.cluster.local resolvers resolvconf check fall 1 rise 1 inter 500ms
-    server-template redis-node 3 _tcp-redis._tcp.redis-headless.{{ .Release.Namespace }}.svc.cluster.local resolvers resolvconf check fall 1 rise 1 inter 500ms
+    server-template redis-node 3 _tcp-redis._tcp.redis-ha.{{ .Release.Namespace }}.svc.cluster.local resolvers resolvconf check fall 1 rise 1 inter 500ms
+    # server-template redis-node 3 _tcp-redis._tcp.redis-headless.{{ .Release.Namespace }}.svc.cluster.local resolvers resolvconf check fall 1 rise 1 inter 500ms
