@@ -1,7 +1,0 @@
-replica:
-  resources:
-    requests:
-      cpu: 254m
-      memory: 1200Mi
-    limits:
-      memory: 1200Mi
