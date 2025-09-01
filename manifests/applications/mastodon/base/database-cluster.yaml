@@ -10,6 +10,8 @@ spec:
 
   storage:
     size: 40Gi
+  walStorage:
+    size: 10Gi
 
   monitoring:
     enablePodMonitor: true
@@ -35,7 +37,7 @@ spec:
       wal_buffers: "16MB"
       default_statistics_target: "100"
       random_page_cost: "1.1"
-      effective_io_concurrency: "300"
+      effective_io_concurrency: "100"
       work_mem: "1702kB"
       huge_pages: "off"
       min_wal_size: "2GB"

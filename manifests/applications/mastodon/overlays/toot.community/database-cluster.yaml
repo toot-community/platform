@@ -8,6 +8,8 @@ spec:
 
   storage:
     size: 550Gi
+  walStorage:
+    size: 60Gi
         
   postgresql:
     parameters:
@@ -26,7 +28,7 @@ spec:
       wal_buffers: "16MB"
       default_statistics_target: "100"
       random_page_cost: "1.1"
-      effective_io_concurrency: "300"
+      effective_io_concurrency: "100"
       work_mem: "10082kB"
       huge_pages: "off"
       min_wal_size: "1GB"
