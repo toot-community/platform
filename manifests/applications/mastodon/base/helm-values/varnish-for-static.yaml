@@ -7,10 +7,14 @@ volumes:
   - name: varnish-storage
     emptyDir:
       sizeLimit: 6Gi  # 5G file + overhead
+  - name: varnish-workdir
+    emptyDir: {}
 
 volumeMounts:
   - name: varnish-storage
     mountPath: /var/cache/varnish
+  - name: varnish-workdir
+    mountPath: /var/lib/varnish
 
 resources:
   requests:

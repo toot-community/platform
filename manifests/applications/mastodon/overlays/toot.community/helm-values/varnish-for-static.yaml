@@ -25,10 +25,14 @@ volumes:
   - name: varnish-storage
     emptyDir:
       sizeLimit: 85Gi  # 80G + overhead
+  - name: varnish-workdir
+    emptyDir: {}
 
 volumeMounts:
   - name: varnish-storage
     mountPath: /var/cache/varnish
+  - name: varnish-workdir
+    mountPath: /var/lib/varnish
 
 initContainers:
   - name: storage-init
