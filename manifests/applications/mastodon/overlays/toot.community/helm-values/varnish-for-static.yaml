@@ -13,14 +13,22 @@ resources:
   requests:
     cpu: 13m
     memory: 512Mi
+    ephemeral-storage: 85Gi  # Ensures node has space
   limits:
     memory: 750Mi
+    ephemeral-storage: 90Gi  # With buffer
     
 varnish:
-  size: 50G
+  size: 80G
 
-persistence:
-  size: 55Gi
+volumes:
+  - name: varnish-storage
+    emptyDir:
+      sizeLimit: 85Gi  # 80G + overhead
+
+volumeMounts:
+  - name: varnish-storage
+    mountPath: /var/cache/varnish
 
 initContainers:
   - name: storage-init
