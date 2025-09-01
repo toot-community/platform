@@ -2,8 +2,20 @@ backend:
   host: microblog-network-assets.fsn1.your-objectstorage.com
   port: 443
 
-persistence:
-  size: 6Gi  # 5G file + overhead
+volumes:
+  - name: varnish-storage
+    emptyDir:
+      sizeLimit: 6Gi  # 5G file + overhead
+
+volumeMounts:
+  - name: varnish-storage
+    mountPath: /var/cache/varnish
+
+resources:
+  requests:
+    ephemeral-storage: 6Gi  # Request disk space for scheduling
+  limits:
+    ephemeral-storage: 7Gi  # Limit with overhead
   
 ingress:
   enabled: true

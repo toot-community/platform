@@ -1,15 +1,25 @@
-deploymentType: statefulset
+deploymentType: deployment
 
 persistence:
-  enabled: true
-  size: 6Gi  # 5G file + overhead
+  enabled: false
+
+volumes:
+  - name: varnish-storage
+    emptyDir:
+      sizeLimit: 6Gi  # 5G file + overhead
+
+volumeMounts:
+  - name: varnish-storage
+    mountPath: /var/cache/varnish
 
 resources:
   requests:
     cpu: 10m
     memory: 151Mi
+    ephemeral-storage: 6Gi  # Request disk space for scheduling
   limits:
     memory: 151Mi
+    ephemeral-storage: 7Gi  # Limit with overhead
 
 initContainers:
   - name: storage-init
