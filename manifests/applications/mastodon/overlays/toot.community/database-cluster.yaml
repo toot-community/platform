@@ -17,29 +17,33 @@ spec:
       # DB Version: 16
       # OS Type: linux
       # DB Type: web
-      # Total Memory (RAM): 8 GB
-      # CPUs num: 2
+      # Total Memory (RAM): 12 GB
+      # CPUs num: 4
       # Data Storage: san
       max_connections: "300"
-      shared_buffers: "2GB"
-      effective_cache_size: "6GB"
-      maintenance_work_mem: "512MB"
+      shared_buffers: "3GB"
+      effective_cache_size: "9GB"
+      maintenance_work_mem: "768MB"
       checkpoint_completion_target: "0.9"
       wal_buffers: "16MB"
       default_statistics_target: "100"
       random_page_cost: "1.1"
       effective_io_concurrency: "100"
-      work_mem: "10082kB"
+      work_mem: "15420kB"
       huge_pages: "off"
       min_wal_size: "1GB"
       max_wal_size: "4GB"
+      max_worker_processes: "4"
+      max_parallel_workers_per_gather: "2"
+      max_parallel_workers: "4"
+      max_parallel_maintenance_workers: "2"
       
   resources:
     requests:
-      memory: "8Gi"
-      cpu: "2"
+      memory: "12Gi"
+      cpu: "4"
     limits:
-      memory: "8Gi"
+      memory: "12Gi"
       
   # nodeMaintenanceWindow:
   #   reusePVC: true
@@ -51,5 +55,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://fsn1.your-objectstorage.com
-    destinationPath: s3://toot-community-cnpg-storage/v20250526/
+    endpointURL: https://sos-ch-dk-2.exo.io
+    destinationPath: s3://toot-community-cnpg-storage/v20250902/
