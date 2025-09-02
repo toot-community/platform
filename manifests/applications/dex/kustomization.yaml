@@ -12,4 +12,4 @@ helmCharts:
     releaseName: dex
     repo: https://charts.dexidp.io
     valuesFile: helm-values.yaml
-    version: 0.23.1
+    version: 0.24.0
