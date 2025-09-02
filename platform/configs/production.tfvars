@@ -24,9 +24,6 @@ worker_nodes = [
   { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax41", },
   { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax41", },
   { name = "worker-4", ip = "10.0.1.9", location = "fsn1", type = "cax41", },
-  # { name = "worker-3bvk", ip = "10.0.1.10", location = "fsn1", type = "cax41", },
-  # { name = "worker-s92a", ip = "10.0.1.11", location = "fsn1", type = "cax41", },
-  # { name = "worker-b172", ip = "10.0.1.12", location = "fsn1", type = "cax41", },
 ]
 
 mastodon_s3_buckets = [
