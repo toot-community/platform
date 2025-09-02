@@ -179,7 +179,7 @@ streaming:
     scheme: http
   annotations: ~
   redis:
-    url: redis://redis-ha-haproxy:6380
+    url: redis://redis-ha-haproxy:6379
   baseURL: wss://streaming.toot.community
   databaseSslMode: no-verify
 
