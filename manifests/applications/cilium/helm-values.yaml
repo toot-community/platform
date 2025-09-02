@@ -11,6 +11,9 @@ hubble:
 
 kubeProxyReplacement: true
 
+k8s:
+  requireIPv4PodCIDR: true
+
 securityContext:
   capabilities:
     ciliumAgent:
