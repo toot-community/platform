@@ -29,8 +29,8 @@ resource "hcloud_server" "controlplane" {
     ip         = each.value.ip
   }
 
-
   depends_on = [hcloud_network_subnet.this]
+  lifecycle { ignore_changes = [image] }
 }
 
 resource "hcloud_server" "worker" {
@@ -55,4 +55,5 @@ resource "hcloud_server" "worker" {
   }
 
   depends_on = [hcloud_network_subnet.this, hcloud_server.controlplane, hcloud_floating_ip_assignment.api]
+  lifecycle { ignore_changes = [image] }
 }
