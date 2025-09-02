@@ -51,7 +51,7 @@ configuration:
   localDomain: example.com
   allowedPrivateAddresses: 10.0.8.0/21 # service subnet to connect to ES
   redis:
-    host: haproxy-redis
+    host: redis-ha-haproxy
     port: 6379
     database: 0
   s3:
@@ -179,7 +179,7 @@ streaming:
     scheme: http
   annotations: ~
   redis:
-    url: redis://haproxy-redis:6379
+    url: redis://redis-ha-haproxy:6380
   baseURL: wss://streaming.toot.community
   databaseSslMode: no-verify
 
