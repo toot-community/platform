@@ -133,4 +133,4 @@ spec:
         - --max-archive-size=10GB
         - --min-chunk-size=64MB # default chunk size is 5MB, but Hetzners limit of 10k objects per multi-part object results in a limit of 50GB per backup file (see: https://docs.hetzner.com/storage/object-storage/overview/#limits)
         - --read-timeout=180 # Hetzner S3 can be slow
-  retentionPolicy: "30d"
+  retentionPolicy: "14d"
