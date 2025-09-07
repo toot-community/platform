@@ -10,3 +10,7 @@ export TF_VAR_whitelist_admins='["1.2.3.4/32"]'
 # OPERATIONS
 export KUBECONFIG="/Users/jorijn/Development/tc/platform/configs/production/output/kubeconfig.yaml"
 export TALOSCONFIG="/Users/jorijn/Development/tc/platform/configs/production/output/talosconfig.yaml"
+
+# Exoscale
+export EXOSCALE_API_KEY=""
+export EXOSCALE_API_SECRET=""

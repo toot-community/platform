@@ -14,6 +14,11 @@ terraform {
       source  = "aminueza/minio"
       version = "~> 3.6.0"
     }
+
+    exoscale = {
+      source  = "exoscale/exoscale"
+      version = "~> 0.65.1"
+    }
   }
 }
 
@@ -28,3 +33,5 @@ provider "minio" {
   minio_region   = var.s3_region
   minio_ssl      = true
 }
+
+provider "exoscale" {}
