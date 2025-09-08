@@ -55,5 +55,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://sos-ch-dk-2.exo.io
-    destinationPath: s3://toot-community-cnpg-storage/v20250902/
+    endpointURL: https://36imo.upcloudobjects.com
+    destinationPath: s3://toot-community-cnpg-storage/v20250908/
