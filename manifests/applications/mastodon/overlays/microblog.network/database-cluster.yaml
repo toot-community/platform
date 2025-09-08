@@ -4,6 +4,11 @@ metadata:
   name: database
 spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17.5
+  env:
+    - name: AWS_REQUEST_CHECKSUM_CALCULATION
+      value: when_required
+    - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+      value: when_required
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
