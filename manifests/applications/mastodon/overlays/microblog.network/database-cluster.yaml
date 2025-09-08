@@ -18,5 +18,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://s3.storage.jorijn.com
+    endpointURL: https://36imo.upcloudobjects.com
     destinationPath: s3://microblog-network-cnpg-storage/
