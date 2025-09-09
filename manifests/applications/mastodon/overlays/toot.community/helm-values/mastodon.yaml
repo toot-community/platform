@@ -92,6 +92,7 @@ sidekiq:
           
 jobs:
   removePreviewCards:
+    enabled: false # tmp. for upcoming migration
     resources:
       requests:
         cpu: 1201m
@@ -100,6 +101,7 @@ jobs:
         memory: 643Mi
     days: 30
   cleanupMedia:
+    enabled: false # tmp. for upcoming migration
     resources:
       requests:
         cpu: 1221m
@@ -107,6 +109,7 @@ jobs:
       limits:
         memory: 665Mi
   cleanupMediaProfiles:
+    enabled: false # tmp. for upcoming migration
     resources:
       requests:
         cpu: 1757m
