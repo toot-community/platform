@@ -10,6 +10,9 @@ configuration:
   authorizedFetch: false
   
   s3:
+    endpoint: https://36imo.upcloudobjects.com
+    hostname: 36imo.upcloudobjects.com
+    region: auto
     aliasHost: *staticDomain
     bucket: microblog-network-assets
     
