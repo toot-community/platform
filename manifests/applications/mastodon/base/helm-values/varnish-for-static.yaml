@@ -85,6 +85,8 @@ varnish:
     - "x-amz-meta-mtime" # wasabi
     - "x-wasabi-cm-reference-id" # wasabi
     - "x-amz-replication-status" # wasabi
+    - "x-amz-server-side-encryption" # upcloud
+    - "x-emc-mtime" # upcloud
   purge:
     enabled: true
     requiredHeader: X-TC-Purge-Key
