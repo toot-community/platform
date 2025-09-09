@@ -1,5 +1,5 @@
 backend:
-  host: microblog-network-assets.fsn1.your-objectstorage.com
+  host: microblog-network-assets.36imo.upcloudobjects.com
   port: 443
 
 volumes:
