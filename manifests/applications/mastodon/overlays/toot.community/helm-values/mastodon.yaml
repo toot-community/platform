@@ -10,9 +10,9 @@ configuration:
   authorizedFetch: false
 
   s3:
-    endpoint: https://fsn1.your-objectstorage.com
-    hostname: fsn1.your-objectstorage.com
-    region: fsn1
+    endpoint: https://36imo.upcloudobjects.com
+    hostname: 36imo.upcloudobjects.com
+    region: auto
     aliasHost: *staticDomain
     bucket: toot-community-assets
     
