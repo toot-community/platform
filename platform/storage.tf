@@ -36,13 +36,14 @@ resource "minio_s3_bucket" "generic_buckets" {
 }
 
 resource "upcloud_managed_object_storage" "this" {
-  configured_status = "started"
-  name              = "mastodon"
-  region            = "europe-2"
+  configured_status = var.upcloud_object_storage_status
+  name              = var.upcloud_object_storage_name
+  region            = var.upcloud_object_storage_region
+
   network {
-    family = "IPv4"
-    name   = "public-network"
-    type   = "public"
+    family = var.upcloud_object_storage_network_family
+    name   = var.upcloud_object_storage_network_name
+    type   = var.upcloud_object_storage_network_type
   }
 }
 
@@ -51,6 +52,7 @@ resource "upcloud_managed_object_storage_bucket" "this" {
 
   service_uuid = upcloud_managed_object_storage.this.id
   name         = each.value.name
+  depends_on   = [upcloud_managed_object_storage.this]
 }
 
 resource "objsto_bucket_policy" "public_read_on_mastodon_buckets" {
@@ -74,6 +76,8 @@ resource "objsto_bucket_policy" "public_read_on_mastodon_buckets" {
       }
     ]
   })
+
+  depends_on = [upcloud_managed_object_storage_bucket.this]
 }
 
 resource "upcloud_managed_object_storage_policy" "this" {
@@ -113,6 +117,7 @@ resource "upcloud_managed_object_storage_user_access_key" "this" {
   username     = each.value.username
   status       = "Active"
   service_uuid = upcloud_managed_object_storage.this.id
+  depends_on   = [upcloud_managed_object_storage_user.this]
 }
 
 resource "upcloud_managed_object_storage_user_policy" "this" {
@@ -121,6 +126,7 @@ resource "upcloud_managed_object_storage_user_policy" "this" {
   username     = each.value.username
   name         = upcloud_managed_object_storage_policy.this[each.key].name
   service_uuid = upcloud_managed_object_storage.this.id
+  depends_on   = [upcloud_managed_object_storage_user.this, upcloud_managed_object_storage_policy.this]
 }
 
 resource "upcloud_managed_object_storage_user" "terraform" {
@@ -130,12 +136,14 @@ resource "upcloud_managed_object_storage_user" "terraform" {
 
 resource "upcloud_managed_object_storage_user_access_key" "terraform" {
   username     = upcloud_managed_object_storage_user.terraform.username
-  status       = "Active"
+  status       = var.upcloud_object_storage_management_user_name
   service_uuid = upcloud_managed_object_storage.this.id
+  depends_on   = [upcloud_managed_object_storage_user.terraform]
 }
 
 resource "upcloud_managed_object_storage_user_policy" "terraform" {
   username     = upcloud_managed_object_storage_user.terraform.username
-  name         = "ECSS3FullAccess"
+  name         = var.upcloud_object_storage_management_user_policy_name
   service_uuid = upcloud_managed_object_storage.this.id
+  depends_on   = [upcloud_managed_object_storage_user_policy.terraform, upcloud_managed_object_storage_user.terraform]
 }
