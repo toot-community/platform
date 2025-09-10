@@ -172,3 +172,51 @@ variable "s3_secret_key" {
   description = "S3 secret key"
   type        = string
 }
+
+variable "upcloud_object_storage_name" {
+  description = "Name of the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "mastodon"
+}
+
+variable "upcloud_object_storage_status" {
+  description = "Status of the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "started"
+}
+
+variable "upcloud_object_storage_region" {
+  description = "Region of the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "europe-2"
+}
+
+variable "upcloud_object_storage_network_family" {
+  description = "Network family for the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "IPv4"
+}
+
+variable "upcloud_object_storage_network_name" {
+  description = "Network name for the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "public-network"
+}
+
+variable "upcloud_object_storage_network_type" {
+  description = "Network type for the UpCloud Managed Object Storage service"
+  type        = string
+  default     = "public"
+}
+
+variable "upcloud_object_storage_management_user_policy_name" {
+  description = "Name of the policy to attach to the UpCloud Managed Object Storage management user"
+  type        = string
+  default     = "ECSS3FullAccess"
+}
+
+variable "upcloud_object_storage_management_user_name" {
+  description = "Name of the UpCloud Managed Object Storage management user"
+  type        = string
+  default     = "terraform"
+}
