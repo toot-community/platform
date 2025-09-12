@@ -19,3 +19,7 @@ helmCharts:
 images:
   - name: velero/velero-plugin-for-aws
     newTag: v1.12.2@sha256:bef271808e0547bb70f69f0430cc73f7a2fa938949c50f7b31171018be967335
+  - name: docker.io/bitnamilegacy/kubectl
+    newName: alpine/k8s
+    newTag: 1.34.0
+    
