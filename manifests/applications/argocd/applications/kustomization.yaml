@@ -6,6 +6,7 @@ resources:
   - cert-manager.yaml
   - cilium.yaml
   - cloudnative-pg.yaml
+  - descheduler.yaml
   - dex.yaml
   - n8n.yaml
   - elastic-operator.yaml
