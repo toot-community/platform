@@ -137,7 +137,7 @@ streaming:
   image:
     repository: ghcr.io/mastodon/mastodon-streaming
     pullPolicy: IfNotPresent
-    tag: v4.4.4@sha256:a1742269661aee37c365db0892679c31d4a78d1bd6038e11cb62bffb5c2b4b2a
+    tag: v4.4.5@sha256:b2d6aefcc160dd4e60b196a814e6a803e6a5e073b17a1f9453b1e42afafad2f8
   replicaCount: 2
   clusterNum: 1
   port: 4000
