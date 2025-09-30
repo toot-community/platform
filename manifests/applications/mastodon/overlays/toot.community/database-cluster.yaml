@@ -4,7 +4,7 @@ metadata:
   name: database
 spec:
   instances: 2
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.9
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
 
   storage:
     size: 550Gi
