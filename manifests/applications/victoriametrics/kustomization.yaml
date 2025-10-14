@@ -16,7 +16,7 @@ helmCharts:
     includeCRDs: true
     repo: https://victoriametrics.github.io/helm-charts/
   - name: prometheus-operator-crds
-    version: "24.0.1"
+    version: "23.0.0"
     releaseName: prometheus-operator-crds
     namespace: victoriametrics
     includeCRDs: true
