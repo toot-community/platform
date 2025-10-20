@@ -9,7 +9,7 @@ spec:
   storage:
     size: 550Gi
   walStorage:
-    size: 60Gi
+    size: 75Gi
         
   postgresql:
     parameters:
