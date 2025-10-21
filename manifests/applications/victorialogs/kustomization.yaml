@@ -7,7 +7,7 @@ resources:
 
 helmCharts:
   - name: victoria-logs-single
-    version: "0.11.15"
+    version: "0.11.16"
     releaseName: vl
     namespace: victorialogs
     valuesFile: helm-values.yaml
