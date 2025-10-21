@@ -24,7 +24,8 @@
   "packageRules": [
     {
       "matchUpdateTypes": [
-        "patch"
+        "patch",
+        "digest"
       ],
       "automerge": true,
       "automergeType": "branch",
@@ -73,7 +74,7 @@
       "matchFileNames": [
         "manifests/applications/mastodon/overlays/toot.community/database-cluster.yaml"
       ],
-      "allowedVersions": "~16"
+      "allowedVersions": "~17"
     }
   ]
 }
