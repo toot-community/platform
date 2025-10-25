@@ -1,5 +1,40 @@
 replicaCount: 2
 
-networking:
+robot:
   enabled: true
-  clusterCIDR: 10.0.16.0/20
+
+networking:
+  enabled: false
+
+env:
+  HCLOUD_NETWORK:
+    valueFrom:
+      secretKeyRef:
+        name: hcloud
+        key: network
+
+  HCLOUD_NETWORK_ROUTES_ENABLED:
+    value: "false"
+
+  HCLOUD_TOKEN:
+    valueFrom:
+      secretKeyRef:
+        name: hcloud
+        key: token
+
+  ROBOT_USER:
+    valueFrom:
+      secretKeyRef:
+        name: hcloud
+        key: robot-user
+        optional: true
+
+  ROBOT_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: hcloud
+        key: robot-password
+        optional: true
+        
+  HCLOUD_NETWORK_DISABLE_ATTACHED_CHECK:
+    value: "true"

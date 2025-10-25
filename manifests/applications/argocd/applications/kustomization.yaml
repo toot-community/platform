@@ -20,3 +20,11 @@ resources:
   - toot-community.yaml
   - victorialogs.yaml
   - robusta.yaml
+
+patches:
+  - target:
+      kind: Application
+    patch: |-
+      - op: replace
+        path: /spec/source/targetRevision
+        value: feat/omni-bare-metal

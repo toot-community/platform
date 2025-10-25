@@ -9,6 +9,9 @@ hubble:
   ui:
     enabled: true
 
+hostFirewall:
+  enabled: true
+
 kubeProxyReplacement: true
 
 k8s:
@@ -44,11 +47,9 @@ cgroup:
 k8sServiceHost: localhost
 k8sServicePort: "7445"
 
-policyAuditMode: false
-
-# https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md#how-to-deploy
-routingMode: native
-ipv4NativeRoutingCIDR: 10.0.0.0/8
+policyAuditMode: true # FIXME: Enable only for debugging
   
 ipv4:
   enabled: true
+
+mtu: 1450

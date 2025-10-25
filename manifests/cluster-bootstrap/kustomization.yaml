@@ -6,4 +6,4 @@ resources:
   - ../applications/talos-ccm # needed for approving the certificate requests
   - ../applications/hetzner-ccm # needed for networking, initializing the nodes
   - ../applications/op-connect # needed for secret management
-  - ../applications/argocd # provisions the rest of the cluster
+  # - ../applications/argocd # provisions the rest of the cluster
