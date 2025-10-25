@@ -1,0 +1,24 @@
+machine:
+  install:
+    disk: /dev/nvme0n1
+  network:
+    hostname: worker-1
+    interfaces:
+      - addresses:
+          - 136.243.1.98/26
+          - 2a01:4f8:211:1adb::2/64
+        dhcp: false
+        interface: enp41s0
+        routes:
+          - gateway: 136.243.1.65
+            network: 0.0.0.0/0
+          - gateway: fe80::1
+            network: ::/0
+        vlans:
+          - addresses:
+              - 10.1.1.2/24
+            mtu: 1400
+            routes:
+              - gateway: 10.1.1.1
+                network: 10.1.0.0/16
+            vlanId: 4000

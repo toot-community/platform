@@ -15,7 +15,6 @@ machine:
     net.ipv4.tcp_fin_timeout: "15"
     net.ipv4.tcp_tw_reuse: "1"
     vm.max_map_count: "262144"
-    # vm.nr_hugepages: "1024"
     vm.swappiness: "10"
   time:
     servers:
@@ -25,8 +24,6 @@ machine:
       - 0.de.pool.ntp.org
       - 1.de.pool.ntp.org
       - time.cloudflare.com
-  install:
-    image: ${installer_image}
 
 cluster:
   apiServer:
@@ -43,9 +40,7 @@ cluster:
       name: none
     podSubnets:
       - 10.0.16.0/20
-      # - fd02:7430:3074::/48
     serviceSubnets:
       - 10.0.8.0/21  
-      # - fd02:7430:5300::/112
   proxy:
     disabled: true

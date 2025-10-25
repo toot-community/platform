@@ -1,0 +1,11 @@
+cluster:
+  network:
+    podSubnets:
+      - 10.0.16.0/20
+    serviceSubnets:
+      - 10.0.8.0/21  
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets:
+        - 10.1.0.0/16

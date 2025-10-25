@@ -64,7 +64,11 @@ kubectl create --namespace op-connect secret generic op-credentials --from-liter
 kubectl create --namespace op-connect secret generic onepassword-token --from-literal=token="$(op read 'op://toot.community/put37jzwsy6wtsfydfdwvpdaxm/credential')"
 
 # Setup Hetzner Cloud integration
-kubectl create --namespace kube-system secret generic hcloud --from-literal=network="$(op read 'op://toot.community/fcd7bcotmu6iuxk44nvbs6ocpq/network')" --from-literal=token="$(op read 'op://toot.community/fcd7bcotmu6iuxk44nvbs6ocpq/token')"
+kubectl create --namespace kube-system secret generic hcloud \
+  --from-literal=network="$(op read 'op://toot.community/6r6v2bqh6dhuunbn6nri4bw3sa/network')" \
+  --from-literal=token="$(op read 'op://toot.community/6r6v2bqh6dhuunbn6nri4bw3sa/token')" \
+  --from-literal=robot-user="$(op read 'op://toot.community/6r6v2bqh6dhuunbn6nri4bw3sa/robot-user')" \
+  --from-literal=robot-password="$(op read 'op://toot.community/6r6v2bqh6dhuunbn6nri4bw3sa/robot-password')"
 
 # Deploy core cluster services via ArgoCD
 kustomize build --enable-helm --load-restrictor=LoadRestrictionsNone manifests/cluster-bootstrap | kubectl apply -f -
