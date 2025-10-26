@@ -57,12 +57,6 @@ variable "controlplane_image" {
   default     = "debian-11"
 }
 
-variable "worker_image" {
-  description = "Image (OS) used for Kubernetes worker nodes."
-  type        = string
-  default     = "debian-11"
-}
-
 variable "controlplane_nodes" {
   description = "List of control plane nodes with fixed names, private IPs, locations, and types."
   type = list(object({
@@ -78,19 +72,31 @@ variable "controlplane_nodes" {
   ]
 }
 
-variable "worker_nodes" {
-  description = "List of worker nodes with fixed names, private IPs, locations, and types."
+variable "vswitch_id" {
+  description = "ID of the vSwitch to attach the nodes to (for Metal nodes)."
+  type        = number
+}
+
+variable "vswitch_subnet_cidr" {
+  description = "CIDR block for the vSwitch subnet (for Metal nodes)."
+  type        = string
+  default     = "10.0.2.0/24"
+}
+
+variable "vswitch_subnet_network_zone" {
+  description = "Network zone for the vSwitch subnet (for Metal nodes)."
+  type        = string
+  default     = "eu-central"
+}
+
+variable "metal_nodes" {
+  description = "List of metal nodes with fixed names, public IPs."
   type = list(object({
-    name     = string
-    ip       = string
-    type     = string
-    location = string
+    name        = string
+    private_ip  = string
+    public_ipv4 = string
   }))
-  default = [
-    { name = "worker-1", ip = "10.0.0.6", location = "nbg1", type = "cax21" },
-    { name = "worker-2", ip = "10.0.0.7", location = "hel1", type = "cax21" },
-    { name = "worker-3", ip = "10.0.0.8", location = "fsn1", type = "cax21" },
-  ]
+  default = []
 }
 
 variable "whitelist_admins" {

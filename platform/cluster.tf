@@ -24,21 +24,21 @@ data "talos_machine_configuration" "controlplane" {
   kubernetes_version = var.kubernetes_version
 }
 
-data "talos_machine_configuration" "worker" {
-  cluster_name       = var.cluster_name
-  cluster_endpoint   = "https://${hcloud_floating_ip.api.ip_address}:6443"
-  machine_type       = "worker"
-  machine_secrets    = talos_machine_secrets.machine_secrets.machine_secrets
-  talos_version      = var.talos_version
-  kubernetes_version = var.kubernetes_version
-}
+# data "talos_machine_configuration" "worker" {
+#   cluster_name       = var.cluster_name
+#   cluster_endpoint   = "https://${hcloud_floating_ip.api.ip_address}:6443"
+#   machine_type       = "worker"
+#   machine_secrets    = talos_machine_secrets.machine_secrets.machine_secrets
+#   talos_version      = var.talos_version
+#   kubernetes_version = var.kubernetes_version
+# }
 
 data "talos_client_configuration" "talosconfig" {
   cluster_name         = var.cluster_name
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   nodes = concat(
     [for node in var.controlplane_nodes : node.ip],
-    [for node in var.worker_nodes : node.ip]
+    # [for node in var.worker_nodes : node.ip]
   )
   endpoints = [hcloud_floating_ip.api.ip_address]
 }
@@ -49,14 +49,25 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   node                        = hcloud_server.controlplane[each.key].ipv4_address
   config_patches = [
-    templatefile("${path.module}/talos/patches/all.yaml", {
+    templatefile("${path.module}/talos/patches/all-kubelet-extra-args.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-no-cni.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-timeservers.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-up-networking.yaml", {
       vpc_subnet_cidr : var.vpc_subnet_cidr,
-      installer_image : data.talos_image_factory_urls.this.urls.installer
+      vswitch_subnet_cidr : var.vswitch_subnet_cidr,
     }),
-    templatefile("${path.module}/talos/patches/controlplane.yaml", {
+    templatefile("${path.module}/talos/patches/cp-enable-talos-service-accounts.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-monitoring-listen-all-interfaces.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-hcloud-install-disk.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-set-etcd-advertised-subnets.yaml", {
+      vpc_subnet_cidr : var.vpc_subnet_cidr,
+    }),
+    templatefile("${path.module}/talos/patches/cp-set-installer-image.yaml", {
+      installer_image : data.talos_image_factory_urls.this.urls.installer,
+    }),
+    templatefile("${path.module}/talos/patches/cp-hcloud-vip-address.yaml", {
       ipv4_vip_addr : hcloud_floating_ip.api.ip_address,
-      hcloud_token : var.hcloud_token,
-      vpc_subnet_cidr : var.vpc_subnet_cidr
+      hcloud_token : var.hcloud_token
     }),
     yamlencode({
       machine = {
@@ -75,35 +86,35 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   ]
 }
 
-resource "talos_machine_configuration_apply" "worker_config_apply" {
-  for_each                    = { for i in var.worker_nodes : i.name => i }
-  client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-  node                        = hcloud_server.worker[each.key].ipv4_address
-  config_patches = [
-    templatefile("${path.module}/talos/patches/all.yaml", {
-      vpc_subnet_cidr : var.vpc_subnet_cidr,
-      installer_image : data.talos_image_factory_urls.this.urls.installer
-    }),
-    templatefile("${path.module}/talos/patches/worker.yaml", {
-      vpc_subnet_cidr : var.vpc_subnet_cidr
-    }),
-    yamlencode({
-      machine = {
-        network = {
-          hostname = "${var.resource_prefix}${each.key}"
-        }
-      }
-    })
-  ]
+# resource "talos_machine_configuration_apply" "worker_config_apply" {
+#   for_each                    = { for i in var.worker_nodes : i.name => i }
+#   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
+#   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
+#   node                        = hcloud_server.worker[each.key].ipv4_address
+#   config_patches = [
+#     templatefile("${path.module}/talos/patches/all.yaml", {
+#       vpc_subnet_cidr : var.vpc_subnet_cidr,
+#       installer_image : data.talos_image_factory_urls.this.urls.installer
+#     }),
+#     templatefile("${path.module}/talos/patches/worker.yaml", {
+#       vpc_subnet_cidr : var.vpc_subnet_cidr
+#     }),
+#     yamlencode({
+#       machine = {
+#         network = {
+#           hostname = "${var.resource_prefix}${each.key}"
+#         }
+#       }
+#     })
+#   ]
 
-  depends_on = [
-    hcloud_server.worker,
-    talos_machine_secrets.machine_secrets,
-    data.talos_machine_configuration.controlplane,
-    hcloud_floating_ip_assignment.api
-  ]
-}
+#   depends_on = [
+#     hcloud_server.worker,
+#     talos_machine_secrets.machine_secrets,
+#     data.talos_machine_configuration.controlplane,
+#     hcloud_floating_ip_assignment.api
+#   ]
+# }
 
 resource "talos_machine_bootstrap" "bootstrap" {
   depends_on           = [hcloud_server.controlplane]

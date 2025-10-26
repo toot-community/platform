@@ -1,7 +1,7 @@
 cluster_name    = "tootcommunity-prod"
 resource_prefix = "tc-prod-"
 architecture    = "arm64"
-environment     = "production"
+environment     = "test-metal"
 
 talos_version      = "v1.11.0"
 kubernetes_version = "v1.34.0"
@@ -12,19 +12,15 @@ vpc_subnet_name  = "cloud-servers"
 vpc_subnet_cidr  = "10.0.1.0/24"
 vpc_network_zone = "eu-central"
 
-controlplane_image = "314107405"
+vswitch_id                  = 51860
+vswitch_subnet_cidr         = "10.0.2.0/24"
+vswitch_subnet_network_zone = "eu-central"
+
+controlplane_image = "327836234"
 controlplane_nodes = [
   { name = "cp-1", ip = "10.0.1.3", location = "fsn1", type = "cax21", },
   { name = "cp-2", ip = "10.0.1.4", location = "fsn1", type = "cax21", },
   { name = "cp-3", ip = "10.0.1.5", location = "fsn1", type = "cax21", },
-]
-
-worker_image = "314107405"
-worker_nodes = [
-  { name = "worker-1", ip = "10.0.1.6", location = "fsn1", type = "cax41", },
-  { name = "worker-2", ip = "10.0.1.7", location = "fsn1", type = "cax41", },
-  { name = "worker-3", ip = "10.0.1.8", location = "fsn1", type = "cax41", },
-  { name = "worker-4", ip = "10.0.1.9", location = "fsn1", type = "cax41", },
 ]
 
 mastodon_s3_buckets = [

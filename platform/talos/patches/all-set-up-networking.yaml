@@ -8,4 +8,5 @@ machine:
   kubelet:
     nodeIP:
       validSubnets:
-        - 10.1.0.0/16
+        - ${vpc_subnet_cidr}
+        - ${vswitch_subnet_cidr}

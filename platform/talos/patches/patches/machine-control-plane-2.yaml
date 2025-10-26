@@ -1,5 +1,0 @@
-machine:
-  install:
-    disk: /dev/sda
-  network:
-    hostname: control-plane-2
