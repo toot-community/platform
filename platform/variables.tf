@@ -92,11 +92,28 @@ variable "vswitch_subnet_network_zone" {
 variable "metal_nodes" {
   description = "List of metal nodes with fixed names, public IPs."
   type = list(object({
-    name        = string
-    private_ip  = string
-    public_ipv4 = string
+    name                = string
+    private_ip          = string
+    private_gateway     = string
+    public_ipv4_address = string
+    public_ipv4_gateway = string
+    public_ipv6_address = string
+    public_ipv6_gateway = string
+    install_disk        = string
   }))
   default = []
+}
+
+variable "vswitch_vlan_id" {
+  description = "VLAN ID to use for the vSwitch (for Metal nodes)."
+  type        = number
+  default     = 4001
+}
+
+variable "metal_mtu_size" {
+  description = "MTU size to set on the Metal nodes' network interfaces."
+  type        = number
+  default     = 1400
 }
 
 variable "whitelist_admins" {
@@ -225,4 +242,10 @@ variable "upcloud_object_storage_management_user_name" {
   description = "Name of the UpCloud Managed Object Storage management user"
   type        = string
   default     = "terraform"
+}
+
+variable "talos_metal_schematic_id" {
+  description = "Schematic ID used to provision Talos Metal images in Hetzner Cloud."
+  type        = string
+  default     = "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
 }

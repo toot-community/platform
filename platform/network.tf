@@ -1,6 +1,7 @@
 resource "hcloud_network" "this" {
-  name     = "${var.resource_prefix}${var.vpc_name}"
-  ip_range = var.vpc_cidr
+  name                     = "${var.resource_prefix}${var.vpc_name}"
+  ip_range                 = var.vpc_cidr
+  expose_routes_to_vswitch = true
 }
 
 resource "hcloud_network_subnet" "this" {

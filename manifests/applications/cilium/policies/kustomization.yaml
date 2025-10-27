@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # control plane specific policies
+  - host-fw-cp-allow-admins.yaml
+  - host-fw-cp-allow-kubernetes-api.yaml
+  - host-fw-cp-allow-talos-api.yaml
+  - host-fw-cp-allow-etcd-api.yaml
+
+  # generic policies
+  - host-fw-generic-allow-icmp-ping.yaml
+  - host-fw-generic-allow-cilium-traffic.yaml
+  - host-fw-generic-allow-kubelet-scraping.yaml
+  - host-fw-generic-allow-kube-apiserver.yaml
+  - host-fw-generic-allow-hubble-relay-to-hubble-peer.yaml
+  - host-fw-generic-allow-talos-api.yaml

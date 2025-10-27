@@ -52,4 +52,4 @@ policyAuditMode: true # FIXME: Enable only for debugging
 ipv4:
   enabled: true
 
-mtu: 1450
+mtu: 1350

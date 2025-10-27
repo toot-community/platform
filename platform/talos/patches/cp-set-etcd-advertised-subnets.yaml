@@ -1,4 +1,4 @@
 cluster:
   etcd:
     advertisedSubnets:
-      - ${vpc_subnet_cidr}
+      - ${vpc_cidr}
