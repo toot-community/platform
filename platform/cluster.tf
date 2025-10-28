@@ -71,7 +71,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
     yamlencode({
       machine = {
         network = {
-          hostname = "${var.resource_prefix}${each.key}"
+          hostname = "${var.resource_prefix}cp-${each.key}"
         }
       }
     })
@@ -105,7 +105,7 @@ resource "talos_machine_configuration_apply" "metal_config_apply" {
     yamlencode({
       machine = {
         network = {
-          hostname = "${var.resource_prefix}${each.key}"
+          hostname = "${var.resource_prefix}wk-${each.key}"
           interfaces = [
             {
               addresses = [

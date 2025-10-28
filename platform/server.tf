@@ -6,7 +6,7 @@ resource "hcloud_placement_group" "controlplane" {
 resource "hcloud_server" "controlplane" {
   for_each = { for i in var.controlplane_nodes : i.name => i }
 
-  name        = "${var.resource_prefix}${each.key}"
+  name        = "${var.resource_prefix}cp-${each.key}"
   location    = each.value.location
   image       = var.controlplane_image
   server_type = each.value.type
