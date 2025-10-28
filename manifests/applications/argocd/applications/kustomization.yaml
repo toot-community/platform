@@ -8,18 +8,18 @@ resources:
   - cloudnative-pg.yaml
   - descheduler.yaml
   - dex.yaml
-  - n8n.yaml
+  # - n8n.yaml
   - elastic-operator.yaml
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
   - metrics-server.yaml
-  - microblog-network.yaml
+  # - microblog-network.yaml
   - talos-ccm.yaml
-  - velero.yaml
+  # - velero.yaml
   - victoriametrics.yaml
-  - toot-community.yaml
+  # - toot-community.yaml
   - victorialogs.yaml
-  - robusta.yaml
+  # - robusta.yaml
 
 patches:
   - target:
@@ -27,4 +27,6 @@ patches:
     patch: |-
       - op: replace
         path: /spec/source/targetRevision
-        value: feat/omni-bare-metal
+        value: feat/metal
+      - op: remove
+        path: /spec/syncPolicy
