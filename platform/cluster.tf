@@ -38,7 +38,7 @@ data "talos_client_configuration" "talosconfig" {
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   nodes = concat(
     [for node in var.controlplane_nodes : node.ip],
-    # [for node in var.worker_nodes : node.ip]
+    [for n in var.metal_nodes : regex("^([^/]+)", n.private_ip)[0]]
   )
   endpoints = [hcloud_floating_ip.api.ip_address]
 }

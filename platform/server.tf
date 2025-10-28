@@ -10,7 +10,7 @@ resource "hcloud_server" "controlplane" {
   location    = each.value.location
   image       = var.controlplane_image
   server_type = each.value.type
-  # firewall_ids             = [hcloud_firewall.controlplane.id]
+
   shutdown_before_deletion = true
   placement_group_id       = hcloud_placement_group.controlplane.id
 
