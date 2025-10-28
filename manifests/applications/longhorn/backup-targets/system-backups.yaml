@@ -1,0 +1,9 @@
+apiVersion: longhorn.io/v1beta2
+kind: BackupTarget
+metadata:
+  name: system-backups
+  namespace: longhorn-system
+spec:
+  backupTargetURL: s3://longhorn-system-backups@us-east-1/
+  credentialSecret: longhorn-system-backups-credentials
+  pollInterval: 5m0s
