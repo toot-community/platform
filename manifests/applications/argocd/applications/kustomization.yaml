@@ -28,5 +28,3 @@ patches:
       - op: replace
         path: /spec/source/targetRevision
         value: feat/metal
-      - op: remove
-        path: /spec/syncPolicy
