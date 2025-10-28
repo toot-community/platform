@@ -12,6 +12,7 @@ resources:
   - elastic-operator.yaml
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
+  - longhorn.yaml
   - metrics-server.yaml
   # - microblog-network.yaml
   - talos-ccm.yaml
