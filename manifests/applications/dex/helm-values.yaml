@@ -77,7 +77,7 @@ config:
   staticClients:
     - id: argocd
       redirectURIs:
-        - https://argocd.toot.community/auth/callback
+        - https://argocd.mgmt.toot.community/auth/callback
         - http://localhost:8085/auth/callback
       name: "ArgoCD"
       secretEnv: STATIC_CLIENT_ARGOCD_SECRET
