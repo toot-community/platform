@@ -151,28 +151,6 @@ variable "generic_s3_buckets" {
   default = []
 }
 
-variable "s3_server" {
-  description = "S3 server URL"
-  type        = string
-  default     = "fsn1.your-objectstorage.com"
-}
-
-variable "s3_region" {
-  description = "S3 region"
-  type        = string
-  default     = "fsn1"
-}
-
-variable "s3_access_key" {
-  description = "S3 access key"
-  type        = string
-}
-
-variable "s3_secret_key" {
-  description = "S3 secret key"
-  type        = string
-}
-
 variable "upcloud_object_storage_name" {
   description = "Name of the UpCloud Managed Object Storage service"
   type        = string
