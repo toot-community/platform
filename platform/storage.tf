@@ -1,40 +1,3 @@
-resource "minio_s3_bucket" "mastodon_buckets" {
-  for_each = { for bucket in var.mastodon_s3_buckets : bucket.name => bucket }
-
-  bucket = each.value.name
-  acl    = "private"
-}
-
-resource "minio_s3_bucket_policy" "public_read" {
-  for_each = minio_s3_bucket.mastodon_buckets
-
-  bucket = each.value.bucket
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          AWS = ["*"]
-        },
-        Action = [
-          "s3:GetObject"
-        ],
-        Resource = [
-          "arn:aws:s3:::${each.value.bucket}/*"
-        ]
-      }
-    ]
-  })
-}
-
-resource "minio_s3_bucket" "generic_buckets" {
-  for_each = { for bucket in var.generic_s3_buckets : bucket.name => bucket }
-
-  bucket = each.value.name
-  acl    = "private"
-}
-
 resource "upcloud_managed_object_storage" "this" {
   configured_status = var.upcloud_object_storage_status
   name              = var.upcloud_object_storage_name
@@ -56,9 +19,9 @@ resource "upcloud_managed_object_storage_bucket" "this" {
 }
 
 resource "objsto_bucket_policy" "public_read_on_mastodon_buckets" {
-  for_each = minio_s3_bucket.mastodon_buckets
+  for_each = { for bucket in var.mastodon_s3_buckets : bucket.name => bucket }
 
-  bucket = each.value.bucket
+  bucket = each.value.name
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -71,7 +34,7 @@ resource "objsto_bucket_policy" "public_read_on_mastodon_buckets" {
           "s3:GetObject"
         ],
         Resource = [
-          "arn:aws:s3:::${each.value.bucket}/*"
+          "arn:aws:s3:::${each.value.name}/*"
         ]
       }
     ]
@@ -136,7 +99,7 @@ resource "upcloud_managed_object_storage_user" "terraform" {
 
 resource "upcloud_managed_object_storage_user_access_key" "terraform" {
   username     = upcloud_managed_object_storage_user.terraform.username
-  status       = var.upcloud_object_storage_management_user_name
+  status       = "Active"
   service_uuid = upcloud_managed_object_storage.this.id
   depends_on   = [upcloud_managed_object_storage_user.terraform]
 }
