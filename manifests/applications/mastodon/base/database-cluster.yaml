@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: database
 spec:
-  instances: 1
+  instances: 2
   # imageName: patch-me
   primaryUpdateStrategy: unsupervised
   enablePDB: true
@@ -16,8 +16,10 @@ spec:
 
   storage:
     size: 40Gi
+    storageClass: local-path
   walStorage:
     size: 10Gi
+    storageClass: local-path
 
   monitoring:
     enablePodMonitor: true

@@ -23,13 +23,13 @@ configuration:
     
 web:
   domain: *instanceDomain
-  replicaCount: 1
+  replicaCount: 3
   podDisruptionBudget:
     enabled: false
   
 streaming:
   baseURL: wss://streaming.microblog.network
-  replicaCount: 1
+  replicaCount: 3
   
 ingress:
   web:

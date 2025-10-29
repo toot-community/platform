@@ -10,7 +10,7 @@ kind: Pooler
 metadata:
   name: database-pooler-rw
 spec:
-  instances: 1
+  instances: 2
 ---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
@@ -19,4 +19,4 @@ metadata:
 spec:
   configuration:
     endpointURL: https://36imo.upcloudobjects.com
-    destinationPath: s3://microblog-network-cnpg-storage/
+    destinationPath: s3://microblog-network-cnpg-storage/v20251029

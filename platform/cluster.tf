@@ -98,6 +98,7 @@ resource "talos_machine_configuration_apply" "metal_config_apply" {
       vpc_cidr : var.vpc_cidr,
     }),
     templatefile("${path.module}/talos/patches/worker-longhorn-volume.yaml", {}),
+    templatefile("${path.module}/talos/patches/worker-elasticsearch.yaml", {}),
     templatefile("${path.module}/talos/patches/worker-metal-install-configuration.yaml", {
       install_disk : each.value.install_disk,
       installer_image : "factory.talos.dev/metal-installer/${var.talos_metal_schematic_id}:${var.talos_version}",
