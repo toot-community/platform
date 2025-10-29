@@ -2,3 +2,7 @@ defaultBackupStore:
   backupTarget: "s3://longhorn-backups@us-west-1/"
   backupTargetCredentialSecret: longhorn-backups-credentials
   pollInterval: 300
+
+metrics:
+  serviceMonitor:
+    enabled: true
