@@ -21,6 +21,7 @@ resources:
   # - toot-community.yaml
   - victorialogs.yaml
   # - robusta.yaml
+  - local-path-storage.yaml
 
 patches:
   - target:
