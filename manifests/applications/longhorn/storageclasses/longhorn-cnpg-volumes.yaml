@@ -14,3 +14,4 @@ parameters:
   replicaAutoBalance: "disabled"
   fsType: ext4
   recurringJobSelector: '[{"name":"cnpg-volumes","isGroup":true}]'
+  dataEngine: v1
