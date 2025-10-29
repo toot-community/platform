@@ -5,11 +5,11 @@ namespace: longhorn-system
 resources:
   - namespace.yaml
   - secrets
-  - backup-targets
 
 helmCharts:
   - name: longhorn
     releaseName: longhorn
     namespace: longhorn-system
+    valuesFile: values.yaml
     version: "1.10.0"
     repo: https://charts.longhorn.io/
