@@ -5,6 +5,8 @@ namespace: longhorn-system
 resources:
   - namespace.yaml
   - secrets
+  - jobs
+  - nodes
 
 helmCharts:
   - name: longhorn
