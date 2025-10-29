@@ -14,3 +14,6 @@ configuration:
   redis:
     host: 128.140.87.70
     port: 32502
+
+  search:
+    enabled: false
