@@ -23,6 +23,7 @@ configuration:
     
   search:
     enabled: true
+    preset: small_cluster
   
   databaseReplicas:
     enabled: true

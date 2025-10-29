@@ -3,14 +3,14 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 8.18.1
+  version: 8.19.6
   http:
     tls:
       selfSignedCertificate:
         disabled: true
   nodeSets:
     - name: default
-      count: 1
+      count: 2
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -19,7 +19,7 @@ spec:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 10Gi
+                storage: 20Gi
       podTemplate:
         spec:
           containers:
@@ -27,6 +27,6 @@ spec:
               resources:
                 requests:
                   cpu: 250m
-                  memory: 2Gi
+                  memory: 4Gi
                 limits:
-                  memory: 2Gi
+                  memory: 4Gi
