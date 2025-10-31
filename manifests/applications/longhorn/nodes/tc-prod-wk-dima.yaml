@@ -1,0 +1,18 @@
+apiVersion: longhorn.io/v1beta2
+kind: Node
+metadata:
+  name: tc-prod-wk-dima
+  namespace: longhorn-system
+spec:
+  allowScheduling: true
+  disks:
+    disk-1:
+      allowScheduling: true
+      diskDriver: ""
+      diskType: filesystem
+      evictionRequested: false
+      path: /var/mnt/longhorn
+      storageReserved: 0
+  evictionRequested: false
+  instanceManagerCPURequest: 0
+  name: tc-prod-wk-dima

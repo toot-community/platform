@@ -12,11 +12,21 @@ resources:
   - elastic-operator.yaml
   - hetzner-ccm.yaml
   - ingress-nginx.yaml
+  - longhorn.yaml
   - metrics-server.yaml
   - microblog-network.yaml
   - talos-ccm.yaml
-  - velero.yaml
+  # - velero.yaml
   - victoriametrics.yaml
   - toot-community.yaml
   - victorialogs.yaml
-  - robusta.yaml
+  # - robusta.yaml
+  - local-path-storage.yaml
+
+patches:
+  - target:
+      kind: Application
+    patch: |-
+      - op: replace
+        path: /spec/source/targetRevision
+        value: feat/metal

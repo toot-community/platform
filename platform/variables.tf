@@ -57,12 +57,6 @@ variable "controlplane_image" {
   default     = "debian-11"
 }
 
-variable "worker_image" {
-  description = "Image (OS) used for Kubernetes worker nodes."
-  type        = string
-  default     = "debian-11"
-}
-
 variable "controlplane_nodes" {
   description = "List of control plane nodes with fixed names, private IPs, locations, and types."
   type = list(object({
@@ -78,19 +72,48 @@ variable "controlplane_nodes" {
   ]
 }
 
-variable "worker_nodes" {
-  description = "List of worker nodes with fixed names, private IPs, locations, and types."
+variable "vswitch_id" {
+  description = "ID of the vSwitch to attach the nodes to (for Metal nodes)."
+  type        = number
+}
+
+variable "vswitch_subnet_cidr" {
+  description = "CIDR block for the vSwitch subnet (for Metal nodes)."
+  type        = string
+  default     = "10.0.2.0/24"
+}
+
+variable "vswitch_subnet_network_zone" {
+  description = "Network zone for the vSwitch subnet (for Metal nodes)."
+  type        = string
+  default     = "eu-central"
+}
+
+variable "metal_nodes" {
+  description = "List of metal nodes with fixed names, public IPs."
   type = list(object({
-    name     = string
-    ip       = string
-    type     = string
-    location = string
+    name                = string
+    private_ip          = string
+    private_gateway     = string
+    public_ipv4_address = string
+    public_ipv4_gateway = string
+    public_ipv6_address = string
+    public_ipv6_gateway = string
+    install_disk        = string
   }))
-  default = [
-    { name = "worker-1", ip = "10.0.0.6", location = "nbg1", type = "cax21" },
-    { name = "worker-2", ip = "10.0.0.7", location = "hel1", type = "cax21" },
-    { name = "worker-3", ip = "10.0.0.8", location = "fsn1", type = "cax21" },
-  ]
+  default = []
+}
+
+variable "vswitch_vlan_id" {
+  description = "VLAN ID to use for the vSwitch (for Metal nodes)."
+  type        = number
+  default     = 4001
+}
+
+variable "metal_mtu_size" {
+  description = "MTU size to set on the Metal nodes' network interfaces."
+  type        = number
+  default     = 1400
 }
 
 variable "whitelist_admins" {
@@ -197,4 +220,10 @@ variable "upcloud_object_storage_management_user_name" {
   description = "Name of the UpCloud Managed Object Storage management user"
   type        = string
   default     = "terraform"
+}
+
+variable "talos_metal_schematic_id" {
+  description = "Schematic ID used to provision Talos Metal images in Hetzner Cloud."
+  type        = string
+  default     = "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
 }

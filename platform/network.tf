@@ -1,6 +1,7 @@
 resource "hcloud_network" "this" {
-  name     = "${var.resource_prefix}${var.vpc_name}"
-  ip_range = var.vpc_cidr
+  name                     = "${var.resource_prefix}${var.vpc_name}"
+  ip_range                 = var.vpc_cidr
+  expose_routes_to_vswitch = true
 }
 
 resource "hcloud_network_subnet" "this" {
@@ -8,6 +9,14 @@ resource "hcloud_network_subnet" "this" {
   network_id   = hcloud_network.this.id
   network_zone = var.vpc_network_zone
   ip_range     = var.vpc_subnet_cidr
+}
+
+resource "hcloud_network_subnet" "vswitch" {
+  type         = "vswitch"
+  network_id   = hcloud_network.this.id
+  network_zone = var.vswitch_subnet_network_zone
+  ip_range     = var.vswitch_subnet_cidr
+  vswitch_id   = var.vswitch_id
 }
 
 resource "hcloud_floating_ip" "api" {

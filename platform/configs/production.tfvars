@@ -1,6 +1,7 @@
 cluster_name    = "tootcommunity-prod"
 resource_prefix = "tc-prod-"
 architecture    = "arm64"
+environment     = "production"
 
 talos_version      = "v1.11.0"
 kubernetes_version = "v1.34.0"

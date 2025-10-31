@@ -1,0 +1,11 @@
+machine:
+  network:
+    interfaces:
+    - interface: enp1s0
+      dhcp: true
+      vip:
+        ip: ${ipv4_vip_addr}
+        hcloud:
+            apiToken: ${hcloud_token}
+    - interface: enp7s0
+      dhcp: true

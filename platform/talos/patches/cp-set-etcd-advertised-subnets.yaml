@@ -1,0 +1,4 @@
+cluster:
+  etcd:
+    advertisedSubnets:
+      - ${vpc_cidr}
