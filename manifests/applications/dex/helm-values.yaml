@@ -55,7 +55,7 @@ volumeMounts:
     mountPath: /etc/dex/tls
 
 config:
-  issuer: https://idp.mgmt.toot.community
+  issuer: https://idp.toot.community
   logger:
     level: info
     format: text
@@ -77,13 +77,13 @@ config:
   staticClients:
     - id: argocd
       redirectURIs:
-        - https://argocd.mgmt.toot.community/auth/callback
+        - https://argocd.toot.community/auth/callback
         - http://localhost:8085/auth/callback
       name: "ArgoCD"
       secretEnv: STATIC_CLIENT_ARGOCD_SECRET
     - id: grafana
       redirectURIs:
-        - https://monitoring.mgmt.toot.community/login/generic_oauth
+        - https://monitoring.toot.community/login/generic_oauth
       name: "Grafana"
       secretEnv: STATIC_CLIENT_GRAFANA_SECRET
 
@@ -102,7 +102,7 @@ config:
         # Credentials can be string literals or pulled from the environment.
         clientID: $GITHUB_CLIENT_ID
         clientSecret: $GITHUB_CLIENT_SECRET
-        redirectURI: https://idp.mgmt.toot.community/callback
+        redirectURI: https://idp.toot.community/callback
 
         # List of org and team names.
         #  - If specified, a user MUST be a member of at least ONE of these orgs
@@ -129,11 +129,11 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   hosts:
-    - host: idp.mgmt.toot.community
+    - host: idp.toot.community
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: dex-tls
       hosts:
-        - idp.mgmt.toot.community
+        - idp.toot.community

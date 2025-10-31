@@ -34,23 +34,23 @@ spec:
           valueFrom:
             secretKeyRef:
               key: username
-              name: database-app
+              name: previous-cluster-db-credentials
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
               key: password
-              name: database-app
+              name: previous-cluster-db-credentials
         envFrom:
         - configMapRef:
             name: mastodon-env
         - secretRef:
             name: mastodon-secrets-env
-        image: ghcr.io/mastodon/mastodon:v4.4.0-beta.1@sha256:49d58b37ff8a1e282e6bef2eae2ea9e0c1d7f39dc62d7e2595b06949fec25c4d
+        image: ghcr.io/mastodon/mastodon:v4.4.5@sha256:e8ad3b126c71ed5d7df24d1257754a45338d5158e9dd88255accdf958a676ca6
         imagePullPolicy: IfNotPresent
         name: search-deploy
         resources:
           limits:
-            memory: 6Gi
+            memory: 8Gi
           requests:
             cpu: "4"
-            memory: 6Gi
+            memory: 8Gi

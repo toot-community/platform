@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: argocd.mgmt.toot.community
+    - host: argocd.toot.community
       http:
         paths:
           - backend:
@@ -22,5 +22,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - argocd.mgmt.toot.community
+        - argocd.toot.community
       secretName: argocd-server-tls

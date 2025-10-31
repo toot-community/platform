@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: database
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.0
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler

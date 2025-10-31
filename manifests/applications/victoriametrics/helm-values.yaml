@@ -36,11 +36,11 @@ grafana:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
     hosts:
-      - monitoring.mgmt.toot.community
+      - monitoring.toot.community
     tls:
-      - secretName: grafana-mit-intern-tls
+      - secretName: monitoring-toot-community-tls
         hosts:
-          - monitoring.mgmt.toot.community
+          - monitoring.toot.community
 
   sidecar:
     dashboards:
@@ -53,7 +53,7 @@ grafana:
       check_for_updates: true
       reporting_enabled: true
     server:
-      root_url: https://monitoring.mgmt.toot.community
+      root_url: https://monitoring.toot.community
       enable_gzip: true
     auth:
       disable_login_form: true

@@ -30,16 +30,17 @@ configuration:
 
 web:
   domain: *instanceDomain
-  replicaCount: 3
+  replicaCount: 6
   resources:
     requests:
       cpu: 683m
-      memory: 2271Mi
+      memory: 4Gi
     limits:
-      memory: 2750Mi
+      memory: 8Gi
   
 streaming:
   baseURL: wss://streaming.toot.community
+  replicaCount: 3
   resources:
     requests:
       cpu: 21m
@@ -65,7 +66,7 @@ sidekiq:
   workers:
     - name: generic
       concurrency: 25
-      replicaCount: 5
+      replicaCount: 10
       queues:
         - default
         - mailers
@@ -76,9 +77,9 @@ sidekiq:
       resources:
         requests:
           cpu: 1111m
-          memory: 2078Mi
+          memory: 4Gi
         limits:
-          memory: 3Gi
+          memory: 8Gi
     - name: scheduler
       concurrency: 25
       replicaCount: 1
@@ -87,9 +88,9 @@ sidekiq:
       resources:
         requests:
           cpu: 317m
-          memory: 633Mi
+          memory: 1Gi
         limits:
-          memory: 633Mi
+          memory: 2Gi
           
 jobs:
   removePreviewCards:
