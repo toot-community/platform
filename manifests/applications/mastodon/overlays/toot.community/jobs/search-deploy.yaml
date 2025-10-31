@@ -34,12 +34,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: username
-              name: previous-cluster-db-credentials
+              name: database-app
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
               key: password
-              name: previous-cluster-db-credentials
+              name: database-app
         envFrom:
         - configMapRef:
             name: mastodon-env
