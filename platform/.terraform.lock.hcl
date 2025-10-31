@@ -2,8 +2,8 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.opentofu.org/hetznercloud/hcloud" {
-  version     = "1.53.1"
-  constraints = "~> 1.53.0"
+  version     = "1.54.0"
+  constraints = "~> 1.54.0"
   hashes = [
     "h1:nkeGq4fyCryOe4NgTGYADMbs9ZDPUKicnMOm4+vKNO4=",
     "zh:05b113a676fe6a1e7c50d7786f7f4f392e6e0e6ebfde832ef6fa869799e2ff97",

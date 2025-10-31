@@ -15,7 +15,7 @@ helmCharts:
     additionalValuesFiles:
       - helm-values/redis-ha.yaml
     releaseName: redis-ha
-    version: 4.34.13
+    version: 4.35.2
     namespace: *namespace
     repo: https://dandydeveloper.github.io/charts
   - name: mastodon
@@ -42,11 +42,11 @@ helmCharts:
 
 images:
   - name: ghcr.io/mastodon/mastodon
-    newTag: "v4.4.5@sha256:e8ad3b126c71ed5d7df24d1257754a45338d5158e9dd88255accdf958a676ca6"
+    newTag: "v4.4.8@sha256:91723fdbb5870a2c0b790ddcc8cb0c9bdff2022ffbf9cc11aab4345ed02e60ab"
   - name: ghcr.io/mastodon/mastodon-streaming
-    newTag: "v4.4.5@sha256:b2d6aefcc160dd4e60b196a814e6a803e6a5e073b17a1f9453b1e42afafad2f8"
+    newTag: "v4.4.8@sha256:d660b899c0710891ff426aede854cd59c3bf16307cf76df4270767ce6fd667d9"
   - name: varnish
-    newTag: "8.0.0@sha256:34657ad3e9058aa58b1d71afc6fc19fcbbdcddbc885e6d0e4a31ab2139182997"
+    newTag: "8.0.0@sha256:e3f809a53935cba111680cc5904b428e5ca345dd8c4fee9bb11037265976122b"
     
 patches:
   - path: database-cluster.yaml

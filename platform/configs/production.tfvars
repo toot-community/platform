@@ -34,5 +34,6 @@ mastodon_s3_buckets = [
 
 generic_s3_buckets = [
   { name = "toot-community-cnpg-storage" },
-  { name = "microblog-network-cnpg-storage" }
+  { name = "microblog-network-cnpg-storage" },
+  { name = "longhorn-backups" },
 ]
