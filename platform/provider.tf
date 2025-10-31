@@ -10,20 +10,15 @@ terraform {
       version = "~> 0.9"
     }
 
-    # minio = {
-    #   source  = "aminueza/minio"
-    #   version = "~> 3.6.0"
-    # }
+    upcloud = {
+      source  = "UpCloudLtd/upcloud"
+      version = "~> 5.27.0"
+    }
 
-    # upcloud = {
-    #   source  = "UpCloudLtd/upcloud"
-    #   version = "~> 5.27.0"
-    # }
-
-    # objsto = {
-    #   source  = "UpCloudLtd/objsto"
-    #   version = "~> 0.2.0"
-    # }
+    objsto = {
+      source  = "UpCloudLtd/objsto"
+      version = "~> 0.2.0"
+    }
   }
 }
 
@@ -31,17 +26,9 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
-# provider "minio" {
-#   minio_server   = var.s3_server
-#   minio_user     = var.s3_access_key
-#   minio_password = var.s3_secret_key
-#   minio_region   = var.s3_region
-#   minio_ssl      = true
-# }
-
-# provider "objsto" {
-#   endpoint   = "https://${tolist(upcloud_managed_object_storage.this.endpoint)[0].domain_name}"
-#   region     = "auto"
-#   access_key = upcloud_managed_object_storage_user_access_key.terraform.access_key_id
-#   secret_key = upcloud_managed_object_storage_user_access_key.terraform.secret_access_key
-# }
+provider "objsto" {
+  endpoint   = "https://${tolist(upcloud_managed_object_storage.this.endpoint)[0].domain_name}"
+  region     = "auto"
+  access_key = upcloud_managed_object_storage_user_access_key.terraform.access_key_id
+  secret_key = upcloud_managed_object_storage_user_access_key.terraform.secret_access_key
+}
