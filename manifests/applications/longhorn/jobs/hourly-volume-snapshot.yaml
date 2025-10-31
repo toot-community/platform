@@ -1,13 +1,13 @@
 apiVersion: longhorn.io/v1beta2
 kind: RecurringJob
 metadata:
-  name: hourly-volume-backup
+  name: hourly-volume-snapshot
   namespace: longhorn-system
 spec:
   concurrency: 3
   cron: 0 * * * *
   groups:
   - default
-  name: hourly-volume-backup
+  name: hourly-volume-snapshot
   retain: 24
-  task: backup
+  task: snapshot
