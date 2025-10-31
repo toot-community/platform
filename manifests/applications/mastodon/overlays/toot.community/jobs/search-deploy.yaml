@@ -45,7 +45,7 @@ spec:
             name: mastodon-env
         - secretRef:
             name: mastodon-secrets-env
-        image: ghcr.io/mastodon/mastodon:v4.4.5@sha256:e8ad3b126c71ed5d7df24d1257754a45338d5158e9dd88255accdf958a676ca6
+        image: ghcr.io/mastodon/mastodon:v4.4.8@sha256:91723fdbb5870a2c0b790ddcc8cb0c9bdff2022ffbf9cc11aab4345ed02e60ab
         imagePullPolicy: IfNotPresent
         name: search-deploy
         resources:
