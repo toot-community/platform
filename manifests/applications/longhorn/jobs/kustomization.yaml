@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - daily-system-backup.yaml
   - daily-volume-backup.yaml
-  - hourly-volume-backup.yaml
+  - hourly-volume-snapshot.yaml
