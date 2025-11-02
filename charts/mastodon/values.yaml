@@ -88,7 +88,7 @@ configuration:
         key: elastic
   ipRetentionPeriod: "31556952" # 1 year
   sessionRetentionPeriod: "31556952" # 1 year
-  trustedProxyIPs: "10.0.0.0/16" # VPC CIDR
+  trustedProxyIPs: "10.244.0.0/16" # VPC POD CIDR
 
 web:
   domain: toot.community
@@ -187,13 +187,14 @@ sidekiq:
   workers:
     - name: generic
       concurrency: 25
-      replicaCount: 1
+      replicaCount: 3
       queues:
         - default
         - mailers
         - ingress
         - push
         - pull
+        - fasp
       resources:
         requests:
           cpu: 125m

@@ -1,6 +1,7 @@
 cluster_name    = "tootcommunity-prod"
 resource_prefix = "tc-prod-"
 architecture    = "arm64"
+environment     = "production"
 
 talos_version      = "v1.11.0"
 kubernetes_version = "v1.34.0"
@@ -34,6 +35,5 @@ mastodon_s3_buckets = [
 generic_s3_buckets = [
   { name = "toot-community-cnpg-storage" },
   { name = "microblog-network-cnpg-storage" },
-  { name = "longhorn-system-backups" },
-  { name = "longhorn-volume-backups" }
+  { name = "longhorn-backups" },
 ]

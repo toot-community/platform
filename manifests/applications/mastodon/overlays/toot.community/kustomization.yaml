@@ -17,7 +17,7 @@ helmCharts:
     additionalValuesFiles:
       - helm-values/redis-ha.yaml
     releaseName: redis-ha
-    version: 4.35.0
+    version: 4.35.2
     namespace: *namespace
     repo: https://dandydeveloper.github.io/charts
   - name: mastodon
@@ -27,7 +27,7 @@ helmCharts:
     valuesFile: ../../base/helm-values/mastodon.yaml
     additionalValuesFiles:
       - helm-values/mastodon.yaml
-      # - helm-values/mastodon-fhf.yaml
+      # - helm-values/mastodon-migration.yaml
   - name: varnish
     version: "0.0.0"
     releaseName: varnish-for-app

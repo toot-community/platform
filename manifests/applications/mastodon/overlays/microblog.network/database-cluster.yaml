@@ -3,14 +3,14 @@ kind: Cluster
 metadata:
   name: database
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.0
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Pooler
 metadata:
   name: database-pooler-rw
 spec:
-  instances: 1
+  instances: 2
 ---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
@@ -19,4 +19,4 @@ metadata:
 spec:
   configuration:
     endpointURL: https://36imo.upcloudobjects.com
-    destinationPath: s3://microblog-network-cnpg-storage/
+    destinationPath: s3://microblog-network-cnpg-storage/v20251029

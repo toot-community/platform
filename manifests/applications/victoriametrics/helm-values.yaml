@@ -38,7 +38,7 @@ grafana:
     hosts:
       - monitoring.toot.community
     tls:
-      - secretName: grafana-mit-intern-tls
+      - secretName: monitoring-toot-community-tls
         hosts:
           - monitoring.toot.community
 

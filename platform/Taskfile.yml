@@ -1,7 +1,7 @@
 version: "3"
 
 env:
-  ENV: production
+  ENV: test-metal
   CONFIG_PATH: ./configs
 
 tasks:
@@ -28,9 +28,9 @@ tasks:
   get-kubeconfig:
     deps: [init]
     cmds:
-      - tofu output -raw kubeconfig > "{{.CONFIG_PATH}}/output/kubeconfig-{{.ENV}}.yaml"
+      - tofu output -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars" -raw kubeconfig > "{{.CONFIG_PATH}}/output/kubeconfig-{{.ENV}}.yaml"
 
   get-talosconfig:
     deps: [init]
     cmds:
-      - tofu output -raw talosconfig > "{{.CONFIG_PATH}}/output/talosconfig-{{.ENV}}.yaml"
+      - tofu output -var-file="{{.CONFIG_PATH}}/{{.ENV}}.tfvars" -raw talosconfig > "{{.CONFIG_PATH}}/output/talosconfig-{{.ENV}}.yaml"

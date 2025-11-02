@@ -11,7 +11,7 @@ packer {
 
 variable "talos_version" {
   type    = string
-  default = "v1.11.0"
+  default = "v1.11.1"
 }
 
 locals {
@@ -38,7 +38,6 @@ build {
 
   provisioner "shell" {
     inline = [
-      "apt-get install -y wget",
       "wget -O /tmp/talos.raw.xz ${local.image}",
       "xz -d -c /tmp/talos.raw.xz | dd of=/dev/sda && sync",
     ]

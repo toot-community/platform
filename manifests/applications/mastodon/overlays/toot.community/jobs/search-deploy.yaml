@@ -45,12 +45,12 @@ spec:
             name: mastodon-env
         - secretRef:
             name: mastodon-secrets-env
-        image: ghcr.io/mastodon/mastodon:v4.4.0-beta.1@sha256:49d58b37ff8a1e282e6bef2eae2ea9e0c1d7f39dc62d7e2595b06949fec25c4d
+        image: ghcr.io/mastodon/mastodon:v4.4.8@sha256:91723fdbb5870a2c0b790ddcc8cb0c9bdff2022ffbf9cc11aab4345ed02e60ab
         imagePullPolicy: IfNotPresent
         name: search-deploy
         resources:
           limits:
-            memory: 6Gi
+            memory: 8Gi
           requests:
             cpu: "4"
-            memory: 6Gi
+            memory: 8Gi

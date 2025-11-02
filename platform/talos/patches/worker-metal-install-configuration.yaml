@@ -1,0 +1,5 @@
+machine:
+  install:
+    disk: ${install_disk}
+    image: ${installer_image}
+    wipe: true

@@ -38,7 +38,7 @@ data "talos_client_configuration" "talosconfig" {
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   nodes = concat(
     [for node in var.controlplane_nodes : node.ip],
-    [for node in var.worker_nodes : node.ip]
+    [for n in var.metal_nodes : regex("^([^/]+)", n.private_ip)[0]]
   )
   endpoints = [hcloud_floating_ip.api.ip_address]
 }
@@ -49,19 +49,29 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   node                        = hcloud_server.controlplane[each.key].ipv4_address
   config_patches = [
-    templatefile("${path.module}/talos/patches/all.yaml", {
-      vpc_subnet_cidr : var.vpc_subnet_cidr,
-      installer_image : data.talos_image_factory_urls.this.urls.installer
+    templatefile("${path.module}/talos/patches/all-kubelet-extra-args.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-no-cni.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-timeservers.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-up-networking.yaml", {
+      vpc_cidr : var.vpc_cidr,
     }),
-    templatefile("${path.module}/talos/patches/controlplane.yaml", {
+    templatefile("${path.module}/talos/patches/cp-enable-talos-service-accounts.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-monitoring-listen-all-interfaces.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-hcloud-install-disk.yaml", {}),
+    templatefile("${path.module}/talos/patches/cp-set-etcd-advertised-subnets.yaml", {
+      vpc_cidr : var.vpc_cidr,
+    }),
+    templatefile("${path.module}/talos/patches/cp-set-installer-image.yaml", {
+      installer_image : data.talos_image_factory_urls.this.urls.installer,
+    }),
+    templatefile("${path.module}/talos/patches/cp-hcloud-vip-address.yaml", {
       ipv4_vip_addr : hcloud_floating_ip.api.ip_address,
-      hcloud_token : var.hcloud_token,
-      vpc_subnet_cidr : var.vpc_subnet_cidr
+      hcloud_token : var.hcloud_token
     }),
     yamlencode({
       machine = {
         network = {
-          hostname = "${var.resource_prefix}${each.key}"
+          hostname = "${var.resource_prefix}cp-${each.key}"
         }
       }
     })
@@ -75,30 +85,70 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   ]
 }
 
-resource "talos_machine_configuration_apply" "worker_config_apply" {
-  for_each                    = { for i in var.worker_nodes : i.name => i }
+resource "talos_machine_configuration_apply" "metal_config_apply" {
+  for_each                    = { for i in var.metal_nodes : i.name => i }
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-  node                        = hcloud_server.worker[each.key].ipv4_address
+  node                        = regex("^([^/]+)", each.value.public_ipv4_address)[0]
   config_patches = [
-    templatefile("${path.module}/talos/patches/all.yaml", {
-      vpc_subnet_cidr : var.vpc_subnet_cidr,
-      installer_image : data.talos_image_factory_urls.this.urls.installer
+    templatefile("${path.module}/talos/patches/all-kubelet-extra-args.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-no-cni.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-timeservers.yaml", {}),
+    templatefile("${path.module}/talos/patches/all-set-up-networking.yaml", {
+      vpc_cidr : var.vpc_cidr,
     }),
-    templatefile("${path.module}/talos/patches/worker.yaml", {
-      vpc_subnet_cidr : var.vpc_subnet_cidr
+    templatefile("${path.module}/talos/patches/worker-longhorn-volume.yaml", {}),
+    templatefile("${path.module}/talos/patches/worker-elasticsearch.yaml", {}),
+    templatefile("${path.module}/talos/patches/worker-metal-install-configuration.yaml", {
+      install_disk : each.value.install_disk,
+      installer_image : "factory.talos.dev/metal-installer/${var.talos_metal_schematic_id}:${var.talos_version}",
     }),
     yamlencode({
       machine = {
         network = {
-          hostname = "${var.resource_prefix}${each.key}"
+          hostname = "${var.resource_prefix}wk-${each.key}"
+          interfaces = [
+            {
+              addresses = [
+                each.value.public_ipv4_address,
+                each.value.public_ipv6_address,
+              ],
+              dhcp = false,
+              deviceSelector : {
+                busPath = "0*" # select the first and only, per https://docs.siderolabs.com/talos/v1.9/networking/predictable-interface-names#single-network-interface
+              }
+              routes = [
+                {
+                  gateway = each.value.public_ipv4_gateway,
+                  network = "0.0.0.0/0",
+                },
+                {
+                  gateway = each.value.public_ipv6_gateway,
+                  network = "::/0",
+                }
+              ],
+              vlans = [
+                {
+                  addresses = ["${each.value.private_ip}/24"],
+                  mtu       = var.metal_mtu_size,
+                  routes = [
+                    {
+                      gateway = each.value.private_gateway,
+                      network = var.vpc_cidr,
+                    }
+                  ],
+                  vlanId = var.vswitch_vlan_id,
+                }
+              ]
+            }
+          ]
         }
       }
     })
   ]
 
   depends_on = [
-    hcloud_server.worker,
+    hcloud_server.controlplane,
     talos_machine_secrets.machine_secrets,
     data.talos_machine_configuration.controlplane,
     hcloud_floating_ip_assignment.api
