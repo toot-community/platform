@@ -12,7 +12,7 @@ terraform {
 
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 5.30.0"
+      version = "~> 5.31.0"
     }
 
     objsto = {
