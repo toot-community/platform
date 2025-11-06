@@ -84,4 +84,4 @@ controller:
       cpu: 256m
       memory: 750Mi # don't KRR
     limits:
-      memory: 1500Mi
+      memory: 4Gi
