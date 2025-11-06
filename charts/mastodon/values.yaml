@@ -119,8 +119,8 @@ web:
   annotations: ~
   strategy:
     rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+      maxSurge: 100%
+      maxUnavailable: 0%
     type: RollingUpdate
   podDisruptionBudget:
     enabled: true
