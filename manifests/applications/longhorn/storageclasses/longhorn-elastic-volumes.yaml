@@ -1,0 +1,17 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-elastic-volumes
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  numberOfReplicas: "1"
+  dataLocality: "strict-local"
+  replicaAutoBalance: "disabled"
+  fsType: ext4
+  recurringJobSelector: '[{"name":"elastic-volumes","isGroup":true}]'
+  dataEngine: v1
