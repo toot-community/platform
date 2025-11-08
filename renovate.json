@@ -32,6 +32,17 @@
       "ignoreTests": true
     },
     {
+      "matchDatasources": [
+        "docker",
+        "kustomize"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/mastodon/mastodon",
+        "ghcr.io/mastodon/mastodon-streaming"
+      ],
+      "groupName": "mastodon"
+    },
+    {
       "matchManagers": [
         "kustomize",
         "helmv3",
