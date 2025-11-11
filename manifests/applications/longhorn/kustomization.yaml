@@ -8,6 +8,7 @@ resources:
   - jobs
   - nodes
   - storageclasses
+  - rules.yaml
 
 helmCharts:
   - name: longhorn
