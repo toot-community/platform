@@ -1,0 +1,23 @@
+{{ if .Values.metrics.podMonitor.enabled }}
+{{- $context := . }}
+{{- range .Values.sidekiq.workers }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "mastodon.fullname" $context }}-sidekiq-{{ .name }}
+  labels:
+    {{- include "mastodon.labels" $context | nindent 4 }}
+    app.kubernetes.io/component: sidekiq-{{ .name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: sidekiq-{{ .name }}
+  podMetricsEndpoints:
+    - port: prometheus
+      interval: {{ $context.Values.metrics.podMonitor.interval }}
+      scrapeTimeout: {{ $context.Values.metrics.podMonitor.scrapeTimeout }}
+      path: {{ $context.Values.metrics.podMonitor.path }}
+      scheme: {{ $context.Values.metrics.podMonitor.scheme }}
+{{ end }}
+{{ end }}

@@ -54,6 +54,16 @@ spec:
           env:
             - name: DB_POOL
               value: {{ .concurrency | quote }}
+            {{- if $context.Values.metrics.enabled }}
+            - name: MASTODON_PROMETHEUS_EXPORTER_ENABLED
+              value: "true"
+            - name: MASTODON_PROMETHEUS_EXPORTER_LOCAL
+              value: "true"
+            - name: MASTODON_PROMETHEUS_EXPORTER_HOST
+              value: "0.0.0.0"
+            - name: MASTODON_PROMETHEUS_EXPORTER_PORT
+              value: "{{ $context.Values.metrics.port }}"
+            {{- end }}
             {{- include "mastodon.commonEnv" $context | nindent 12 }}
           image: "{{ $context.Values.image.repository }}:{{ $context.Values.image.tag | default $context.Chart.AppVersion }}"
           imagePullPolicy: {{ $context.Values.image.pullPolicy }}
@@ -62,6 +72,11 @@ spec:
             {{- toYaml .resources | nindent 12 }}
           securityContext:
             {{- toYaml $context.Values.securityContext | nindent 12 }}
+          {{- if $context.Values.metrics.enabled }}
+          ports:
+            - name: prometheus
+              containerPort: {{ $context.Values.metrics.port }}
+          {{- end }}
       restartPolicy: Always
       {{- with $context.Values.podSecurityContext }}
       securityContext:
