@@ -297,3 +297,24 @@ jobs:
       limits:
         memory: 400Mi
     days: 30
+    
+metrics:
+  enabled: true
+  port: 9394
+  podMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    path: /metrics
+    scheme: http
+  web:
+    detailed: true
+    exporter:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 180M
+        limits:
+          memory: 250M
+  sidekiq:
+    detailed: true

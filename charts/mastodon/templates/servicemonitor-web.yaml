@@ -1,0 +1,19 @@
+{{ if .Values.metrics.podMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "mastodon.fullname" . }}-web
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: web
+  podMetricsEndpoints:
+    - port: prometheus
+      interval: {{ .Values.metrics.podMonitor.interval }}
+      scrapeTimeout: {{ .Values.metrics.podMonitor.scrapeTimeout }}
+      path: {{ .Values.metrics.podMonitor.path }}
+      scheme: {{ .Values.metrics.podMonitor.scheme }}
+{{ end }}

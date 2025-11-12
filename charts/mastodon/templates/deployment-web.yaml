@@ -61,6 +61,21 @@ spec:
             {{- toYaml .Values.web.resources | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+        {{- if .Values.metrics.enabled }}
+        - name: prometheus-exporter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - ./bin/prometheus_exporter
+          args:
+            - "--bind"
+            - "0.0.0.0"
+            - "--port"
+            - "{{ .Values.metrics.port }}"
+          resources: {{ toYaml .Values.metrics.web.exporter.resources | nindent 12 }}
+          ports:
+            - name: prometheus
+              containerPort: {{ .Values.metrics.port }}
+        {{- end }}
       restartPolicy: Always
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
