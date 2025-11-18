@@ -4,6 +4,8 @@ metadata:
   name: database
 spec:
   instances: 2
+  failoverDelay: 15 # don't failover immediately on network blips
+  
   # imageName: patch-me
   primaryUpdateStrategy: unsupervised
   enablePDB: true
@@ -26,6 +28,10 @@ spec:
 
   postgresql:
     parameters:
+      # connection settings
+      wal_receiver_timeout: 30s
+      wal_sender_timeout: 30s
+      
       # statistics
       pg_stat_statements.max: "10000"
       pg_stat_statements.track: "all"
