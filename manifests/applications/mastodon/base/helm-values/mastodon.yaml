@@ -17,4 +17,4 @@ otel:
   enabled: false
   namePrefix: mastodon
   nameSeparator: /
-  exporterUri: http://vt-vt-single-server:10428
+  exporterUri: http://vt-vt-single-server.victoriatraces.svc.cluster.local:10428/insert/opentelemetry/
