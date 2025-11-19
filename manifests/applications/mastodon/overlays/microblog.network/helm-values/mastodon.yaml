@@ -55,4 +55,4 @@ s3Gateway:
 
 otel:
   enabled: true
-  namePrefix: mastodon/microblog-network
+  namePrefix: microblog-network
