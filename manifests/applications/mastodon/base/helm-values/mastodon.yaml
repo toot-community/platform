@@ -12,3 +12,9 @@ ingress:
   web:
     serviceNameOverride: varnish-for-app
     servicePortOverride: 80
+
+otel:
+  enabled: false
+  namePrefix: mastodon
+  nameSeparator: /
+  exporterUri: http://vt-vt-single-server:10428

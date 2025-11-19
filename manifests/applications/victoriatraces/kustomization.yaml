@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: victoriatraces
+
+resources:
+  - namespace.yaml
+
+helmCharts:
+  - name: victoria-traces-single
+    version: "0.0.3"
+    releaseName: vt
+    namespace: victoriatraces
+    valuesFile: helm-values.yaml
+    includeCRDs: true
+    repo: https://victoriametrics.github.io/helm-charts/

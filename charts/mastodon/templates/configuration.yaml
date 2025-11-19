@@ -74,6 +74,11 @@ data:
   PROMETHEUS_EXPORTER_HOST: "127.0.0.1"
   PROMETHEUS_EXPORTER_PORT: "{{ .Values.metrics.port | default "9394" }}"
   {{- end }}
+  {{- if .Values.otel.enabled }}
+  OTEL_SERVICE_NAME_PREFIX: {{ .Values.otel.namePrefix }}
+  OTEL_SERVICE_NAME_SEPARATOR: {{ .Values.otel.nameSeparator | default "/" }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.otel.exporterUri }}
+  {{- end }}
 kind: ConfigMap
 metadata:
   labels:

@@ -52,3 +52,7 @@ s3Gateway:
       - hosts:
           - *staticDomain
         secretName: ingress-static-tls
+
+otel:
+  enabled: true
+  namePrefix: mastodon/microblog-network
