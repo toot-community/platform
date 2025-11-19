@@ -54,5 +54,5 @@ s3Gateway:
         secretName: ingress-static-tls
 
 otel:
-  enabled: true
+  enabled: false # is broken, need to look at this later
   namePrefix: microblog-network
