@@ -318,3 +318,9 @@ metrics:
           memory: 250M
   sidekiq:
     detailed: true
+    
+otel:
+  enabled: false
+  namePrefix: mastodon
+  nameSeparator: /
+  exporterUri: http://otel-collector:4317

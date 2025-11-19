@@ -1,0 +1,19 @@
+serviceAccount:
+  create: true
+  
+server:
+  retentionPeriod: "100y"
+  retentionDiskSpaceUsage: "95"
+  
+  persistentVolume:
+    size: "100Gi"
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "200m"
+    limits:
+      memory: "4Gi"
+
+  vmServiceScrape:
+    enabled: true
