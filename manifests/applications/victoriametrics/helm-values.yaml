@@ -85,7 +85,14 @@ grafana:
           type: victoriametrics-logs-datasource
           access: proxy
           url: http://vl-victoria-logs-single-server.victorialogs.svc.cluster.local:9428
-
+        - name: VictoriaTraces
+          type: jaeger
+          access: proxy
+          url: http://vt-vt-single-server.victoriatraces.svc.cluster.local:10428/select/jaeger
+          tracesToLogs:
+            datasourceUid: VictoriaLogs
+          tracesToMetrics:
+            datasourceUid: VictoriaMetrics
 defaultDashboards:
   dashboards:
     victoriametrics-vmalert:
