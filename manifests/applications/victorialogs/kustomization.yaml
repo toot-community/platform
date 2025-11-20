@@ -4,6 +4,7 @@ namespace: victorialogs
 
 resources:
   - namespace.yaml
+  - vector-podscrape.yaml
 
 helmCharts:
   - name: victoria-logs-single
