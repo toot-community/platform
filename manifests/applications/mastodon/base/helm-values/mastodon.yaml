@@ -7,14 +7,14 @@ configuration:
     timeouts:
       open: 10
       read: 10
+  
+  otel:
+    enabled: false
+    namePrefix: mastodon
+    nameSeparator: /
+    exporterUri: http://vt-vt-single-server.victoriatraces.svc.cluster.local:10428/insert/opentelemetry/
 
 ingress:
   web:
     serviceNameOverride: varnish-for-app
     servicePortOverride: 80
-
-otel:
-  enabled: false
-  namePrefix: mastodon
-  nameSeparator: /
-  exporterUri: http://vt-vt-single-server.victoriatraces.svc.cluster.local:10428/insert/opentelemetry/

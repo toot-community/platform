@@ -27,6 +27,13 @@ configuration:
   
   databaseReplicas:
     enabled: true
+    
+  otel:
+    enabled: true
+    namePrefix: toot-community
+    
+  extraConfiguration:
+    OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
 
 web:
   domain: *instanceDomain
