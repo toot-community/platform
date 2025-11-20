@@ -1,0 +1,20 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: vector
+  namespace: victorialogs
+  labels:
+    app.kubernetes.io/part-of: victorialogs
+spec:
+  jobLabel: vector
+  namespaceSelector:
+    matchNames:
+      - victorialogs
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vector
+  podMetricsEndpoints:
+    - portNumber: 9090
+      interval: "10s"
+      honorLabels: true
+      path: /metrics
