@@ -22,11 +22,11 @@ configuration:
     smtpServer: mail.jorijn.com
     
   otel:
-    enabled: true
+    enabled: false
     namePrefix: microblog-network
     
-  extraConfiguration:
-    OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
+  extraConfiguration: {}
+    # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
     
 web:
   domain: *instanceDomain
