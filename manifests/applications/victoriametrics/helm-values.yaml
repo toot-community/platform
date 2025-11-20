@@ -112,11 +112,11 @@ vmsingle:
     storage:
       resources:
         requests:
-          storage: 50Gi
+          storage: 150Gi
 
 vmcluster:
   enabled: false
-  retentionPeriod: "30d"
+  retentionPeriod: "180d"
   spec:
     storage:
       resources:

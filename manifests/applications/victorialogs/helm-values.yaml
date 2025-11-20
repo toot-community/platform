@@ -2,7 +2,7 @@ serviceAccount:
   create: true
   
 server:
-  retentionDiskSpaceUsage: "40"
+  retentionDiskSpaceUsage: "100"
   extraArgs:
     envflag.enable: true
     envflag.prefix: VM_
@@ -12,7 +12,7 @@ server:
   
   persistentVolume:
     enabled: true
-    size: 50Gi
+    size: 105Gi
     
   resources:
     requests:
