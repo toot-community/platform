@@ -89,6 +89,12 @@ configuration:
   ipRetentionPeriod: "31556952" # 1 year
   sessionRetentionPeriod: "31556952" # 1 year
   trustedProxyIPs: "10.244.0.0/16" # VPC POD CIDR
+  otel:
+    enabled: false
+    namePrefix: mastodon
+    nameSeparator: /
+    exporterUri: http://otel-collector:4317
+  extraConfiguration: {}
 
 web:
   domain: toot.community
@@ -318,9 +324,3 @@ metrics:
           memory: 250M
   sidekiq:
     detailed: true
-    
-otel:
-  enabled: false
-  namePrefix: mastodon
-  nameSeparator: /
-  exporterUri: http://otel-collector:4317

@@ -21,6 +21,13 @@ configuration:
     fromAddress: microblog.network Notifications <support@microblog.network>
     smtpServer: mail.jorijn.com
     
+  otel:
+    enabled: true
+    namePrefix: microblog-network
+    
+  extraConfiguration:
+    OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
+    
 web:
   domain: *instanceDomain
   replicaCount: 3
@@ -52,7 +59,3 @@ s3Gateway:
       - hosts:
           - *staticDomain
         secretName: ingress-static-tls
-
-otel:
-  enabled: false # is broken, need to look at this later
-  namePrefix: microblog-network

@@ -79,9 +79,11 @@ data:
   OTEL_SERVICE_NAME_SEPARATOR: {{ .Values.otel.nameSeparator | default "/" }}
   OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.otel.exporterUri }}
   {{- end }}
+  {{- range $key, $val := .Values.configuration.extraConfiguration }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
 kind: ConfigMap
 metadata:
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
   name: {{ include "mastodon.fullname" . }}-env
-

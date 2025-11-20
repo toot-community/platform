@@ -20,5 +20,6 @@ resources:
   - victoriametrics.yaml
   - toot-community.yaml
   - victorialogs.yaml
+  - victoriatraces.yaml
   - robusta.yaml
   - local-path-storage.yaml

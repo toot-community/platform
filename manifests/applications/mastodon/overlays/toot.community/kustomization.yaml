@@ -27,7 +27,6 @@ helmCharts:
     valuesFile: ../../base/helm-values/mastodon.yaml
     additionalValuesFiles:
       - helm-values/mastodon.yaml
-      # - helm-values/mastodon-migration.yaml
   - name: varnish
     version: "0.0.0"
     releaseName: varnish-for-app
