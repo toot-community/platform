@@ -22,6 +22,6 @@ spec:
                 port:
                   number: {{ .Values.streaming.port }}
             path: /api/v1/streaming
-            pathType: ImplementationSpecific
+            pathType: Prefix
   tls:
     {{ .Values.ingress.streaming.tls | toYaml | nindent 4 }}

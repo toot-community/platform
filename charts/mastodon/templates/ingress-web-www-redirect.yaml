@@ -31,7 +31,7 @@ spec:
                   number: {{ .Values.web.port }}
                   {{- end }}
             path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
   tls:
     - hosts:
         - "www.{{ .Values.ingress.web.host }}"

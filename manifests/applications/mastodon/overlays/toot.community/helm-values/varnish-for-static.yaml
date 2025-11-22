@@ -80,7 +80,7 @@ ingress:
     - host: static.toot.community
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls:
     - secretName: static.toot.community-tls
       hosts:
