@@ -30,7 +30,7 @@ ingress:
     - host: static.microblog.network
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls:
     - secretName: static.microblog.network-tls
       hosts:

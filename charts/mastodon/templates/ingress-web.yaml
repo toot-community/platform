@@ -39,6 +39,6 @@ spec:
                   number: {{ .Values.web.port }}
                   {{- end }}
             path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
   tls:
     {{ .Values.ingress.web.tls | toYaml | nindent 4 }}

@@ -132,7 +132,7 @@ ingress:
     - host: idp.toot.community
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls:
     - secretName: dex-tls
       hosts:
