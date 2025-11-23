@@ -59,3 +59,12 @@ s3Gateway:
       - hosts:
           - *staticDomain
         secretName: ingress-static-tls
+
+gateway:
+  enabled: true
+  parentRefs:
+    - name: shared
+      namespace: kube-system
+  web:
+    wwwRedirect:
+      enabled: true

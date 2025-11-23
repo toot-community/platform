@@ -37,3 +37,9 @@ ingress:
         - static.microblog.network
       
 replicaCount: 1
+
+gateway:
+  enabled: true
+  parentRefs:
+    - name: shared
+      namespace: kube-system

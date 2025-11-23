@@ -1,0 +1,28 @@
+{{- $fullName := include "mastodon.fullname" . -}}
+{{- $parentRefs := default .Values.gateway.parentRefs .Values.gateway.web.parentRefs -}}
+{{- $hostname := default .Values.ingress.web.host .Values.gateway.web.hostname -}}
+{{- if and .Values.gateway.enabled (gt (len $parentRefs) 0) }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-web
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  {{- with .Values.gateway.web.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- toYaml $parentRefs | nindent 2 }}
+  hostnames:
+    - {{ $hostname | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ ternary .Values.ingress.web.serviceNameOverride (printf "%s-web" $fullName) (ne .Values.ingress.web.serviceNameOverride nil) }}
+          port: {{ ternary .Values.ingress.web.servicePortOverride .Values.web.port (ne .Values.ingress.web.servicePortOverride nil) }}
+{{- end }}

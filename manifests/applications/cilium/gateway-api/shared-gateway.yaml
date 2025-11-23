@@ -1,0 +1,55 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: shared
+  namespace: kube-system
+spec:
+  gatewayClassName: cilium
+  
+  infrastructure:
+    annotations:
+      load-balancer.hetzner.cloud/name: lb-cilium-gateway
+      load-balancer.hetzner.cloud/use-private-ip: "true"
+      load-balancer.hetzner.cloud/protocol: tcp
+      load-balancer.hetzner.cloud/algorithm-type: round_robin
+      load-balancer.hetzner.cloud/type: lb11
+      load-balancer.hetzner.cloud/location: fsn1
+      load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
+
+  listeners:
+    # - &toot-base
+    #   protocol: HTTPS
+    #   port: 443
+    #   name: toot-community-https
+    #   hostname: toot.community
+    #   tls: &toot-tls
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - group: ""
+    #         kind: Secret
+    #         name: toot-community-tls
+    #   allowedRoutes:
+    #     namespaces:
+    #       from: All
+    # - <<: *toot-base
+    #   name: wildcard-toot-community-https
+    #   hostname: "*.toot.community"
+    #   tls: *toot-tls
+    - &microblog-base
+      protocol: HTTPS
+      port: 443
+      name: microblog-network-https
+      hostname: microblog.network
+      tls: &microblog-tls
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: microblog-network-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - <<: *microblog-base
+      name: wildcard-microblog-network-https
+      hostname: "*.microblog.network"
+      tls: *microblog-tls

@@ -1,0 +1,41 @@
+{{- $root := . -}}
+{{- $fullName := include "varnish.fullname" $root -}}
+{{- $parentRefs := $root.Values.gateway.parentRefs -}}
+{{- $hosts := default $root.Values.ingress.hosts $root.Values.gateway.hosts -}}
+{{- if and $root.Values.gateway.enabled (gt (len $parentRefs) 0) }}
+{{- range $index, $host := $hosts }}
+{{- $hostname := default $host.host $host.hostname -}}
+{{- $hostParentRefs := default $parentRefs $host.parentRefs -}}
+{{- $paths := default (list (dict "path" "/" "pathType" "Prefix")) $host.paths -}}
+{{- if and $hostname (gt (len $hostParentRefs) 0) }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ printf "%s-%s" $fullName (replace "." "-" $hostname) | trunc 63 | trimSuffix "-" }}
+  labels:
+    {{- include "varnish.labels" $root | nindent 4 }}
+  {{- with default $root.Values.gateway.annotations $host.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- toYaml $hostParentRefs | nindent 4 }}
+  hostnames:
+    - {{ $hostname | quote }}
+  rules:
+    {{ range $paths }}
+    - matches:
+        - path:
+            type: {{ ternary "Exact" "PathPrefix" (eq (default "Prefix" .pathType) "Exact") }}
+            value: {{ default "/" .path }}
+      backendRefs:
+        - name: {{ $fullName }}
+          port: {{ $root.Values.service.port }}
+    {{- end }}
+{{- if lt (add $index 1) (len $hosts) }}
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

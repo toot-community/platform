@@ -77,6 +77,18 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+gateway:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hosts: []
+  # - hostname: chart-example.local
+  #   annotations: {}
+  #   parentRefs: []
+  #   paths:
+  #     - path: /
+  #       pathType: Prefix
+
 resources:
   limits:
     memory: 512Mi
