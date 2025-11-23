@@ -1,3 +1,4 @@
+{{- if .Values.ingress.streaming.enabled }}
 {{- $fullName := include "mastodon.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -25,3 +26,4 @@ spec:
             pathType: Prefix
   tls:
     {{ .Values.ingress.streaming.tls | toYaml | nindent 4 }}
+{{- end }}

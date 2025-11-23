@@ -1,0 +1,28 @@
+{{- $fullName := include "mastodon.fullname" . -}}
+{{- $parentRefs := default .Values.gateway.parentRefs .Values.gateway.streaming.parentRefs -}}
+{{- $hostname := default .Values.ingress.streaming.host .Values.gateway.streaming.hostname -}}
+{{- if and .Values.gateway.enabled (gt (len $parentRefs) 0) }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-streaming
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  {{- with .Values.gateway.streaming.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- toYaml $parentRefs | nindent 2 }}
+  hostnames:
+    - {{ $hostname | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/v1/streaming
+      backendRefs:
+        - name: {{ printf "%s-streaming" $fullName }}
+          port: {{ .Values.streaming.port }}
+{{- end }}

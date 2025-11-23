@@ -1,0 +1,33 @@
+{{- $fullName := include "mastodon.fullname" . -}}
+{{- $parentRefs := default .Values.gateway.parentRefs .Values.gateway.web.parentRefs -}}
+{{- $webHostname := default .Values.ingress.web.host .Values.gateway.web.hostname -}}
+{{- $wwwRedirectEnabled := default .Values.ingress.web.wwwRedirect.enabled .Values.gateway.web.wwwRedirect.enabled -}}
+{{- $wwwHostname := .Values.gateway.web.wwwRedirect.hostname | default (printf "www.%s" $webHostname) -}}
+{{- if and .Values.gateway.enabled $wwwRedirectEnabled (gt (len $parentRefs) 0) }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-web-www-redirect
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  {{- with .Values.gateway.web.wwwRedirect.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- toYaml $parentRefs | nindent 2 }}
+  hostnames:
+    - {{ $wwwHostname | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            host: {{ $webHostname | quote }}
+            scheme: https
+            statusCode: 308
+{{- end }}

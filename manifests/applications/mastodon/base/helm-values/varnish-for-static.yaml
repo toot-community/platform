@@ -66,6 +66,12 @@ onload:
   host: haproxy-onload.haproxy-onload.svc.cluster.local
   port: 8080
 
+# gateway:
+#   enabled: true
+#   parentRefs:
+#     - name: shared
+#       namespace: kube-system
+
 # Migration mode configuration
 migration:
   enabled: false
@@ -263,4 +269,3 @@ varnish:
             return (deliver);
         }
     }
-

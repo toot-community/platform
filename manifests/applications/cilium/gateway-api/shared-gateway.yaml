@@ -16,11 +16,40 @@ spec:
       load-balancer.hetzner.cloud/location: fsn1
       load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
 
-  listeners: []
-  # - protocol: HTTP
-  #   hostname: toot.community
-  #   port: 80
-  #   name: toot-community-http
-  #   allowedRoutes:
-  #     namespaces:
-  #       from: All
+  listeners:
+    # - &toot-base
+    #   protocol: HTTPS
+    #   port: 443
+    #   name: toot-community-https
+    #   hostname: toot.community
+    #   tls: &toot-tls
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - group: ""
+    #         kind: Secret
+    #         name: toot-community-tls
+    #   allowedRoutes:
+    #     namespaces:
+    #       from: All
+    # - <<: *toot-base
+    #   name: wildcard-toot-community-https
+    #   hostname: "*.toot.community"
+    #   tls: *toot-tls
+    - &microblog-base
+      protocol: HTTPS
+      port: 443
+      name: microblog-network-https
+      hostname: microblog.network
+      tls: &microblog-tls
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: microblog-network-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - <<: *microblog-base
+      name: wildcard-microblog-network-https
+      hostname: "*.microblog.network"
+      tls: *microblog-tls
