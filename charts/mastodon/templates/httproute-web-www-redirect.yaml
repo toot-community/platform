@@ -29,5 +29,5 @@ spec:
           requestRedirect:
             host: {{ $webHostname | quote }}
             scheme: https
-            statusCode: 308
+            statusCode: 301
 {{- end }}
