@@ -42,4 +42,4 @@ gateway:
   enabled: true
   parentRefs:
     - name: shared
-      namespace: kube-system
+      namespace: traefik-system
