@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: traefik-system
+
+resources: 
+  - gateway-api/certificates
+  - gateway-api/shared-gateway.yaml
+
+helmCharts:
+  - name: traefik
+    version: "37.4.0"
+    releaseName: traefik
+    namespace: traefik-system
+    valuesFile: helm-values.yaml
+    includeCRDs: true
+    repo: https://traefik.github.io/charts
