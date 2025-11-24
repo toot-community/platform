@@ -30,8 +30,6 @@ metrics:
       enabled: true
     serviceMonitor:
       enabled: true
-    prometheusRule:
-      enabled: true
 
 global:
   sendAnonymousUsage: true
