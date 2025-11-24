@@ -146,7 +146,7 @@ vmagent:
         cpu: 125m
         memory: 500Mi
       limits:
-        memory: 500Mi
+        memory: 1Gi
 
 kubeEtcd:
   endpoints: *api-endpoints
