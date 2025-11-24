@@ -10,7 +10,7 @@ hubble:
     enabled: true
 
 hostFirewall:
-  enabled: true
+  enabled: false
 
 kubeProxyReplacement: true
 
@@ -47,7 +47,7 @@ cgroup:
 k8sServiceHost: localhost
 k8sServicePort: "7445"
 
-policyAuditMode: true # FIXME: Enable only for debugging
+policyAuditMode: false
   
 ipv4:
   enabled: true
@@ -56,6 +56,7 @@ mtu: 1350
 
 gatewayAPI:
   enabled: true
-  enableProxyProtocol: false
+  enableProxyProtocol: true
   enableAlpn: true
   enableAppProtocol: true
+  externalTrafficPolicy: Local
