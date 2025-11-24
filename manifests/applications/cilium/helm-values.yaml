@@ -53,10 +53,3 @@ ipv4:
   enabled: true
 
 mtu: 1350
-
-gatewayAPI:
-  enabled: true
-  enableProxyProtocol: true
-  enableAlpn: false
-  enableAppProtocol: false
-  externalTrafficPolicy: Local
