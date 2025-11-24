@@ -56,6 +56,6 @@ mtu: 1350
 
 gatewayAPI:
   enabled: true
-  enableProxyProtocol: true
+  enableProxyProtocol: false
   enableAlpn: true
   enableAppProtocol: true

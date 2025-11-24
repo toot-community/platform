@@ -14,7 +14,7 @@ spec:
       load-balancer.hetzner.cloud/algorithm-type: round_robin
       load-balancer.hetzner.cloud/type: lb11
       load-balancer.hetzner.cloud/location: fsn1
-      load-balancer.hetzner.cloud/uses-proxyprotocol: "true"
+      load-balancer.hetzner.cloud/uses-proxyprotocol: "false"
 
   listeners:
     # - protocol: HTTP
