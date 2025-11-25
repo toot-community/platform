@@ -16,7 +16,7 @@ helmCharts:
     includeCRDs: true
     valuesFile: helm-values-cert-manager.yaml
   - repo: https://charts.hetzner.cloud
-    version: v0.6.1
+    version: 0.6.2
     name: cert-manager-webhook-hetzner
     namespace: cert-manager
     releaseName: cert-manager-webhook-hetzner
