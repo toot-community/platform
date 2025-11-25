@@ -4,3 +4,4 @@ namespace: kube-system
 
 resources: 
   - microblog-network.yaml
+  - toot-community.yaml

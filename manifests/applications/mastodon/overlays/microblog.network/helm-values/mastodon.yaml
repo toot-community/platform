@@ -59,12 +59,3 @@ s3Gateway:
       - hosts:
           - *staticDomain
         secretName: ingress-static-tls
-
-gateway:
-  enabled: true
-  parentRefs:
-    - name: shared
-      namespace: traefik-system
-  web:
-    wwwRedirect:
-      enabled: true

@@ -19,11 +19,11 @@ ingress:
     serviceNameOverride: varnish-for-app
     servicePortOverride: 80
 
-# gateway:
-#   enabled: true
-#   parentRefs:
-#     - name: shared
-#       namespace: kube-system
-#   web:
-#     wwwRedirect:
-#       enabled: true
+gateway:
+  enabled: true
+  parentRefs:
+    - name: shared
+      namespace: traefik-system
+  web:
+    wwwRedirect:
+      enabled: true

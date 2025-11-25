@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: toot-community-https
+spec:
+  commonName: toot.community
+  dnsNames:
+    - toot.community
+    - "*.toot.community"
+  issuerRef:
+    name: letsencrypt-hetzner
+    kind: ClusterIssuer
+  secretName: toot-community-tls
