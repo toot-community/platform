@@ -6,48 +6,48 @@ spec:
   gatewayClassName: traefik
 
   listeners:
-    # - protocol: HTTP
-    #   port: 80
-    #   name: toot-community-http
-    #   hostname: toot.community
-    #   allowedRoutes:
-    #     namespaces:
-    #       from: All
+    - protocol: HTTP
+      port: 80
+      name: toot-community-http
+      hostname: toot.community
+      allowedRoutes:
+        namespaces:
+          from: All
 
-    # - protocol: HTTP
-    #   port: 80
-    #   name: wildcard-toot-community-http
-    #   hostname: "*.toot.community"
-    #   allowedRoutes:
-    #     namespaces:
-    #       from: All
-    # - protocol: HTTPS
-    #   port: 443
-    #   name: toot-community-https
-    #   hostname: toot.community
-    #   tls:
-    #     mode: Terminate
-    #     certificateRefs:
-    #       - group: ""
-    #         kind: Secret
-    #         name: toot-community-tls
-    #   allowedRoutes:
-    #     namespaces:
-    #       from: All
+    - protocol: HTTP
+      port: 80
+      name: wildcard-toot-community-http
+      hostname: "*.toot.community"
+      allowedRoutes:
+        namespaces:
+          from: All
+    - protocol: HTTPS
+      port: 443
+      name: toot-community-https
+      hostname: toot.community
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: toot-community-tls
+      allowedRoutes:
+        namespaces:
+          from: All
 
-    # - protocol: HTTPS
-    #   port: 443
-    #   name: wildcard-toot-community-https
-    #   hostname: "*.toot.community"
-    #   tls:
-    #     mode: Terminate
-    #     certificateRefs:
-    #       - group: ""
-    #         kind: Secret
-    #         name: toot-community-tls
-    #   allowedRoutes:
-    #     namespaces:
-    #       from: All
+    - protocol: HTTPS
+      port: 443
+      name: wildcard-toot-community-https
+      hostname: "*.toot.community"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: toot-community-tls
+      allowedRoutes:
+        namespaces:
+          from: All
 
     - protocol: HTTP
       port: 8000
