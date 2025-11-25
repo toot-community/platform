@@ -7,7 +7,7 @@ spec:
 
   listeners:
     - protocol: HTTP
-      port: 80
+      port: 8000
       name: toot-community-http
       hostname: toot.community
       allowedRoutes:
@@ -15,14 +15,14 @@ spec:
           from: All
 
     - protocol: HTTP
-      port: 80
+      port: 8000
       name: wildcard-toot-community-http
       hostname: "*.toot.community"
       allowedRoutes:
         namespaces:
           from: All
     - protocol: HTTPS
-      port: 443
+      port: 8443
       name: toot-community-https
       hostname: toot.community
       tls:
@@ -36,7 +36,7 @@ spec:
           from: All
 
     - protocol: HTTPS
-      port: 443
+      port: 8443
       name: wildcard-toot-community-https
       hostname: "*.toot.community"
       tls:
