@@ -33,9 +33,10 @@ metrics:
 
 global:
   sendAnonymousUsage: true
-  
+
 ports:
-  web:  
+  web:
+    redirectTo: websecure
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
