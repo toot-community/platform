@@ -36,7 +36,11 @@ global:
 
 ports:
   web:
-    redirectTo: websecure
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
