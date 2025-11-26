@@ -11,7 +11,7 @@ resources:
 
 varnish:
   size: 256M
-  cachePublicInstanceEndpoints: true # set this to false if the instance runs under limited federation mode or authorized fetch is enabled
+  cachePublicInstanceEndpoints: false # discovered a strange redirect bug when this is turned on
   extraArgs:
     - -s
     - malloc,{{ .Values.varnish.size }}
