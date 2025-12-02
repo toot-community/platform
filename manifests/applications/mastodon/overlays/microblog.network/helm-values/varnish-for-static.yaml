@@ -37,3 +37,6 @@ ingress:
         - static.microblog.network
       
 replicaCount: 1
+
+crowdsecBouncer:
+  enabled: true

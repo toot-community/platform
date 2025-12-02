@@ -85,4 +85,3 @@ ingress:
     - secretName: static.toot.community-tls
       hosts:
         - static.toot.community
-      
