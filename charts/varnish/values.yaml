@@ -89,6 +89,10 @@ gateway:
   #     - path: /
   #       pathType: Prefix
 
+crowdsecBouncer:
+  enabled: false
+  name: crowdsec-bouncer
+
 resources:
   limits:
     memory: 512Mi

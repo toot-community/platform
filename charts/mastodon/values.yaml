@@ -270,6 +270,10 @@ gateway:
     annotations: {}
     parentRefs: []
 
+crowdsecBouncer:
+  enabled: false
+  name: crowdsec-bouncer
+
 jobs:
   annotations: ~
   cleanupMedia:
