@@ -53,9 +53,8 @@ ports:
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
-    http:
-      middlewares:
-        - crowdsec-bouncer@kubernetescrd
+    middlewares:
+        - traefik-system@kubernetescrd
 
 deployment:
   replicas: 3
