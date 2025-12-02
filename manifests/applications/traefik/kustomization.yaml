@@ -5,6 +5,7 @@ namespace: traefik-system
 resources: 
   - gateway-api/certificates
   - gateway-api/shared-gateway.yaml
+  - secrets.yaml
 
 helmCharts:
   - name: traefik
