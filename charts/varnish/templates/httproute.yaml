@@ -29,14 +29,6 @@ spec:
         - path:
             type: {{ ternary "Exact" "PathPrefix" (eq (default "Prefix" .pathType) "Exact") }}
             value: {{ default "/" .path }}
-      {{- if $root.Values.crowdsecBouncer.enabled }}
-      filters:
-        - type: ExtensionRef
-          extensionRef:
-            group: traefik.io
-            kind: Middleware
-            name: {{ default "crowdsec-bouncer" $root.Values.crowdsecBouncer.name | quote }}
-      {{- end }}
       backendRefs:
         - name: {{ $fullName }}
           port: {{ $root.Values.service.port }}

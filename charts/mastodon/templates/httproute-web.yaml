@@ -22,14 +22,6 @@ spec:
         - path:
             type: PathPrefix
             value: /
-      {{- if .Values.crowdsecBouncer.enabled }}
-      filters:
-        - type: ExtensionRef
-          extensionRef:
-            group: traefik.io
-            kind: Middleware
-            name: {{ default "crowdsec-bouncer" .Values.crowdsecBouncer.name | quote }}
-      {{- end }}
       backendRefs:
         - name: {{ ternary .Values.ingress.web.serviceNameOverride (printf "%s-web" $fullName) (ne .Values.ingress.web.serviceNameOverride nil) }}
           port: {{ ternary .Values.ingress.web.servicePortOverride .Values.web.port (ne .Values.ingress.web.servicePortOverride nil) }}
