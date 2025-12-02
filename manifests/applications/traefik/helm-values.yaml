@@ -79,3 +79,10 @@ resources:
     memory: 750Mi
   limits:
     memory: 4Gi
+
+experimental:
+  abortOnPluginFailure: true
+  plugins:
+    crowdsec-bouncer:
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.4.6"
