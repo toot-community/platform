@@ -22,6 +22,10 @@ logs:
   access:
     enabled: true
     format: json
+    fields:
+      headers:
+        names:
+          User-Agent: keep
 
 metrics:
   prometheus:
