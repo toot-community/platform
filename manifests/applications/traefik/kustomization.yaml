@@ -6,6 +6,7 @@ resources:
   - gateway-api/certificates
   - gateway-api/shared-gateway.yaml
   - secrets.yaml
+  - crowdsec-middleware.yaml
 
 helmCharts:
   - name: traefik
