@@ -53,8 +53,8 @@ ports:
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
-    # middlewares:
-    #     - traefik-system-crowdsec-bouncer@kubernetescrd
+    middlewares:
+        - traefik-system-crowdsec-bouncer@kubernetescrd
 
 deployment:
   replicas: 3
@@ -83,7 +83,7 @@ resources:
     memory: 4Gi
 
 experimental:
-  abortOnPluginFailure: true
+  abortOnPluginFailure: false
   plugins:
     crowdsec-bouncer:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
