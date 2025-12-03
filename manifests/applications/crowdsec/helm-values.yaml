@@ -74,6 +74,15 @@ config:
       host:     ${DB_HOST}
       port:     ${DB_PORT}
       sslmode:  ${DB_SSLMODE}
+      flush:
+        max_age: 7d
+        metrics_max_age: 90d
+        bouncers_autodelete:
+          cert: 60m
+          api_key: 60m
+        agents_autodelete:
+          cert: 60m
+          login_password: 60m
     api:
       server:
         auto_registration:
