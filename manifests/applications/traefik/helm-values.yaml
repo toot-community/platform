@@ -58,6 +58,11 @@ ports:
 
 deployment:
   replicas: 3
+
+volumes:
+  - name: traefik-secrets
+    type: secret
+    mountPath: /etc/traefik/secrets
   
 service:
   annotations:

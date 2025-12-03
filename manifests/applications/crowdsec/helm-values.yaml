@@ -1,0 +1,83 @@
+container_runtime: containerd
+
+agent:
+  # we are not setting up traefik but the acquisition section is required.
+  acquisition:
+    - namespace: traefik-system
+      podName: traefik-*
+      program: traefik
+      poll_without_inotify: true
+  env:
+    - name: COLLECTIONS
+      value: "crowdsecurity/traefik"
+
+lapi:
+  replicas: 2
+  storeCAPICredentialsInSecret: true
+  strategy:
+    type: RollingUpdate
+  persistentVolume:
+    config:
+      enabled: false
+    data:
+      enabled: false
+  env:
+    - name: ENROLL_KEY
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: ENROLL_KEY
+    - name: ENROLL_INSTANCE_NAME
+      value: "toot-community"
+    - name: ENROLL_TAGS
+      value: "k8s linux"
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-db-app
+          key: password
+    - name: DB_USER
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-db-app
+          key: username
+    - name: DB_NAME
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-db-app
+          key: dbname
+    - name: DB_HOST
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-db-app
+          key: host
+    - name: DB_PORT
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-db-app
+          key: port
+    - name: DB_SSLMODE
+      value: "require"
+    - name: BOUNCER_KEY_traefik
+      valueFrom:
+        secretKeyRef:
+          name: crowdsec-secrets
+          key: BOUNCER_KEY_traefik
+
+config:
+  config.yaml.local: |
+    db_config:
+      type:     postgres
+      user:     ${DB_USER}
+      password: ${DB_PASSWORD}
+      db_name:  ${DB_NAME}
+      host:     ${DB_HOST}
+      port:     ${DB_PORT}
+      sslmode:  ${DB_SSLMODE}
+    api:
+      server:
+        auto_registration:
+          enabled: true
+          token: "${REGISTRATION_TOKEN}"
+          allowed_ranges:
+            - "10.0.0.0/8"
