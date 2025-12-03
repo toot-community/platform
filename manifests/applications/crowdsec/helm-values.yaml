@@ -10,6 +10,15 @@ agent:
   env:
     - name: COLLECTIONS
       value: "crowdsecurity/traefik"
+    - name: DISABLE_SCENARIOS
+      value: |
+        crowdsecurity/http-crawl-non_statics
+        crowdsecurity/http-bad-user-agent
+        crowdsecurity/http-probing
+        crowdsecurity/http-generic-bf
+        crowdsecurity/http-generic-test
+        crowdsecurity/http-wordpress-scan
+        ltsich/http-w00tw00t
 
 lapi:
   replicas: 2
