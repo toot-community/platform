@@ -125,9 +125,9 @@ varnish:
     acl ipv4_only { "0.0.0.0"/0; }
     acl trusted_proxies { "10.0.0.0"/16; }
     acl purge_clients {
-        "188.245.120.181"/32; # tc-prod-worker-1
-        "128.140.87.70"/32; # tc-prod-worker-2
-        "91.99.94.115"/32; # tc-prod-worker-3
+        "5.9.13.35"/32; # tc-prod-wk-dima
+        "148.251.81.14"/32; # tc-prod-wk-lyuba
+        "136.243.1.98"/32; # tc-prod-wk-yuka
     }
 
     sub vcl_init {
