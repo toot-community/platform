@@ -1,7 +1,13 @@
 container_runtime: containerd
 
 agent:
-  # we are not setting up traefik but the acquisition section is required.
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "500Mi"
   acquisition:
     - namespace: traefik-system
       podName: traefik-*
@@ -20,6 +26,13 @@ lapi:
   storeCAPICredentialsInSecret: true
   strategy:
     type: RollingUpdate
+  resources:
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
   persistentVolume:
     config:
       enabled: false
