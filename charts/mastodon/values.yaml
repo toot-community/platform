@@ -221,7 +221,7 @@ sidekiq:
 
 ingress:
   web:
-    enabled: true
+    enabled: false
     maxBodySize: 100m
     upstreamProxyTimeout: 120
     ingressClassName: nginx
@@ -242,7 +242,7 @@ ingress:
     wwwRedirect:
       enabled: true
   streaming:
-    enabled: true
+    enabled: false
     host: streaming.toot.community
     ingressClassName: nginx
     annotations: 
