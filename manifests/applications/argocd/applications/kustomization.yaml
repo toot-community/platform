@@ -12,7 +12,6 @@ resources:
   - n8n.yaml
   - elastic-operator.yaml
   - hetzner-ccm.yaml
-  - ingress-nginx.yaml
   - haproxy-onload.yaml
   - longhorn.yaml
   - metrics-server.yaml
