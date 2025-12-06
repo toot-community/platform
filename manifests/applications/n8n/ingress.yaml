@@ -13,7 +13,7 @@ metadata:
   name: n8n
   namespace: n8n
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: workflows.toot.community
       http:

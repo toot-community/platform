@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: argocd.toot.community
       http:
