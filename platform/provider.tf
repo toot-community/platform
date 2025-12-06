@@ -2,7 +2,7 @@ terraform {
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "~> 1.56.0"
+      version = "~> 1.57.0"
     }
 
     talos = {
@@ -12,7 +12,7 @@ terraform {
 
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 5.31.0"
+      version = "~> 5.32.0"
     }
 
     objsto = {

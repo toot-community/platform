@@ -1,7 +1,13 @@
 container_runtime: containerd
 
 agent:
-  # we are not setting up traefik but the acquisition section is required.
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "500Mi"
   acquisition:
     - namespace: traefik-system
       podName: traefik-*
@@ -10,12 +16,23 @@ agent:
   env:
     - name: COLLECTIONS
       value: "crowdsecurity/traefik"
+    - name: DISABLE_SCENARIOS
+      value: |
+        crowdsecurity/http-crawl-non_statics
+        crowdsecurity/http-generic-bf
 
 lapi:
   replicas: 2
   storeCAPICredentialsInSecret: true
   strategy:
     type: RollingUpdate
+  resources:
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
   persistentVolume:
     config:
       enabled: false
@@ -74,6 +91,15 @@ config:
       host:     ${DB_HOST}
       port:     ${DB_PORT}
       sslmode:  ${DB_SSLMODE}
+      flush:
+        max_age: 7d
+        metrics_max_age: 90d
+        bouncers_autodelete:
+          cert: 60m
+          api_key: 60m
+        agents_autodelete:
+          cert: 60m
+          login_password: 60m
     api:
       server:
         auto_registration:

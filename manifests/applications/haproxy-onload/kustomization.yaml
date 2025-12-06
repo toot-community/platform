@@ -6,7 +6,7 @@ resources: []
 
 helmCharts:
   - name: haproxy
-    version: "1.26.1"
+    version: "1.27.0"
     releaseName: haproxy-onload
     namespace: *namespace
     valuesFile: helm-values.yaml
