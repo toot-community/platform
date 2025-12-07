@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: geoip-updater
+  namespace: victorialogs
+spec:
+  # Run every Wednesday at 3 AM (after MaxMind's Tuesday updates)
+  schedule: "0 3 * * 3"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: geoip-updater
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: updater
+            image: curlimages/curl:8.5.0
+            command:
+              - sh
+              - -c
+              - |
+                set -e
+                echo "Starting GeoLite2-ASN database update..."
+
+                # Read license key from secret
+                LICENSE_KEY=$(cat /secrets/maxmind/license-key)
+
+                # Download using license key as query parameter (same method as init container)
+                echo "Downloading from MaxMind..."
+                curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=${LICENSE_KEY}&suffix=tar.gz" \
+                  -o /tmp/GeoLite2-ASN.tar.gz
+
+                # Extract database
+                echo "Extracting database..."
+                tar -xzf /tmp/GeoLite2-ASN.tar.gz -C /tmp --strip-components=1
+
+                # Backup old database
+                if [ -f /geoip/GeoLite2-ASN.mmdb ]; then
+                  echo "Backing up old database..."
+                  cp /geoip/GeoLite2-ASN.mmdb /geoip/GeoLite2-ASN.mmdb.bak
+                fi
+
+                # Install new database
+                echo "Installing new database..."
+                mv /tmp/GeoLite2-ASN.mmdb /geoip/GeoLite2-ASN.mmdb
+
+                # Verify and show info
+                ls -lh /geoip/
+                echo "GeoLite2-ASN database updated successfully at $(date)"
+            volumeMounts:
+              - name: geoip-data
+                mountPath: /geoip
+              - name: maxmind-license
+                mountPath: /secrets/maxmind
+                readOnly: true
+          volumes:
+            - name: geoip-data
+              persistentVolumeClaim:
+                claimName: geoip-data
+            - name: maxmind-license
+              secret:
+                secretName: maxmind-license

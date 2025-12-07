@@ -5,6 +5,9 @@ namespace: victorialogs
 resources:
   - namespace.yaml
   - vector-podscrape.yaml
+  - secrets.yaml
+  - geoip-pvc.yaml
+  - geoip-updater-cronjob.yaml
 
 helmCharts:
   - name: victoria-logs-single
