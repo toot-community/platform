@@ -27,7 +27,7 @@ spec:
       filters:
         - type: RequestRedirect
           requestRedirect:
-            host: {{ $webHostname | quote }}
+            hostname: {{ $webHostname | quote }}
             scheme: https
             statusCode: 301
 {{- end }}
