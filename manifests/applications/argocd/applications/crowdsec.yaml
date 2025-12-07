@@ -18,3 +18,10 @@ spec:
       selfHeal: true
     syncOptions:
       - ServerSideApply=true
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: crowdsec-lapi-secrets
+      jsonPointers:
+        - /data/csLapiSecret
+        - /data/registrationToken
