@@ -10,4 +10,4 @@ spec:
       crowdsecLapiScheme: http
       crowdsecLapiHost: crowdsec-service.crowdsec.svc.cluster.local:8080
       crowdsecLapiPath: "/"
-      crowdsecLapiKey: /etc/traefik/secrets/crowdsec_middleware_lapi_key
+      crowdsecLapiKeyFile: /etc/traefik/secrets/crowdsec_middleware_lapi_key

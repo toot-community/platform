@@ -82,6 +82,37 @@ lapi:
           key: BOUNCER_KEY_traefik
 
 config:
+  profiles.yaml: |
+    name: tencent_scraper_profile
+    filters:
+      - Alert.Remediation == true && Alert.GetScenario() == "toot-community/tencent-scraper"
+    decisions:
+      - type: ban
+        duration: 2160h
+    on_success: break
+    ---
+    name: default_ip_remediation
+    filters:
+      - Alert.Remediation == true && Alert.GetScope() == "Ip"
+    decisions:
+      - type: ban
+        duration: 4h
+    on_success: break
+  scenarios:
+    tencent-scraper.yaml: |
+      type: trigger
+      name: toot-community/tencent-scraper
+      description: "Detect Tencent scraper based on distinctive User-Agent fingerprint (Chrome 126 on Windows 7)"
+      filter: |
+        evt.Meta.log_type == "http_access-log" &&
+        evt.Meta.http_user_agent contains "Chrome/126.0.6478.114" &&
+        evt.Meta.http_user_agent contains "Windows NT 6.1"
+      groupby: evt.Meta.source_ip
+      blackhole: 5m
+      labels:
+        service: http
+        type: scraper
+        remediation: true
   config.yaml.local: |
     db_config:
       type:     postgres
