@@ -26,6 +26,8 @@ securityContext:
       - ALL
   runAsNonRoot: true
   runAsUser: 991
+  seccompProfile:
+    type: RuntimeDefault
 
 configuration:
   database:
@@ -122,6 +124,15 @@ web:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 10
+  livenessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /health
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 120
+    periodSeconds: 15
+    timeoutSeconds: 5
   annotations: ~
   strategy:
     rollingUpdate:
@@ -131,6 +142,15 @@ web:
   podDisruptionBudget:
     enabled: true
     minAvailable: 2
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: web
+            topologyKey: kubernetes.io/hostname
 
 translations:
   enabled: true
@@ -167,6 +187,15 @@ streaming:
       path: /api/v1/streaming/health
     periodSeconds: 3
     failureThreshold: 30
+  livenessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /api/v1/streaming/health
+      port: streaming
+      scheme: HTTP
+    initialDelaySeconds: 120
+    periodSeconds: 15
+    timeoutSeconds: 5
   resources:
     requests:
       cpu: 41m
@@ -176,6 +205,15 @@ streaming:
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: streaming
+            topologyKey: kubernetes.io/hostname
   podMonitor:
     enabled: true
     interval: 30s
@@ -190,6 +228,12 @@ streaming:
   databaseSslMode: no-verify
 
 sidekiq:
+  podDisruptionBudget:
+    enabled: true
+    maxUnavailable: 1
+  affinity:
+    enabled: true
+    topologyKey: kubernetes.io/hostname
   workers:
     - name: generic
       concurrency: 25

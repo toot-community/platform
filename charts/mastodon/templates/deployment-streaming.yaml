@@ -73,6 +73,10 @@ spec:
             {{- toYaml .Values.streaming.readinessProbe | nindent 12 }}
           startupProbe:
             {{- toYaml .Values.streaming.startupProbe | nindent 12 }}
+          {{- with .Values.streaming.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.streaming.resources | nindent 12 }}
           securityContext:
@@ -82,3 +86,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.streaming.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

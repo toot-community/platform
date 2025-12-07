@@ -84,4 +84,16 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" $context }}
       terminationGracePeriodSeconds: {{ $context.Values.terminationGracePeriodSeconds }}
+      {{- if $context.Values.sidekiq.affinity.enabled }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "mastodon.selectorLabels" $context | nindent 20 }}
+                    app.kubernetes.io/component: sidekiq-{{ .name }}
+                topologyKey: {{ $context.Values.sidekiq.affinity.topologyKey }}
+      {{- end }}
 {{- end }}

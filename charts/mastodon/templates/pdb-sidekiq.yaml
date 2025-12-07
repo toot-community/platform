@@ -1,0 +1,25 @@
+{{ if .Values.sidekiq.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+  name: {{ include "mastodon.fullname" . }}-sidekiq
+spec:
+  {{- if .Values.sidekiq.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.sidekiq.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  {{- if .Values.sidekiq.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.sidekiq.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+          {{- range .Values.sidekiq.workers }}
+          - sidekiq-{{ .name }}
+          {{- end }}
+{{ end }}

@@ -57,6 +57,10 @@ spec:
             {{- toYaml .Values.web.readinessProbe | nindent 12 }}
           startupProbe:
             {{- toYaml .Values.web.startupProbe | nindent 12 }}
+          {{- with .Values.web.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           securityContext:
@@ -72,6 +76,8 @@ spec:
             - "--port"
             - "{{ .Values.metrics.port }}"
           resources: {{ toYaml .Values.metrics.web.exporter.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
             - name: prometheus
               containerPort: {{ .Values.metrics.port }}
@@ -81,3 +87,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- with .Values.web.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
