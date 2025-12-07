@@ -102,11 +102,12 @@ config:
     tencent-scraper.yaml: |
       type: trigger
       name: toot-community/tencent-scraper
-      description: "Detect Tencent scraper based on distinctive User-Agent fingerprint (Chrome 126 on Windows 7)"
+      description: "Detect Tencent scraper based on User-Agent fingerprint and ASN"
       filter: |
         evt.Meta.log_type == "http_access-log" &&
         evt.Meta.http_user_agent contains "Chrome/126.0.6478.114" &&
-        evt.Meta.http_user_agent contains "Windows NT 6.1"
+        evt.Meta.http_user_agent contains "Windows NT 6.1" &&
+        evt.Meta.ASNNumber in ["132203", "132591", "45090"]
       groupby: evt.Meta.source_ip
       blackhole: 5m
       labels:
