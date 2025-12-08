@@ -289,7 +289,7 @@ streaming:
   image:
     repository: ghcr.io/mastodon/mastodon-streaming
     pullPolicy: IfNotPresent
-    tag: ""  # Set explicitly with digest for pinning
+    tag: v4.5.3@sha256:b758cec9c9e06b5b16036aa4b73da519b779feba4df63c0da81e65e06c38a75f
 
   # Override database SSL mode for streaming
   databaseSslMode: no-verify
