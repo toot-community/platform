@@ -58,8 +58,8 @@ mastodon:
   limitedFederationMode: false
 
   # Privacy settings
-  ipRetentionPeriod: "31556952"      # 1 year in seconds
-  sessionRetentionPeriod: "31556952"  # 1 year in seconds
+  ipRetentionPeriod: 31556952      # 1 year in seconds
+  sessionRetentionPeriod: 31556952  # 1 year in seconds
 
   # Network settings
   trustedProxyIp: "10.244.0.0/16"
@@ -112,12 +112,12 @@ redis:
 # OBJECT STORAGE (S3)
 # =============================================================================
 s3:
-  bucket: static-toot-community
-  region: region
-  endpoint: https://endpoint.of.s3
-  hostname: hostname.of.s3
+  bucket: ""  # REQUIRED: S3 bucket name
+  region: ""  # REQUIRED: S3 region
+  endpoint: ""  # REQUIRED: S3 endpoint URL
+  hostname: ""  # REQUIRED: S3 hostname
   protocol: https
-  aliasHost: static.toot.community
+  aliasHost: ""  # REQUIRED: CDN/alias hostname for static assets
   multipartThreshold: "1024000000"  # 1GB (essentially disabling multipart uploads)
   timeouts:
     open: 10
@@ -127,10 +127,10 @@ s3:
 # EMAIL (SMTP)
 # =============================================================================
 smtp:
-  server: smtp.server
+  server: ""  # REQUIRED: SMTP server hostname
   port: 465
-  domain: toot.community
-  fromAddress: "toot.community Notifications <notifications@toot.community>"
+  domain: ""  # REQUIRED: Domain for SMTP HELO
+  fromAddress: ""  # REQUIRED: From address for outgoing emails
   authMethod: plain
   deliveryMethod: smtp
   enableStarttlsAuto: true
@@ -158,9 +158,11 @@ search:
 translations:
   enabled: true
   libretranslate:
+    enabled: true
     endpoint: https://translate.mstdn.social/
-  # deepl:
-  #   plan: free
+  deepl:
+    enabled: false
+    plan: free
 
 # =============================================================================
 # OBSERVABILITY
@@ -283,7 +285,7 @@ streaming:
   clusterNum: 1
 
   # Base URL for WebSocket connections
-  baseUrl: wss://streaming.toot.community
+  baseUrl: ""  # REQUIRED: e.g., wss://streaming.example.com
 
   # Streaming has its own image (Node.js)
   image:
@@ -430,7 +432,7 @@ ingress:
   web:
     enabled: false
     ingressClassName: nginx
-    host: toot.community
+    host: ""  # REQUIRED when enabled: your domain
 
     # Service routing override (for cache layers like Varnish)
     serviceOverride:
@@ -444,7 +446,7 @@ ingress:
     # Client certificate verification
     verifyClient:
       enabled: false
-      secretName: tootcommunity/tootcommunity-ca-secret
+      secretName: ""
 
     # WWW to non-WWW redirect
     wwwRedirect:
@@ -455,25 +457,19 @@ ingress:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
-    tls:
-      - hosts:
-          - toot.community
-        secretName: toot.community-tls
+    tls: []  # Configure TLS when enabled
 
   streaming:
     enabled: false
     ingressClassName: nginx
-    host: streaming.toot.community
+    host: ""  # REQUIRED when enabled: streaming domain
 
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
-    tls:
-      - hosts:
-          - streaming.toot.community
-        secretName: streaming.toot.community-tls
+    tls: []  # Configure TLS when enabled
 
 # =============================================================================
 # GATEWAY API

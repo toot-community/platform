@@ -1,4 +1,4 @@
-{{ if .Values.observability.metrics.podMonitor.enabled }}
+{{ if and .Values.observability.metrics.enabled .Values.observability.metrics.podMonitor.enabled }}
 {{- $context := . }}
 {{- range .Values.sidekiq.workers }}
 ---

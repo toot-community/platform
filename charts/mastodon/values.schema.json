@@ -1,0 +1,380 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/toot-community/platform/charts/mastodon/values.schema.json",
+  "title": "Mastodon Helm Chart Values",
+  "type": "object",
+  "properties": {
+    "global": {
+      "type": "object",
+      "description": "Global settings inherited by all components",
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] },
+            "tag": { "type": "string" }
+          }
+        },
+        "imagePullSecrets": { "type": "array" },
+        "podDefaults": {
+          "type": "object",
+          "properties": {
+            "annotations": { "type": "object" },
+            "securityContext": { "type": "object" },
+            "podSecurityContext": { "type": "object" },
+            "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "nameOverride": { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean" },
+        "name": { "type": "string" },
+        "annotations": { "type": "object" }
+      }
+    },
+    "mastodon": {
+      "type": "object",
+      "description": "Mastodon application configuration",
+      "properties": {
+        "localDomain": { "type": "string", "description": "Primary domain for the Mastodon instance" },
+        "webDomain": { "type": "string" },
+        "defaultLocale": { "type": "string" },
+        "authorizedFetch": { "type": "boolean" },
+        "limitedFederationMode": { "type": "boolean" },
+        "ipRetentionPeriod": { "type": "integer", "minimum": 0 },
+        "sessionRetentionPeriod": { "type": "integer", "minimum": 0 },
+        "trustedProxyIp": { "type": "string" },
+        "allowedPrivateAddresses": { "type": "string" },
+        "extraEnv": { "type": "object" }
+      },
+      "required": ["localDomain"]
+    },
+    "database": {
+      "type": "object",
+      "description": "Database configuration",
+      "properties": {
+        "primary": {
+          "type": "object",
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "integer" },
+            "name": { "type": "string" },
+            "poolSize": { "type": "integer", "minimum": 1 },
+            "sslMode": { "type": "string" }
+          },
+          "required": ["host", "port", "name"]
+        },
+        "replica": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "host": { "type": "string" },
+            "port": { "type": "integer" }
+          }
+        },
+        "migrations": {
+          "type": "object",
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "integer" },
+            "name": { "type": "string" },
+            "runOnUpgrade": { "type": "boolean" }
+          }
+        },
+        "credentials": {
+          "type": "object",
+          "properties": {
+            "secretName": { "type": "string" },
+            "usernameKey": { "type": "string" },
+            "passwordKey": { "type": "string" }
+          },
+          "required": ["secretName", "usernameKey", "passwordKey"]
+        }
+      }
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string" },
+        "port": { "type": "integer" },
+        "database": { "type": "integer" },
+        "url": { "type": "string", "description": "Full Redis URL (takes precedence over host/port)" }
+      }
+    },
+    "s3": {
+      "type": "object",
+      "description": "Object storage (S3) configuration",
+      "properties": {
+        "bucket": { "type": "string" },
+        "region": { "type": "string" },
+        "endpoint": { "type": "string" },
+        "hostname": { "type": "string" },
+        "protocol": { "type": "string", "enum": ["http", "https"] },
+        "aliasHost": { "type": "string" },
+        "multipartThreshold": { "type": "string" },
+        "timeouts": {
+          "type": "object",
+          "properties": {
+            "open": { "type": "integer" },
+            "read": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "smtp": {
+      "type": "object",
+      "description": "Email (SMTP) configuration",
+      "properties": {
+        "server": { "type": "string" },
+        "port": { "type": "integer" },
+        "domain": { "type": "string" },
+        "fromAddress": { "type": "string" },
+        "authMethod": { "type": "string" },
+        "deliveryMethod": { "type": "string" },
+        "enableStarttlsAuto": { "type": "boolean" },
+        "opensslVerifyMode": { "type": "string" },
+        "caFile": { "type": "string" },
+        "tls": { "type": "boolean" }
+      }
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "host": { "type": "string" },
+        "port": { "type": "integer" },
+        "preset": { "type": "string" },
+        "password": { "type": "object" }
+      }
+    },
+    "translations": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "libretranslate": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "endpoint": { "type": "string" }
+          }
+        },
+        "deepl": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "plan": { "type": "string" }
+          }
+        }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "properties": {
+        "otel": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "namePrefix": { "type": "string" },
+            "nameSeparator": { "type": "string" },
+            "exporterUri": { "type": "string" }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "port": { "type": "integer" },
+            "web": { "type": "object" },
+            "sidekiq": { "type": "object" },
+            "podMonitor": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "interval": { "type": "string" },
+                "scrapeTimeout": { "type": "string" },
+                "path": { "type": "string" },
+                "scheme": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "web": {
+      "type": "object",
+      "description": "Web component configuration",
+      "properties": {
+        "replicas": { "type": "integer", "minimum": 1 },
+        "port": { "type": "integer" },
+        "concurrency": { "type": "integer" },
+        "maxThreads": { "type": "integer" },
+        "resources": { "$ref": "#/$defs/resources" },
+        "strategy": { "$ref": "#/$defs/strategy" },
+        "podDisruptionBudget": { "$ref": "#/$defs/podDisruptionBudget" },
+        "affinity": { "type": "object" },
+        "nodeSelector": { "type": "object" },
+        "tolerations": { "type": "array" },
+        "startupProbe": { "type": "object" },
+        "readinessProbe": { "type": "object" },
+        "livenessProbe": { "type": "object" },
+        "annotations": { "type": "object" }
+      }
+    },
+    "streaming": {
+      "type": "object",
+      "description": "Streaming component configuration",
+      "properties": {
+        "replicas": { "type": "integer", "minimum": 1 },
+        "port": { "type": "integer" },
+        "clusterNum": { "type": "integer" },
+        "baseUrl": { "type": "string" },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "pullPolicy": { "type": "string" },
+            "tag": { "type": "string" }
+          }
+        },
+        "databaseSslMode": { "type": "string" },
+        "resources": { "$ref": "#/$defs/resources" },
+        "strategy": { "$ref": "#/$defs/strategy" },
+        "podDisruptionBudget": { "$ref": "#/$defs/podDisruptionBudget" },
+        "affinity": { "type": "object" },
+        "nodeSelector": { "type": "object" },
+        "tolerations": { "type": "array" }
+      }
+    },
+    "sidekiq": {
+      "type": "object",
+      "description": "Sidekiq background job processor configuration",
+      "properties": {
+        "defaults": {
+          "type": "object",
+          "properties": {
+            "resources": { "$ref": "#/$defs/resources" },
+            "strategy": { "$ref": "#/$defs/strategy" }
+          }
+        },
+        "podDisruptionBudget": { "$ref": "#/$defs/podDisruptionBudget" },
+        "affinity": { "type": "object" },
+        "nodeSelector": { "type": "object" },
+        "tolerations": { "type": "array" },
+        "workers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "replicas": { "type": "integer", "minimum": 1 },
+              "concurrency": { "type": "integer", "minimum": 1 },
+              "queues": { "type": "array", "items": { "type": "string" } },
+              "resources": { "$ref": "#/$defs/resources" }
+            },
+            "required": ["name", "queues"]
+          }
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "web": { "$ref": "#/$defs/ingressConfig" },
+        "streaming": { "$ref": "#/$defs/ingressConfig" }
+      }
+    },
+    "gateway": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "parentRefs": { "type": "array" },
+        "web": { "type": "object" },
+        "streaming": { "type": "object" }
+      }
+    },
+    "jobs": {
+      "type": "object",
+      "properties": {
+        "defaults": { "type": "object" },
+        "annotations": { "type": "object" },
+        "cleanupMedia": { "$ref": "#/$defs/cronJob" },
+        "cleanupMediaProfiles": { "$ref": "#/$defs/cronJob" },
+        "removePreviewCards": { "$ref": "#/$defs/cronJob" },
+        "statusesRemove": { "$ref": "#/$defs/cronJob" },
+        "accountsPrune": { "$ref": "#/$defs/cronJob" }
+      }
+    },
+    "debug": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "resources": {
+      "type": "object",
+      "properties": {
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": { "type": "string" },
+            "memory": { "type": "string" }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": { "type": "string" },
+            "memory": { "type": "string" }
+          }
+        }
+      }
+    },
+    "strategy": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["RollingUpdate", "Recreate"] },
+        "rollingUpdate": {
+          "type": "object",
+          "properties": {
+            "maxSurge": { "type": ["string", "integer"] },
+            "maxUnavailable": { "type": ["string", "integer"] }
+          }
+        }
+      }
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minAvailable": { "type": ["string", "integer"] },
+        "maxUnavailable": { "type": ["string", "integer"] }
+      }
+    },
+    "ingressConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "ingressClassName": { "type": "string" },
+        "host": { "type": "string" },
+        "annotations": { "type": "object" },
+        "tls": { "type": "array" }
+      }
+    },
+    "cronJob": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "schedule": { "type": "string" },
+        "resources": { "$ref": "#/$defs/resources" }
+      }
+    }
+  }
+}

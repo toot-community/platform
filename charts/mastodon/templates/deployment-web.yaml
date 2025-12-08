@@ -53,10 +53,14 @@ spec:
             - containerPort: {{ .Values.web.port }}
               name: http
               protocol: TCP
+          {{- with .Values.web.readinessProbe }}
           readinessProbe:
-            {{- toYaml .Values.web.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.web.startupProbe }}
           startupProbe:
-            {{- toYaml .Values.web.startupProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.web.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -75,7 +79,10 @@ spec:
             - "0.0.0.0"
             - "--port"
             - "{{ .Values.observability.metrics.port }}"
-          resources: {{ toYaml .Values.observability.metrics.web.exporter.resources | nindent 12 }}
+          {{- with .Values.observability.metrics.web.exporter.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.global.podDefaults.securityContext | nindent 12 }}
           ports:

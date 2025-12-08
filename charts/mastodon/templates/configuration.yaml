@@ -45,8 +45,11 @@ data:
   {{- if .Values.mastodon.allowedPrivateAddresses }}
   ALLOWED_PRIVATE_ADDRESSES: {{ .Values.mastodon.allowedPrivateAddresses }}
   {{- end }}
-  {{- if .Values.translations.enabled }}
+  {{- if and .Values.translations.enabled .Values.translations.libretranslate.enabled }}
   LIBRE_TRANSLATE_ENDPOINT: {{ .Values.translations.libretranslate.endpoint }}
+  {{- end }}
+  {{- if and .Values.translations.enabled .Values.translations.deepl.enabled }}
+  DEEPL_PLAN: {{ .Values.translations.deepl.plan }}
   {{- end }}
   {{- if .Values.search.enabled }}
   ES_ENABLED: "true"
@@ -67,8 +70,8 @@ data:
   {{- if .Values.mastodon.trustedProxyIp }}
   TRUSTED_PROXY_IP: {{ .Values.mastodon.trustedProxyIp }}
   {{- end }}
-  IP_RETENTION_PERIOD: {{ .Values.mastodon.ipRetentionPeriod | quote }}
-  SESSION_RETENTION_PERIOD: {{ .Values.mastodon.sessionRetentionPeriod | quote }}
+  IP_RETENTION_PERIOD: {{ .Values.mastodon.ipRetentionPeriod | int64 | quote }}
+  SESSION_RETENTION_PERIOD: {{ .Values.mastodon.sessionRetentionPeriod | int64 | quote }}
   {{- if .Values.observability.metrics.enabled }}
   MASTODON_PROMETHEUS_EXPORTER_ENABLED: "true"
   MASTODON_PROMETHEUS_EXPORTER_WEB_DETAILED_METRICS: "{{ .Values.observability.metrics.web.detailed | default "false" }}"

@@ -62,31 +62,37 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Get image repository with component override support
+Get image repository with optional component override support
 Usage: {{ include "mastodon.imageRepository" (dict "component" .Values.web "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}
+Or:    {{ include "mastodon.imageRepository" (dict "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}
 */}}
 {{- define "mastodon.imageRepository" -}}
-{{- $componentImage := .component.image | default dict -}}
+{{- $component := .component | default dict -}}
+{{- $componentImage := $component.image | default dict -}}
 {{- $globalImage := .global.image | default dict -}}
 {{- $componentImage.repository | default $globalImage.repository | default .default -}}
 {{- end }}
 
 {{/*
-Get image tag with component override support
+Get image tag with optional component override support
 Usage: {{ include "mastodon.imageTag" (dict "component" .Values.web "global" .Values.global "Chart" .Chart) }}
+Or:    {{ include "mastodon.imageTag" (dict "global" .Values.global "Chart" .Chart) }}
 */}}
 {{- define "mastodon.imageTag" -}}
-{{- $componentImage := .component.image | default dict -}}
+{{- $component := .component | default dict -}}
+{{- $componentImage := $component.image | default dict -}}
 {{- $globalImage := .global.image | default dict -}}
 {{- $componentImage.tag | default $globalImage.tag | default .Chart.AppVersion -}}
 {{- end }}
 
 {{/*
-Get image pull policy with component override support
+Get image pull policy with optional component override support
 Usage: {{ include "mastodon.imagePullPolicy" (dict "component" .Values.web "global" .Values.global) }}
+Or:    {{ include "mastodon.imagePullPolicy" (dict "global" .Values.global) }}
 */}}
 {{- define "mastodon.imagePullPolicy" -}}
-{{- $componentImage := .component.image | default dict -}}
+{{- $component := .component | default dict -}}
+{{- $componentImage := $component.image | default dict -}}
 {{- $globalImage := .global.image | default dict -}}
 {{- $componentImage.pullPolicy | default $globalImage.pullPolicy | default "IfNotPresent" -}}
 {{- end }}
@@ -126,10 +132,11 @@ Common envFrom configuration for Mastodon containers
 
 {{/*
 Common container configuration for Mastodon (web/sidekiq/jobs)
+Uses global.image settings - components use streaming.image for custom images
 */}}
 {{- define "mastodon.containerBase" -}}
-image: "{{ include "mastodon.imageRepository" (dict "component" .Values.web "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}:{{ include "mastodon.imageTag" (dict "component" .Values.web "global" .Values.global "Chart" .Chart) }}"
-imagePullPolicy: {{ include "mastodon.imagePullPolicy" (dict "component" .Values.web "global" .Values.global) }}
+image: "{{ include "mastodon.imageRepository" (dict "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}:{{ include "mastodon.imageTag" (dict "global" .Values.global "Chart" .Chart) }}"
+imagePullPolicy: {{ include "mastodon.imagePullPolicy" (dict "global" .Values.global) }}
 envFrom:
   {{- include "mastodon.commonEnvFrom" . | nindent 2 }}
 {{- end }}
@@ -187,6 +194,8 @@ spec:
               resources:
                 {{- toYaml .resources | nindent 16 }}
               {{- end }}
+              securityContext:
+                {{- toYaml .root.Values.global.podDefaults.securityContext | nindent 16 }}
 {{- end }}
 
 {{/*
@@ -223,4 +232,6 @@ template:
             - name: SKIP_POST_DEPLOYMENT_MIGRATIONS
               value: "true"
             {{- end }}
+          securityContext:
+            {{- toYaml .Values.global.podDefaults.securityContext | nindent 12 }}
 {{- end }}
