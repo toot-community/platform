@@ -1,4 +1,4 @@
-{{ if .Values.configuration.database.runDatabaseMigrations | default false }}
+{{ if .Values.database.migrations.runOnUpgrade | default false }}
 apiVersion: batch/v1
 kind: Job
 metadata:

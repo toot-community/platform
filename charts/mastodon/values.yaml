@@ -1,147 +1,239 @@
-image:
-  repository: ghcr.io/mastodon/mastodon
-  pullPolicy: IfNotPresent
+# =============================================================================
+# GLOBAL SETTINGS
+# =============================================================================
+global:
+  # Default image for all Mastodon components (web, sidekiq, jobs)
+  image:
+    repository: ghcr.io/mastodon/mastodon
+    pullPolicy: IfNotPresent
+    tag: ""  # Defaults to Chart.AppVersion if empty
 
-imagePullSecrets: []
+  imagePullSecrets: []
+
+  # Default pod settings inherited by all components
+  podDefaults:
+    annotations: {}
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      runAsNonRoot: true
+      runAsUser: 991
+      seccompProfile:
+        type: RuntimeDefault
+
+    podSecurityContext:
+      fsGroup: 991
+      runAsGroup: 991
+      runAsUser: 991
+
+    terminationGracePeriodSeconds: 30
+
+# =============================================================================
+# CHART METADATA
+# =============================================================================
 nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
   create: true
+  name: ""
   annotations: {}
 
-podAnnotations: {}
+# =============================================================================
+# APPLICATION CONFIGURATION
+# =============================================================================
+mastodon:
+  # Instance domain settings
+  localDomain: example.com
+  webDomain: ""  # Defaults to localDomain if empty
 
-podSecurityContext:
-  fsGroup: 991
-  runAsGroup: 991
-  runAsUser: 991
+  # Localization
+  defaultLocale: en
 
-terminationGracePeriodSeconds: 30
+  # Federation settings
+  authorizedFetch: false
+  limitedFederationMode: false
 
-securityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-  runAsNonRoot: true
-  runAsUser: 991
-  seccompProfile:
-    type: RuntimeDefault
+  # Privacy settings
+  ipRetentionPeriod: 31556952      # 1 year in seconds
+  sessionRetentionPeriod: 31556952  # 1 year in seconds
 
-configuration:
-  database:
+  # Network settings
+  trustedProxyIp: "10.244.0.0/16"
+  allowedPrivateAddresses: ""  # e.g., 10.0.8.0/21 for ES service subnet
+
+  # Extra environment variables (key-value pairs)
+  extraEnv: {}
+
+# =============================================================================
+# DATABASE CONFIGURATION
+# =============================================================================
+database:
+  # Primary database connection (through pooler)
+  primary:
     host: database-pooler-rw
-    name: app
-    poolsize: 25
     port: 5432
-    dbMigrations: # to circumvent pgpooler
-      port: 5432
-      name: app
-      host: database-rw
-    sslmode: require
-    runDatabaseMigrations: true
-    credentials:
-      usernameKey: username
-      passwordKey: password
-      secretName: database-app
-  databaseReplicas:
+    name: app
+    poolSize: 25
+    sslMode: require
+
+  # Read replica for read-heavy workloads (used by streaming if enabled)
+  replica:
     enabled: false
     host: database-pooler-ro
     port: 5432
-  defaultLocale: en
-  localDomain: example.com
-  allowedPrivateAddresses: 10.0.8.0/21 # service subnet to connect to ES
-  redis:
-    host: redis-ha-haproxy
-    port: 6379
-    database: 0
-  s3:
-    aliasHost: static.toot.community
-    bucket: static-toot-community
-    endpoint: https://endpoint.of.s3
-    hostname: hostname.of.s3
-    region: region
-    protocol: https
-    multipartThreshold: "1024000000" # 1GB (essentially disabling multipart uploads)
-    timeouts:
-      open: 10
-      read: 10
-  smtp:
-    authMethod: plain
-    caFile: /etc/ssl/certs/ca-certificates.crt
-    deliveryMethod: smtp
-    enableStarttlsAuto: true
-    opensslVerifyMode: peer
-    port: 465
-    domain: toot.community
-    fromAddress: toot.community Notifications <notifications@toot.community>
-    smtpServer: smtp.server
-  search:
+
+  # Direct connection for migrations (bypasses pgbouncer)
+  migrations:
+    host: database-rw
+    port: 5432
+    name: app
+    runOnUpgrade: true
+
+  # Credentials from Kubernetes secret
+  credentials:
+    secretName: database-app
+    usernameKey: username
+    passwordKey: password
+
+# =============================================================================
+# REDIS CONFIGURATION
+# =============================================================================
+redis:
+  host: redis-ha-haproxy
+  port: 6379
+  database: 0
+  url: ""  # Full URL format (takes precedence if set, used by streaming)
+
+# =============================================================================
+# OBJECT STORAGE (S3)
+# =============================================================================
+s3:
+  bucket: ""  # REQUIRED: S3 bucket name
+  region: ""  # REQUIRED: S3 region
+  endpoint: ""  # REQUIRED: S3 endpoint URL
+  hostname: ""  # REQUIRED: S3 hostname
+  protocol: https
+  aliasHost: ""  # REQUIRED: CDN/alias hostname for static assets
+  multipartThreshold: "1024000000"  # 1GB (essentially disabling multipart uploads)
+  timeouts:
+    open: 10
+    read: 10
+
+# =============================================================================
+# EMAIL (SMTP)
+# =============================================================================
+smtp:
+  server: ""  # REQUIRED: SMTP server hostname
+  port: 465
+  domain: ""  # REQUIRED: Domain for SMTP HELO
+  fromAddress: ""  # REQUIRED: From address for outgoing emails
+  authMethod: plain
+  deliveryMethod: smtp
+  enableStarttlsAuto: true
+  opensslVerifyMode: peer
+  caFile: /etc/ssl/certs/ca-certificates.crt
+
+# =============================================================================
+# SEARCH (ELASTICSEARCH)
+# =============================================================================
+search:
+  enabled: false
+  host: elasticsearch-es-http
+  port: 9200
+  scheme: http
+  user: elastic
+  preset: single_node_cluster  # https://github.com/mastodon/documentation/pull/1279/files
+  password:
+    secretKeyRef:
+      name: elasticsearch-es-elastic-user
+      key: elastic
+
+# =============================================================================
+# TRANSLATIONS
+# =============================================================================
+translations:
+  enabled: true
+  libretranslate:
+    enabled: true
+    endpoint: https://translate.mstdn.social/
+  deepl:
     enabled: false
-    host: elasticsearch-es-http
-    port: 9200
-    scheme: http
-    preset: single_node_cluster # https://github.com/mastodon/documentation/pull/1279/files
-    user: elastic
-    password:
-      secretKeyRef:
-        name: elasticsearch-es-elastic-user
-        key: elastic
-  ipRetentionPeriod: "31556952" # 1 year
-  sessionRetentionPeriod: "31556952" # 1 year
-  trustedProxyIPs: "10.244.0.0/16" # VPC POD CIDR
+    plan: free
+
+# =============================================================================
+# OBSERVABILITY
+# =============================================================================
+observability:
+  # OpenTelemetry tracing
   otel:
     enabled: false
     namePrefix: mastodon
-    nameSeparator: /
+    nameSeparator: "/"
     exporterUri: http://otel-collector:4317
-  extraConfiguration: {}
 
+  # Prometheus metrics
+  metrics:
+    enabled: true
+    port: 9394
+
+    # Web component metrics
+    web:
+      detailed: true
+      exporter:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 180Mi
+          limits:
+            memory: 250Mi
+
+    # Sidekiq metrics
+    sidekiq:
+      detailed: true
+
+    # PodMonitor configuration (shared across components)
+    podMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
+      path: /metrics
+      scheme: http
+
+# =============================================================================
+# COMPONENT: WEB
+# =============================================================================
 web:
-  domain: toot.community
+  replicas: 2
+  port: 3000
+
+  # Puma configuration
   concurrency: 2
   maxThreads: 5
-  port: 3000
+
+  # Image override (inherits from global.image if not set)
+  image: {}
+
   resources:
     requests:
       cpu: 275m
       memory: 1045Mi
     limits:
       memory: 1045Mi
-  startupProbe:
-    httpGet:
-      port: http
-      path: /health
-    periodSeconds: 3
-    failureThreshold: 30
-  readinessProbe:
-    failureThreshold: 3
-    httpGet:
-      path: /health
-      port: http
-      scheme: HTTP
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 10
-  livenessProbe:
-    failureThreshold: 3
-    httpGet:
-      path: /health
-      port: http
-      scheme: HTTP
-    initialDelaySeconds: 120
-    periodSeconds: 15
-    timeoutSeconds: 5
-  annotations: ~
+
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 100%
       maxUnavailable: 0%
-    type: RollingUpdate
+
   podDisruptionBudget:
     enabled: true
     minAvailable: 2
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -152,59 +244,75 @@ web:
                 app.kubernetes.io/component: web
             topologyKey: kubernetes.io/hostname
 
-translations:
-  enabled: true
-  libretranslate:
-    endpoint: https://translate.mstdn.social/ # FIXME: set to deepl when their system works again
-  # deepl:
-    # plan: free
+  nodeSelector: {}
+  tolerations: []
 
+  startupProbe:
+    httpGet:
+      port: http
+      path: /health
+    periodSeconds: 3
+    failureThreshold: 30
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+      scheme: HTTP
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+    timeoutSeconds: 10
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 120
+    periodSeconds: 15
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+  annotations: {}
+
+# =============================================================================
+# COMPONENT: STREAMING
+# =============================================================================
 streaming:
+  replicas: 2
+  port: 4000
+  clusterNum: 1
+
+  # Base URL for WebSocket connections
+  baseUrl: ""  # REQUIRED: e.g., wss://streaming.example.com
+
+  # Streaming has its own image (Node.js)
   image:
     repository: ghcr.io/mastodon/mastodon-streaming
     pullPolicy: IfNotPresent
     tag: v4.5.3@sha256:b758cec9c9e06b5b16036aa4b73da519b779feba4df63c0da81e65e06c38a75f
-  replicaCount: 2
-  clusterNum: 1
-  port: 4000
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  readinessProbe:
-    failureThreshold: 3
-    httpGet:
-      path: /api/v1/streaming/health
-      port: streaming
-      scheme: HTTP
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 10
-  startupProbe:
-    httpGet:
-      port: streaming
-      path: /api/v1/streaming/health
-    periodSeconds: 3
-    failureThreshold: 30
-  livenessProbe:
-    failureThreshold: 3
-    httpGet:
-      path: /api/v1/streaming/health
-      port: streaming
-      scheme: HTTP
-    initialDelaySeconds: 120
-    periodSeconds: 15
-    timeoutSeconds: 5
+
+  # Override database SSL mode for streaming
+  databaseSslMode: no-verify
+
   resources:
     requests:
       cpu: 41m
       memory: 100Mi
     limits:
       memory: 100Mi
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
+
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -214,30 +322,83 @@ streaming:
               matchLabels:
                 app.kubernetes.io/component: streaming
             topologyKey: kubernetes.io/hostname
-  podMonitor:
-    enabled: true
-    interval: 30s
-    scrapeTimeout: 10s
-    path: /metrics
-    port: streaming
-    scheme: http
-  annotations: ~
-  redis:
-    url: redis://redis-ha-haproxy:6379
-  baseURL: wss://streaming.toot.community
-  databaseSslMode: no-verify
 
+  nodeSelector: {}
+  tolerations: []
+
+  startupProbe:
+    httpGet:
+      port: streaming
+      path: /api/v1/streaming/health
+    periodSeconds: 3
+    failureThreshold: 30
+
+  readinessProbe:
+    httpGet:
+      path: /api/v1/streaming/health
+      port: streaming
+      scheme: HTTP
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+    timeoutSeconds: 10
+
+  livenessProbe:
+    httpGet:
+      path: /api/v1/streaming/health
+      port: streaming
+      scheme: HTTP
+    initialDelaySeconds: 120
+    periodSeconds: 15
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+  # Streaming-specific PodMonitor override
+  podMonitor:
+    port: streaming
+
+  annotations: {}
+
+# =============================================================================
+# COMPONENT: SIDEKIQ
+# =============================================================================
 sidekiq:
+  # Default settings for all workers
+  defaults:
+    resources:
+      requests:
+        cpu: 125m
+        memory: 541Mi
+      limits:
+        memory: 541Mi
+
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+
   podDisruptionBudget:
     enabled: true
-    maxUnavailable: 1
+    minAvailable: 1
+
   affinity:
-    enabled: true
-    topologyKey: kubernetes.io/hostname
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: sidekiq
+            topologyKey: kubernetes.io/hostname
+
+  nodeSelector: {}
+  tolerations: []
+
   workers:
     - name: generic
+      replicas: 3
       concurrency: 25
-      replicaCount: 3
       queues:
         - default
         - mailers
@@ -251,9 +412,10 @@ sidekiq:
           memory: 541Mi
         limits:
           memory: 541Mi
+
     - name: scheduler
+      replicas: 1
       concurrency: 25
-      replicaCount: 1
       queues:
         - scheduler
       resources:
@@ -263,126 +425,147 @@ sidekiq:
         limits:
           memory: 437Mi
 
+# =============================================================================
+# INGRESS (NGINX INGRESS CONTROLLER)
+# =============================================================================
 ingress:
   web:
     enabled: false
-    maxBodySize: 100m
-    upstreamProxyTimeout: 120
     ingressClassName: nginx
-    host: toot.community
-    serviceNameOverride: ~
-    servicePortOverride: ~
-    annotations: 
-      cert-manager.io/cluster-issuer: letsencrypt
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    host: ""  # REQUIRED when enabled: your domain
+
+    # Service routing override (for cache layers like Varnish)
+    serviceOverride:
+      name: null
+      port: null
+
+    # Nginx-specific settings
+    maxBodySize: 100m
+    proxyTimeout: 120
+
+    # Client certificate verification
     verifyClient:
       enabled: false
-      secretName: tootcommunity/tootcommunity-ca-secret
-    tls:
-      - hosts:
-          - toot.community
-        secretName: toot.community-tls
+      secretName: ""
+
+    # WWW to non-WWW redirect
     wwwRedirect:
       enabled: true
-  streaming:
-    enabled: false
-    host: streaming.toot.community
-    ingressClassName: nginx
-    annotations: 
+
+    annotations:
       cert-manager.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    tls:
-      - hosts:
-          - streaming.toot.community
-        secretName: streaming.toot.community-tls
 
+    tls: []  # Configure TLS when enabled
+
+  streaming:
+    enabled: false
+    ingressClassName: nginx
+    host: ""  # REQUIRED when enabled: streaming domain
+
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    tls: []  # Configure TLS when enabled
+
+# =============================================================================
+# GATEWAY API
+# =============================================================================
 gateway:
   enabled: false
-  parentRefs: []
-  web:
-    hostname: ""
-    annotations: {}
-    parentRefs: []
-    wwwRedirect:
-      enabled: ~
-      hostname: ""
-      annotations: {}
-  streaming:
-    hostname: ""
-    annotations: {}
-    parentRefs: []
 
+  # Default parent refs for all routes
+  parentRefs: []
+
+  web:
+    hostname: ""  # Defaults to ingress.web.host
+    parentRefs: []  # Overrides gateway.parentRefs
+    annotations: {}
+
+    wwwRedirect:
+      enabled: false
+      hostname: ""  # Defaults to www.{hostname}
+      annotations: {}
+
+  streaming:
+    hostname: ""  # Defaults to ingress.streaming.host
+    parentRefs: []
+    annotations: {}
+
+# =============================================================================
+# SCHEDULED JOBS (CRONJOBS)
+# =============================================================================
 jobs:
-  annotations: ~
+  # Default resources for all jobs
+  defaults:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 500Mi
+      limits:
+        memory: 750Mi
+
+  annotations: {}
+
   cleanupMedia:
     enabled: true
-    schedule: "0 5 * * *" # every day at 5am
+    schedule: "0 5 * * *"  # Every day at 5am
     days: 7
     resources:
       requests:
         cpu: 250m
-        memory: 750M
+        memory: 750Mi
       limits:
-        memory: 750M
-  statusesRemove:
-    enabled: false
-    schedule: "5 4 * * 6"
-    days: 90
-    resources:
-      requests:
-        cpu: 300m
-        memory: 1500M
-      limits:
-        memory: 1500M
+        memory: 750Mi
+
   cleanupMediaProfiles:
     enabled: true
-    schedule: "0 5 * * *" # every day at 5am
+    schedule: "0 5 * * *"  # Every day at 5am
     days: 14
     resources:
       requests:
         cpu: 1000m
-        memory: 721M
+        memory: 721Mi
       limits:
-        memory: 721M
-  accountsPrune:
-    enabled: false # FIXME: needs to fix indexes before enabling this
-    schedule: "0 2 * * 1" # every monday at 2am
-    resources:
-      requests:
-        cpu: 1033m
-        memory: 584M
-      limits:
-        memory: 584M
+        memory: 721Mi
+
   removePreviewCards:
     enabled: true
-    schedule: "0 5 * * 1" # every monday at 5am
+    schedule: "0 5 * * 1"  # Every Monday at 5am
+    days: 30
     resources:
       requests:
         cpu: 500m
         memory: 400Mi
       limits:
         memory: 400Mi
-    days: 30
-    
-metrics:
-  enabled: true
-  port: 9394
-  podMonitor:
-    enabled: true
-    interval: 30s
-    scrapeTimeout: 10s
-    path: /metrics
-    scheme: http
-  web:
-    detailed: true
-    exporter:
-      resources:
-        requests:
-          cpu: 100m
-          memory: 180M
-        limits:
-          memory: 250M
-  sidekiq:
-    detailed: true
+
+  statusesRemove:
+    enabled: false
+    schedule: "5 4 * * 6"  # Saturday at 4:05am
+    days: 90
+    resources:
+      requests:
+        cpu: 300m
+        memory: 1500Mi
+      limits:
+        memory: 1500Mi
+
+  accountsPrune:
+    enabled: false
+    schedule: "0 2 * * 1"  # Every Monday at 2am
+    resources:
+      requests:
+        cpu: 1033m
+        memory: 584Mi
+      limits:
+        memory: 584Mi
+
+# =============================================================================
+# DEBUG MODE
+# =============================================================================
+debug:
+  enabled: false

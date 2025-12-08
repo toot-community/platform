@@ -1,4 +1,4 @@
-{{ if .Values.streaming.podMonitor.enabled }}
+{{ if and .Values.observability.metrics.enabled .Values.observability.metrics.podMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
@@ -11,9 +11,9 @@ spec:
     matchLabels:
       app.kubernetes.io/component: streaming
   podMetricsEndpoints:
-    - port: {{ .Values.streaming.podMonitor.port }}
-      interval: {{ .Values.streaming.podMonitor.interval }}
-      scrapeTimeout: {{ .Values.streaming.podMonitor.scrapeTimeout }}
-      path: {{ .Values.streaming.podMonitor.path }}
-      scheme: {{ .Values.streaming.podMonitor.scheme }}
+    - port: {{ .Values.streaming.podMonitor.port | default "streaming" }}
+      interval: {{ .Values.observability.metrics.podMonitor.interval }}
+      scrapeTimeout: {{ .Values.observability.metrics.podMonitor.scrapeTimeout }}
+      path: {{ .Values.observability.metrics.podMonitor.path }}
+      scheme: {{ .Values.observability.metrics.podMonitor.scheme }}
 {{ end }}
