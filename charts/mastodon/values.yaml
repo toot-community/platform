@@ -382,15 +382,11 @@ sidekiq:
     enabled: true
     minAvailable: 1
 
+  # Pod anti-affinity to spread workers of the same type across nodes
+  # Each worker type (e.g., sidekiq-generic) avoids other pods of the same type
   affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/component: sidekiq
-            topologyKey: kubernetes.io/hostname
+    enabled: true
+    topologyKey: kubernetes.io/hostname
 
   nodeSelector: {}
   tolerations: []

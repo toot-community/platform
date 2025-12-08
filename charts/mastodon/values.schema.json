@@ -263,7 +263,14 @@
           }
         },
         "podDisruptionBudget": { "$ref": "#/$defs/podDisruptionBudget" },
-        "affinity": { "type": "object" },
+        "affinity": {
+          "type": "object",
+          "description": "Pod anti-affinity settings for spreading workers of the same type",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "topologyKey": { "type": "string" }
+          }
+        },
         "nodeSelector": { "type": "object" },
         "tolerations": { "type": "array" },
         "workers": {
