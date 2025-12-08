@@ -22,10 +22,6 @@ victoria-metrics-operator:
     enabled: true
 
 grafana:
-  dashboards:
-    traefik:
-      gnetId: 17347
-
   vmScrape:
     spec:
       selector:
