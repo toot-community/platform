@@ -62,25 +62,55 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Get image repository with component override support
+Usage: {{ include "mastodon.imageRepository" (dict "component" .Values.web "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}
+*/}}
+{{- define "mastodon.imageRepository" -}}
+{{- $componentImage := .component.image | default dict -}}
+{{- $globalImage := .global.image | default dict -}}
+{{- $componentImage.repository | default $globalImage.repository | default .default -}}
+{{- end }}
+
+{{/*
+Get image tag with component override support
+Usage: {{ include "mastodon.imageTag" (dict "component" .Values.web "global" .Values.global "Chart" .Chart) }}
+*/}}
+{{- define "mastodon.imageTag" -}}
+{{- $componentImage := .component.image | default dict -}}
+{{- $globalImage := .global.image | default dict -}}
+{{- $componentImage.tag | default $globalImage.tag | default .Chart.AppVersion -}}
+{{- end }}
+
+{{/*
+Get image pull policy with component override support
+Usage: {{ include "mastodon.imagePullPolicy" (dict "component" .Values.web "global" .Values.global) }}
+*/}}
+{{- define "mastodon.imagePullPolicy" -}}
+{{- $componentImage := .component.image | default dict -}}
+{{- $globalImage := .global.image | default dict -}}
+{{- $componentImage.pullPolicy | default $globalImage.pullPolicy | default "IfNotPresent" -}}
+{{- end }}
+
+{{/*
 Common environment variables for Mastodon containers
 */}}
 {{- define "mastodon.commonEnv" -}}
 - name: DB_USER
   valueFrom:
     secretKeyRef:
-      key: {{ .Values.configuration.database.credentials.usernameKey }}
-      name: {{ .Values.configuration.database.credentials.secretName }}
+      key: {{ .Values.database.credentials.usernameKey }}
+      name: {{ .Values.database.credentials.secretName }}
 - name: DB_PASS
   valueFrom:
     secretKeyRef:
-      key: {{ .Values.configuration.database.credentials.passwordKey }}
-      name: {{ .Values.configuration.database.credentials.secretName }}
-{{- if .Values.configuration.search.enabled }}
+      key: {{ .Values.database.credentials.passwordKey }}
+      name: {{ .Values.database.credentials.secretName }}
+{{- if .Values.search.enabled }}
 - name: ES_PASS
   valueFrom:
     secretKeyRef:
-      key: {{ .Values.configuration.search.password.secretKeyRef.key }}
-      name: {{ .Values.configuration.search.password.secretKeyRef.name }}
+      key: {{ .Values.search.password.secretKeyRef.key }}
+      name: {{ .Values.search.password.secretKeyRef.name }}
 {{- end }}
 {{- end }}
 
@@ -95,11 +125,11 @@ Common envFrom configuration for Mastodon containers
 {{- end }}
 
 {{/*
-Common container configuration for Mastodon
+Common container configuration for Mastodon (web/sidekiq/jobs)
 */}}
 {{- define "mastodon.containerBase" -}}
-image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-imagePullPolicy: {{ .Values.image.pullPolicy }}
+image: "{{ include "mastodon.imageRepository" (dict "component" .Values.web "global" .Values.global "default" "ghcr.io/mastodon/mastodon") }}:{{ include "mastodon.imageTag" (dict "component" .Values.web "global" .Values.global "Chart" .Chart) }}"
+imagePullPolicy: {{ include "mastodon.imagePullPolicy" (dict "component" .Values.web "global" .Values.global) }}
 envFrom:
   {{- include "mastodon.commonEnvFrom" . | nindent 2 }}
 {{- end }}
@@ -110,11 +140,11 @@ Common pod spec configuration
 {{- define "mastodon.podSpec" -}}
 restartPolicy: {{ .restartPolicy | default "Never" }}
 serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
-{{- with .Values.podSecurityContext }}
+{{- with .Values.global.podDefaults.podSecurityContext }}
 securityContext:
   {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- with .Values.imagePullSecrets }}
+{{- with .Values.global.imagePullSecrets }}
 imagePullSecrets:
   {{- toYaml . | nindent 2 }}
 {{- end }}
@@ -172,7 +202,7 @@ template:
       {{- end }}
     spec:
       {{- include "mastodon.podSpec" . | nindent 6 }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.global.podDefaults.terminationGracePeriodSeconds }}
       containers:
         - name: {{ include "mastodon.fullname" . }}-db-migrate
           {{- include "mastodon.containerBase" . | nindent 10 }}
@@ -184,14 +214,13 @@ template:
           env:
             {{- include "mastodon.commonEnv" . | nindent 12 }}
             - name: DB_PORT
-              value: {{ .Values.configuration.database.dbMigrations.port | quote }}
+              value: {{ .Values.database.migrations.port | quote }}
             - name: DB_NAME
-              value: {{ .Values.configuration.database.dbMigrations.name }}
+              value: {{ .Values.database.migrations.name }}
             - name: DB_HOST
-              value: {{ .Values.configuration.database.dbMigrations.host }}
+              value: {{ .Values.database.migrations.host }}
             {{- if eq .skipPostMigrations true }}
             - name: SKIP_POST_DEPLOYMENT_MIGRATIONS
               value: "true"
             {{- end }}
 {{- end }}
-

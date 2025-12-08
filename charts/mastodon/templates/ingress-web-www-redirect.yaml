@@ -4,8 +4,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    {{- if .Values.ingress.web.annotations }}
-    {{- toYaml .Values.ingress.web.annotations | nindent 4 }}
+    {{- with .Values.ingress.web.annotations }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
     nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.ingress.web.host }}
   labels:
@@ -19,14 +19,14 @@ spec:
         paths:
           - backend:
               service:
-                {{- if .Values.ingress.web.serviceNameOverride }}
-                name: {{ .Values.ingress.web.serviceNameOverride }}
+                {{- if .Values.ingress.web.serviceOverride.name }}
+                name: {{ .Values.ingress.web.serviceOverride.name }}
                 {{- else }}
                 name: {{ include "mastodon.fullname" . }}-web
                 {{- end }}
                 port:
-                  {{- if .Values.ingress.web.servicePortOverride }}
-                  number: {{ .Values.ingress.web.servicePortOverride }}
+                  {{- if .Values.ingress.web.serviceOverride.port }}
+                  number: {{ .Values.ingress.web.serviceOverride.port }}
                   {{- else }}
                   number: {{ .Values.web.port }}
                   {{- end }}

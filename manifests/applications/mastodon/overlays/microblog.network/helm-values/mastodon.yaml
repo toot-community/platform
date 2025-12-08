@@ -2,42 +2,42 @@
 .streamingDomain: &streamingDomain streaming.microblog.network
 .staticDomain: &staticDomain static.microblog.network
 
-debug: false
+debug:
+  enabled: false
 
-configuration:
+mastodon:
   localDomain: *instanceDomain
   limitedFederationMode: true
   authorizedFetch: false
-  
-  s3:
-    endpoint: https://36imo.upcloudobjects.com
-    hostname: 36imo.upcloudobjects.com
-    region: auto
-    aliasHost: *staticDomain
-    bucket: microblog-network-assets
-    
-  smtp:
-    domain: *instanceDomain
-    fromAddress: microblog.network Notifications <support@microblog.network>
-    smtpServer: mail.jorijn.com
-    
+  extraEnv: {}
+    # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
+
+s3:
+  endpoint: https://36imo.upcloudobjects.com
+  hostname: 36imo.upcloudobjects.com
+  region: auto
+  aliasHost: *staticDomain
+  bucket: microblog-network-assets
+
+smtp:
+  domain: *instanceDomain
+  fromAddress: microblog.network Notifications <support@microblog.network>
+  server: mail.jorijn.com
+
+observability:
   otel:
     enabled: false
     namePrefix: microblog-network
-    
-  extraConfiguration: {}
-    # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
-    
+
 web:
-  domain: *instanceDomain
-  replicaCount: 3
+  replicas: 3
   podDisruptionBudget:
     enabled: false
-  
+
 streaming:
-  baseURL: wss://streaming.microblog.network
-  replicaCount: 3
-  
+  baseUrl: wss://streaming.microblog.network
+  replicas: 3
+
 ingress:
   web:
     host: *instanceDomain

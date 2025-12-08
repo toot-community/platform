@@ -1,13 +1,19 @@
-configuration:
-  s3:
-    endpoint: https://fsn1.your-objectstorage.com
-    hostname: fsn1.your-objectstorage.com
-    region: fsn1
-    protocol: https
-    timeouts:
-      open: 10
-      read: 10
-  
+mastodon:
+  allowedPrivateAddresses: "10.0.8.0/21"
+
+redis:
+  url: redis://redis-ha-haproxy:6379
+
+s3:
+  endpoint: https://fsn1.your-objectstorage.com
+  hostname: fsn1.your-objectstorage.com
+  region: fsn1
+  protocol: https
+  timeouts:
+    open: 10
+    read: 10
+
+observability:
   otel:
     enabled: false
     namePrefix: mastodon
@@ -16,8 +22,9 @@ configuration:
 
 ingress:
   web:
-    serviceNameOverride: varnish-for-app
-    servicePortOverride: 80
+    serviceOverride:
+      name: varnish-for-app
+      port: 80
 
 gateway:
   enabled: true

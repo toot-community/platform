@@ -1,4 +1,4 @@
-{{ if .Values.metrics.podMonitor.enabled }}
+{{ if .Values.observability.metrics.podMonitor.enabled }}
 {{- $context := . }}
 {{- range .Values.sidekiq.workers }}
 ---
@@ -15,9 +15,9 @@ spec:
       app.kubernetes.io/component: sidekiq-{{ .name }}
   podMetricsEndpoints:
     - port: prometheus
-      interval: {{ $context.Values.metrics.podMonitor.interval }}
-      scrapeTimeout: {{ $context.Values.metrics.podMonitor.scrapeTimeout }}
-      path: {{ $context.Values.metrics.podMonitor.path }}
-      scheme: {{ $context.Values.metrics.podMonitor.scheme }}
+      interval: {{ $context.Values.observability.metrics.podMonitor.interval }}
+      scrapeTimeout: {{ $context.Values.observability.metrics.podMonitor.scrapeTimeout }}
+      path: {{ $context.Values.observability.metrics.podMonitor.path }}
+      scheme: {{ $context.Values.observability.metrics.podMonitor.scheme }}
 {{ end }}
 {{ end }}

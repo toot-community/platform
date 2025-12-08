@@ -1,4 +1,4 @@
-{{ if .Values.metrics.podMonitor.enabled }}
+{{ if .Values.observability.metrics.podMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
@@ -12,8 +12,8 @@ spec:
       app.kubernetes.io/component: web
   podMetricsEndpoints:
     - port: prometheus
-      interval: {{ .Values.metrics.podMonitor.interval }}
-      scrapeTimeout: {{ .Values.metrics.podMonitor.scrapeTimeout }}
-      path: {{ .Values.metrics.podMonitor.path }}
-      scheme: {{ .Values.metrics.podMonitor.scheme }}
+      interval: {{ .Values.observability.metrics.podMonitor.interval }}
+      scrapeTimeout: {{ .Values.observability.metrics.podMonitor.scrapeTimeout }}
+      path: {{ .Values.observability.metrics.podMonitor.path }}
+      scheme: {{ .Values.observability.metrics.podMonitor.scheme }}
 {{ end }}

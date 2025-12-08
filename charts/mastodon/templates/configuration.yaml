@@ -1,85 +1,87 @@
 apiVersion: v1
 data:
-  DB_HOST: {{ .Values.configuration.database.host }}
-  DB_NAME: {{ .Values.configuration.database.name }}
-  DB_POOL: {{ .Values.configuration.database.poolsize | quote }}
-  DB_PORT: {{ .Values.configuration.database.port | quote }}
-  DB_SSLMODE: {{ .Values.configuration.database.sslmode }}
-  {{- if .Values.configuration.databaseReplicas.enabled }}
-  REPLICA_DB_HOST: {{ .Values.configuration.databaseReplicas.host }}
-  REPLICA_DB_PORT: {{ .Values.configuration.databaseReplicas.port | quote }}
+  DB_HOST: {{ .Values.database.primary.host }}
+  DB_NAME: {{ .Values.database.primary.name }}
+  DB_POOL: {{ .Values.database.primary.poolSize | quote }}
+  DB_PORT: {{ .Values.database.primary.port | quote }}
+  DB_SSLMODE: {{ .Values.database.primary.sslMode }}
+  {{- if .Values.database.replica.enabled }}
+  REPLICA_DB_HOST: {{ .Values.database.replica.host }}
+  REPLICA_DB_PORT: {{ .Values.database.replica.port | quote }}
   {{- end }}
-  DEFAULT_LOCALE: {{ .Values.configuration.defaultLocale }}
-  LOCAL_DOMAIN: {{ .Values.configuration.localDomain }}
+  DEFAULT_LOCALE: {{ .Values.mastodon.defaultLocale }}
+  LOCAL_DOMAIN: {{ .Values.mastodon.localDomain }}
   MALLOC_ARENA_MAX: "2"
   NODE_ENV: production
   PREPARED_STATEMENTS: "false"
   RAILS_ENV: production
-  REDIS_HOST: {{ .Values.configuration.redis.host }}
-  REDIS_PORT: {{ .Values.configuration.redis.port | quote }}
-  REDIS_DB: {{ .Values.configuration.redis.database | default 0 | quote }}
-  S3_ALIAS_HOST: {{ .Values.configuration.s3.aliasHost }}
-  S3_BUCKET: {{ .Values.configuration.s3.bucket }}
+  REDIS_HOST: {{ .Values.redis.host }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
+  REDIS_DB: {{ .Values.redis.database | default 0 | quote }}
+  S3_ALIAS_HOST: {{ .Values.s3.aliasHost }}
+  S3_BUCKET: {{ .Values.s3.bucket }}
   S3_ENABLED: "true"
-  S3_ENDPOINT: {{ .Values.configuration.s3.endpoint }}
-  S3_HOSTNAME: {{ .Values.configuration.s3.hostname }}
-  S3_PROTOCOL: {{ .Values.configuration.s3.protocol }}
-  S3_REGION: {{ .Values.configuration.s3.region }}
-  S3_OPEN_TIMEOUT: {{ .Values.configuration.s3.timeouts.open | default 5 | quote }}
-  S3_READ_TIMEOUT: {{ .Values.configuration.s3.timeouts.read | default 5 | quote }}
-  S3_MULTIPART_THRESHOLD: {{ .Values.configuration.s3.multipartThreshold | default "10485760" | quote }}
-  SMTP_AUTH_METHOD: {{ .Values.configuration.smtp.authMethod }}
-  SMTP_CA_FILE: {{ .Values.configuration.smtp.caFile }}
-  SMTP_DELIVERY_METHOD: {{ .Values.configuration.smtp.deliveryMethod }}
-  SMTP_ENABLE_STARTTLS_AUTO: {{ .Values.configuration.smtp.enableStarttlsAuto | quote }}
-  SMTP_OPENSSL_VERIFY_MODE: {{ .Values.configuration.smtp.opensslVerifyMode }}
-  SMTP_PORT: {{ .Values.configuration.smtp.port | quote }}
-  SMTP_DOMAIN: {{ .Values.configuration.smtp.domain }}
-  SMTP_FROM_ADDRESS: {{ .Values.configuration.smtp.fromAddress }}
-  SMTP_SERVER: {{ .Values.configuration.smtp.smtpServer }}
+  S3_ENDPOINT: {{ .Values.s3.endpoint }}
+  S3_HOSTNAME: {{ .Values.s3.hostname }}
+  S3_PROTOCOL: {{ .Values.s3.protocol }}
+  S3_REGION: {{ .Values.s3.region }}
+  S3_OPEN_TIMEOUT: {{ .Values.s3.timeouts.open | default 5 | quote }}
+  S3_READ_TIMEOUT: {{ .Values.s3.timeouts.read | default 5 | quote }}
+  S3_MULTIPART_THRESHOLD: {{ .Values.s3.multipartThreshold | default "10485760" | quote }}
+  SMTP_AUTH_METHOD: {{ .Values.smtp.authMethod }}
+  SMTP_CA_FILE: {{ .Values.smtp.caFile }}
+  SMTP_DELIVERY_METHOD: {{ .Values.smtp.deliveryMethod }}
+  SMTP_ENABLE_STARTTLS_AUTO: {{ .Values.smtp.enableStarttlsAuto | quote }}
+  SMTP_OPENSSL_VERIFY_MODE: {{ .Values.smtp.opensslVerifyMode }}
+  SMTP_PORT: {{ .Values.smtp.port | quote }}
+  SMTP_DOMAIN: {{ .Values.smtp.domain }}
+  SMTP_FROM_ADDRESS: {{ .Values.smtp.fromAddress }}
+  SMTP_SERVER: {{ .Values.smtp.server }}
   SMTP_TLS: "true"
   STREAMING_CLUSTER_NUM: {{ .Values.streaming.clusterNum | quote }}
-  WEB_DOMAIN: {{ .Values.web.domain }}
+  WEB_DOMAIN: {{ .Values.mastodon.webDomain | default .Values.mastodon.localDomain }}
   WEB_CONCURRENCY: {{ .Values.web.concurrency | quote }}
   MAX_THREADS: {{ .Values.web.maxThreads | quote }}
-  ALLOWED_PRIVATE_ADDRESSES: {{ .Values.configuration.allowedPrivateAddresses }}
+  {{- if .Values.mastodon.allowedPrivateAddresses }}
+  ALLOWED_PRIVATE_ADDRESSES: {{ .Values.mastodon.allowedPrivateAddresses }}
+  {{- end }}
   {{- if .Values.translations.enabled }}
   LIBRE_TRANSLATE_ENDPOINT: {{ .Values.translations.libretranslate.endpoint }}
   {{- end }}
-  {{- if .Values.configuration.search.enabled }}
+  {{- if .Values.search.enabled }}
   ES_ENABLED: "true"
-  ES_HOST: {{ .Values.configuration.search.host }}
-  ES_PORT: {{ .Values.configuration.search.port | quote }}
-  ES_USER: {{ .Values.configuration.search.user }}
-  ES_PRESET: {{ .Values.configuration.search.preset | default "single_node_cluster" }}
+  ES_HOST: {{ .Values.search.host }}
+  ES_PORT: {{ .Values.search.port | quote }}
+  ES_USER: {{ .Values.search.user }}
+  ES_PRESET: {{ .Values.search.preset | default "single_node_cluster" }}
   {{- end }}
-  {{- if .Values.streaming.baseURL }}
-  STREAMING_API_BASE_URL: {{ .Values.streaming.baseURL }}
+  {{- if .Values.streaming.baseUrl }}
+  STREAMING_API_BASE_URL: {{ .Values.streaming.baseUrl }}
   {{- end }}
-  {{- if .Values.configuration.authorizedFetch }}
+  {{- if .Values.mastodon.authorizedFetch }}
   AUTHORIZED_FETCH: "true"
   {{- end }}
-  {{- if .Values.configuration.limitedFederationMode }}
+  {{- if .Values.mastodon.limitedFederationMode }}
   LIMITED_FEDERATION_MODE: "true"
   {{- end }}
-  {{- if .Values.configuration.trustedProxyIPs }}
-  TRUSTED_PROXY_IP: {{ .Values.configuration.trustedProxyIPs }}
+  {{- if .Values.mastodon.trustedProxyIp }}
+  TRUSTED_PROXY_IP: {{ .Values.mastodon.trustedProxyIp }}
   {{- end }}
-  IP_RETENTION_PERIOD: {{ .Values.configuration.ipRetentionPeriod | quote }}
-  SESSION_RETENTION_PERIOD: {{ .Values.configuration.sessionRetentionPeriod | quote }}
-  {{- if .Values.metrics.enabled }}
+  IP_RETENTION_PERIOD: {{ .Values.mastodon.ipRetentionPeriod | quote }}
+  SESSION_RETENTION_PERIOD: {{ .Values.mastodon.sessionRetentionPeriod | quote }}
+  {{- if .Values.observability.metrics.enabled }}
   MASTODON_PROMETHEUS_EXPORTER_ENABLED: "true"
-  MASTODON_PROMETHEUS_EXPORTER_WEB_DETAILED_METRICS: "{{ .Values.metrics.web.detailed | default "false" }}"
-  MASTODON_PROMETHEUS_EXPORTER_SIDEKIQ_DETAILED_METRICS: "{{ .Values.metrics.sidekiq.detailed | default "false" }}"
+  MASTODON_PROMETHEUS_EXPORTER_WEB_DETAILED_METRICS: "{{ .Values.observability.metrics.web.detailed | default "false" }}"
+  MASTODON_PROMETHEUS_EXPORTER_SIDEKIQ_DETAILED_METRICS: "{{ .Values.observability.metrics.sidekiq.detailed | default "false" }}"
   PROMETHEUS_EXPORTER_HOST: "127.0.0.1"
-  PROMETHEUS_EXPORTER_PORT: "{{ .Values.metrics.port | default "9394" }}"
+  PROMETHEUS_EXPORTER_PORT: "{{ .Values.observability.metrics.port | default "9394" }}"
   {{- end }}
-  {{- if .Values.configuration.otel.enabled }}
-  OTEL_SERVICE_NAME_PREFIX: {{ .Values.configuration.otel.namePrefix }}
-  OTEL_SERVICE_NAME_SEPARATOR: {{ .Values.configuration.otel.nameSeparator | default "/" }}
-  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.configuration.otel.exporterUri }}
+  {{- if .Values.observability.otel.enabled }}
+  OTEL_SERVICE_NAME_PREFIX: {{ .Values.observability.otel.namePrefix }}
+  OTEL_SERVICE_NAME_SEPARATOR: {{ .Values.observability.otel.nameSeparator | default "/" }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.observability.otel.exporterUri }}
   {{- end }}
-  {{- range $key, $val := .Values.configuration.extraConfiguration }}
+  {{- range $key, $val := .Values.mastodon.extraEnv }}
   {{ $key }}: {{ $val | quote }}
   {{- end }}
 kind: ConfigMap
