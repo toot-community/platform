@@ -42,9 +42,9 @@ helmCharts:
 
 images:
   - name: ghcr.io/mastodon/mastodon
-    newTag: "v4.5.2@sha256:cadce590949fbd3ecc38df221d0fc406cce8533fa68860fc3087a9cc21fa5225"
+    newTag: "v4.5.3@sha256:92b397ce7749a3a2f9d3f983c09479fe783ada12dc055bc975ca911beb4df31e"
   - name: ghcr.io/mastodon/mastodon-streaming
-    newTag: "v4.5.2@sha256:ff6e49df2dda5feb9f7a20130f89a0d09f93de64122c1e85f0ca468f379010ff"
+    newTag: "v4.5.3@sha256:7340d8b82dde734ddb6e9eee25013f5ea25545c3875fd17cc38e3120fefeeb05"
   - name: varnish
     newTag: "8.0.0@sha256:1a1266b3cb860ab9b8668e33acc8f6edcb40b650e4d34ca3ad14333a2f5dae93"
     
