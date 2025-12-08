@@ -388,8 +388,12 @@ sidekiq:
         - weight: 100
           podAffinityTerm:
             labelSelector:
-              matchLabels:
-                app.kubernetes.io/component: sidekiq
+              matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - sidekiq-generic
+                    - sidekiq-scheduler
             topologyKey: kubernetes.io/hostname
 
   nodeSelector: {}
