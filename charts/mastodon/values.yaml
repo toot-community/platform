@@ -6,7 +6,7 @@ global:
   image:
     repository: ghcr.io/mastodon/mastodon
     pullPolicy: IfNotPresent
-    tag: ""  # Defaults to Chart.AppVersion if empty
+    tag: "@sha256:b862a0f0f20dafb26597e6d59768ee73cdeab08fa8ecaa3ecf95ccf38c443657"  # Defaults to Chart.AppVersion if empty
 
   imagePullSecrets: []
 
