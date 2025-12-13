@@ -42,3 +42,7 @@ sinksConfig:
     aws_region: "eu-west-1"
     from_email: "robusta-alerts@ses.jorijn.com"
     with_header: true
+    scope:
+      include:
+        - severity: HIGH
+        - severity: MEDIUM
