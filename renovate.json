@@ -55,6 +55,15 @@
       "groupName": "mastodon"
     },
     {
+      "matchPackageNames": [
+        "ghcr.io/mastodon/mastodon"
+      ],
+      "matchFileNames": [
+        "charts/mastodon/**"
+      ],
+      "pinDigests": false
+    },
+    {
       "matchManagers": [
         "kustomize",
         "helmv3",
