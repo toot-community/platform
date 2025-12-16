@@ -315,7 +315,7 @@ upgrade_node() {
   if [[ "${DRY_RUN}" == "true" ]]; then
     log "INFO" "[dry-run] talosctl -n ${node_ip} upgrade --image ${installer_image} --wait --timeout ${UPGRADE_TIMEOUT}"
   else
-    echo talosctl -n "${node_ip}" upgrade --image "${installer_image}" --wait --timeout "${UPGRADE_TIMEOUT}"
+    talosctl -n "${node_ip}" upgrade --image "${installer_image}" --wait --timeout "${UPGRADE_TIMEOUT}"
   fi
 
   log "INFO" "Waiting for Talos API on ${node_name}"
