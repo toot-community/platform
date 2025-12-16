@@ -5,13 +5,13 @@ metadata:
     {{- include "mastodon.labels" . | nindent 4 }}
     app: {{ include "mastodon.fullname" . }}-streaming
     version: {{ .Chart.AppVersion | quote }}
-  {{- if .Values.streaming.annotations }}
-    annotations:
-      {{- toYaml .Values.streaming.annotations | nindent 4 }}
+  {{- with .Values.streaming.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   name: {{ include "mastodon.fullname" . }}-streaming
 spec:
-  replicas: {{ .Values.streaming.replicaCount | default 3 }}
+  replicas: {{ .Values.streaming.replicas }}
   selector:
     matchLabels:
       {{- include "mastodon.selectorLabels" . | nindent 6 }}
@@ -25,36 +25,41 @@ spec:
         app.kubernetes.io/component: streaming
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configuration.yaml") . | sha256sum }}
+        {{- with .Values.global.podDefaults.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - command:
           - node
           - ./streaming
           env:
-            {{- if .Values.configuration.databaseReplicas.enabled }}
+            {{- if .Values.database.replica.enabled }}
             - name: DB_HOST
-              value: {{ .Values.configuration.databaseReplicas.host }}
+              value: {{ .Values.database.replica.host }}
             {{- end }}
-            {{- if .Values.streaming.redis }}
-            {{- if .Values.streaming.redis.url }}
+            {{- if .Values.redis.url }}
             - name: REDIS_URL
-              value: {{ .Values.streaming.redis.url }}
+              value: {{ .Values.redis.url }}
             - name: REDIS_HOST
               value: empty
             - name: REDIS_PORT
               value: empty
             {{- end }}
-            {{- end }}
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.configuration.database.credentials.usernameKey }}
-                  name: {{ .Values.configuration.database.credentials.secretName }}
+                  key: {{ .Values.database.credentials.usernameKey }}
+                  name: {{ .Values.database.credentials.secretName }}
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.configuration.database.credentials.passwordKey }}
-                  name: {{ .Values.configuration.database.credentials.secretName }}
+                  key: {{ .Values.database.credentials.passwordKey }}
+                  name: {{ .Values.database.credentials.secretName }}
             - name: PORT
               value: {{ .Values.streaming.port | quote }}
             - name: DB_SSLMODE
@@ -80,13 +85,21 @@ spec:
           resources:
             {{- toYaml .Values.streaming.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.global.podDefaults.securityContext | nindent 12 }}
       restartPolicy: Always
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.global.podDefaults.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.global.podDefaults.terminationGracePeriodSeconds }}
       {{- with .Values.streaming.affinity }}
       affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.streaming.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.streaming.tolerations }}
+      tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -2,59 +2,60 @@
 .streamingDomain: &streamingDomain streaming.toot.community
 .staticDomain: &staticDomain static.toot.community
 
-debug: false
+debug:
+  enabled: false
 
-configuration:
+mastodon:
   localDomain: *instanceDomain
   limitedFederationMode: false
   authorizedFetch: false
+  extraEnv: {}
+    # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
 
-  s3:
-    endpoint: https://36imo.upcloudobjects.com
-    hostname: 36imo.upcloudobjects.com
-    region: auto
-    aliasHost: *staticDomain
-    bucket: toot-community-assets
-    
-  smtp:
-    domain: *instanceDomain
-    fromAddress: toot.community Notifications <support@toot.community>
-    smtpServer: mail.jorijn.com
-    
-  search:
+s3:
+  endpoint: https://36imo.upcloudobjects.com
+  hostname: 36imo.upcloudobjects.com
+  region: auto
+  aliasHost: *staticDomain
+  bucket: toot-community-assets
+
+smtp:
+  domain: *instanceDomain
+  fromAddress: toot.community Notifications <support@toot.community>
+  server: mail.jorijn.com
+
+search:
+  enabled: true
+  preset: small_cluster
+
+database:
+  replica:
     enabled: true
-    preset: small_cluster
-  
-  databaseReplicas:
-    enabled: true
-    
+
+observability:
   otel:
     enabled: false
     namePrefix: toot-community
-    
-  extraConfiguration: {}
-    # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
 
 web:
-  domain: *instanceDomain
-  replicaCount: 6
+  replicas: 6
   resources:
     requests:
       cpu: 683m
       memory: 4Gi
     limits:
       memory: 8Gi
-  
+
 streaming:
-  baseURL: wss://streaming.toot.community
-  replicaCount: 3
+  baseUrl: wss://streaming.toot.community
+  replicas: 3
   resources:
     requests:
       cpu: 21m
       memory: 100Mi
     limits:
       memory: 100Mi
-  
+
 ingress:
   web:
     host: *instanceDomain
@@ -73,7 +74,7 @@ sidekiq:
   workers:
     - name: generic
       concurrency: 25
-      replicaCount: 10
+      replicas: 10
       queues:
         - default
         - mailers
@@ -89,7 +90,7 @@ sidekiq:
           memory: 8Gi
     - name: scheduler
       concurrency: 25
-      replicaCount: 1
+      replicas: 1
       queues:
         - scheduler
       resources:
@@ -98,7 +99,7 @@ sidekiq:
           memory: 1Gi
         limits:
           memory: 2Gi
-          
+
 jobs:
   removePreviewCards:
     resources:

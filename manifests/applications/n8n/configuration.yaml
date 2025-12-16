@@ -16,7 +16,7 @@ data:
   EXECUTIONS_DATA_PRUNE: "true"
   EXECUTIONS_DATA_MAX_AGES: "336"
   GENERIC_TIMEZONE: "Europe/Amsterdam"
-  N8N_HOST: workflows.toot.community"
+  N8N_HOST: "workflows.toot.community"
   N8N_PORT: "5678"
   N8N_PROTOCOL: https
   N8N_LISTEN_ADDRESS: "0.0.0.0"

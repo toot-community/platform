@@ -9,14 +9,14 @@ resources:
 
 helmCharts:
   - name: victoria-metrics-k8s-stack
-    version: "0.65.1"
+    version: "0.66.0"
     releaseName: vm
     namespace: victoriametrics
     valuesFile: helm-values.yaml
     includeCRDs: true
     repo: https://victoriametrics.github.io/helm-charts/
   - name: prometheus-operator-crds
-    version: "25.0.0"
+    version: "25.0.1"
     releaseName: prometheus-operator-crds
     namespace: victoriametrics
     includeCRDs: true

@@ -23,6 +23,6 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: {{ ternary .Values.ingress.web.serviceNameOverride (printf "%s-web" $fullName) (ne .Values.ingress.web.serviceNameOverride nil) }}
-          port: {{ ternary .Values.ingress.web.servicePortOverride .Values.web.port (ne .Values.ingress.web.servicePortOverride nil) }}
+        - name: {{ ternary .Values.ingress.web.serviceOverride.name (printf "%s-web" $fullName) (ne .Values.ingress.web.serviceOverride.name nil) }}
+          port: {{ ternary .Values.ingress.web.serviceOverride.port .Values.web.port (ne .Values.ingress.web.serviceOverride.port nil) }}
 {{- end }}

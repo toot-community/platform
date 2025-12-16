@@ -14,13 +14,12 @@ spec:
     matchLabels:
       {{- include "mastodon.selectorLabels" $context | nindent 6 }}
       app.kubernetes.io/component: sidekiq-{{ .name }}
+  {{- with .strategy | default $context.Values.sidekiq.defaults.strategy }}
   strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  {{- if .replicaCount }}
-  replicas: {{ .replicaCount }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .replicas }}
+  replicas: {{ .replicas }}
   {{- end }}
   template:
     metadata:
@@ -29,10 +28,17 @@ spec:
         app.kubernetes.io/component: sidekiq-{{ .name }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configuration.yaml") $context | sha256sum }}
+        {{- with $context.Values.global.podDefaults.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
-      {{- if $context.Values.sidekiq.nodeSelector }}
+      {{- with $context.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $context.Values.sidekiq.nodeSelector }}
       nodeSelector:
-        {{- toYaml $context.Values.sidekiq.nodeSelector | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with $context.Values.sidekiq.tolerations }}
       tolerations:
@@ -54,7 +60,7 @@ spec:
           env:
             - name: DB_POOL
               value: {{ .concurrency | quote }}
-            {{- if $context.Values.metrics.enabled }}
+            {{- if $context.Values.observability.metrics.enabled }}
             - name: MASTODON_PROMETHEUS_EXPORTER_ENABLED
               value: "true"
             - name: MASTODON_PROMETHEUS_EXPORTER_LOCAL
@@ -62,28 +68,26 @@ spec:
             - name: MASTODON_PROMETHEUS_EXPORTER_HOST
               value: "0.0.0.0"
             - name: MASTODON_PROMETHEUS_EXPORTER_PORT
-              value: "{{ $context.Values.metrics.port }}"
+              value: "{{ $context.Values.observability.metrics.port }}"
             {{- end }}
             {{- include "mastodon.commonEnv" $context | nindent 12 }}
-          image: "{{ $context.Values.image.repository }}:{{ $context.Values.image.tag | default $context.Chart.AppVersion }}"
-          imagePullPolicy: {{ $context.Values.image.pullPolicy }}
+          image: "{{ include "mastodon.imageRepository" (dict "component" $context.Values.web "global" $context.Values.global "default" "ghcr.io/mastodon/mastodon") }}:{{ include "mastodon.imageTag" (dict "component" $context.Values.web "global" $context.Values.global "Chart" $context.Chart) }}"
+          imagePullPolicy: {{ include "mastodon.imagePullPolicy" (dict "component" $context.Values.web "global" $context.Values.global) }}
           name: mastodon
           resources:
-            {{- toYaml .resources | nindent 12 }}
+            {{- toYaml (.resources | default $context.Values.sidekiq.defaults.resources) | nindent 12 }}
           securityContext:
-            {{- toYaml $context.Values.securityContext | nindent 12 }}
-          {{- if $context.Values.metrics.enabled }}
+            {{- toYaml $context.Values.global.podDefaults.securityContext | nindent 12 }}
+          {{- if $context.Values.observability.metrics.enabled }}
           ports:
             - name: prometheus
-              containerPort: {{ $context.Values.metrics.port }}
+              containerPort: {{ $context.Values.observability.metrics.port }}
           {{- end }}
       restartPolicy: Always
-      {{- with $context.Values.podSecurityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- toYaml $context.Values.global.podDefaults.podSecurityContext | nindent 8 }}
       serviceAccountName: {{ include "mastodon.serviceAccountName" $context }}
-      terminationGracePeriodSeconds: {{ $context.Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ $context.Values.global.podDefaults.terminationGracePeriodSeconds }}
       {{- if $context.Values.sidekiq.affinity.enabled }}
       affinity:
         podAntiAffinity:
@@ -92,7 +96,6 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    {{- include "mastodon.selectorLabels" $context | nindent 20 }}
                     app.kubernetes.io/component: sidekiq-{{ .name }}
                 topologyKey: {{ $context.Values.sidekiq.affinity.topologyKey }}
       {{- end }}

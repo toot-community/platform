@@ -9,14 +9,14 @@ resources:
 
 helmCharts:
   - repo: https://charts.jetstack.io
-    version: v1.19.1
+    version: v1.19.2
     name: cert-manager
     namespace: cert-manager
     releaseName: cert-manager
     includeCRDs: true
     valuesFile: helm-values-cert-manager.yaml
   - repo: https://charts.hetzner.cloud
-    version: 0.6.2
+    version: 0.6.3
     name: cert-manager-webhook-hetzner
     namespace: cert-manager
     releaseName: cert-manager-webhook-hetzner
