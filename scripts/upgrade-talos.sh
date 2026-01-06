@@ -218,14 +218,14 @@ resolve_installer_image() {
   local node_ip="$1"
   local schematic_id="$2"
 
-  local mc_spec mc_image base_image mc_first_doc
+  local mc_image base_image
   mc_image=""
-  mc_spec=$(talosctl -n "${node_ip}" get machineconfig -o json 2>/dev/null | jq -r '.spec // empty' || true)
-  if [[ -n "${mc_spec}" ]]; then
-    # machineconfig spec may contain multiple YAML documents; we only care about the first
-    mc_first_doc=$(printf '%s' "${mc_spec}" | awk 'BEGIN{RS="---"} {print; exit}')
-    mc_image=$(printf '%s' "${mc_first_doc}" | yq -r '.machine.install.image // .install.image // ""' 2>/dev/null || true)
-  fi
+  # The machineconfig spec is a double-encoded JSON string - use fromjson to decode it properly
+  # The config may contain multiple YAML documents; use yq ea to select the one with machine.install.image
+  mc_image=$(talosctl -n "${node_ip}" get machineconfig -o json 2>/dev/null \
+    | jq -r '.spec | fromjson' 2>/dev/null \
+    | yq ea 'select(.machine.install.image) | .machine.install.image' 2>/dev/null \
+    || true)
 
   if [[ -n "${mc_image}" ]]; then
     base_image="${mc_image%%:*}"
@@ -234,9 +234,9 @@ resolve_installer_image() {
     return 0
   fi
 
-  base_image="${factory_host}/installer/${schematic_id}"
-  log "WARN" "Unable to determine installer image from machineconfig for ${node_ip}, falling back to factory base: ${base_image}" >&2
-  echo "${base_image}:${TARGET_VERSION}"
+  log "ERROR" "Unable to determine installer image from machineconfig for ${node_ip}" >&2
+  log "ERROR" "Cannot proceed without a valid installer image. Ensure the node's machineconfig contains machine.install.image" >&2
+  return 1
 }
 
 node_ready_and_version() {
@@ -297,7 +297,9 @@ upgrade_node() {
 
   local factory_url installer_image
   factory_url="${FACTORY_BASE%/}/schematics/${schematic_id}"
-  installer_image=$(resolve_installer_image "${node_ip}" "${schematic_id}")
+  if ! installer_image=$(resolve_installer_image "${node_ip}" "${schematic_id}"); then
+    fatal "Failed to resolve installer image for ${node_name}"
+  fi
 
   local current_version
   current_version=$(extract_version_number "$(jq -r '.status.nodeInfo.osImage // ""' <<<"${node_json}")")
