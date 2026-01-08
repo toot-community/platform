@@ -22,7 +22,7 @@ s3:
 smtp:
   domain: *instanceDomain
   fromAddress: microblog.network Notifications <support@microblog.network>
-  server: mail.jorijn.com
+  server: email-smtp.eu-west-1.amazonaws.com
 
 observability:
   otel:

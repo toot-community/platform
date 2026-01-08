@@ -22,7 +22,7 @@ s3:
 smtp:
   domain: *instanceDomain
   fromAddress: toot.community Notifications <support@toot.community>
-  server: mail.jorijn.com
+  server: email-smtp.eu-west-1.amazonaws.com
 
 search:
   enabled: true
