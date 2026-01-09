@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-route53
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: support@toot.community
+    privateKeySecretRef:
+      name: letsencrypt-route53
+    solvers:
+      - selector:
+          dnsZones:
+            - toot.community
+        dns01:
+          route53:
+      - selector:
+          dnsZones:
+            - microblog.network
+        dns01:
+          route53:

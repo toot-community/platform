@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oidc-proxy-config
+  namespace: oidc-issuer
+  labels:
+    app.kubernetes.io/instance: oidc-proxy
+    app.kubernetes.io/name: oidc-proxy
+data:
+  default.conf: |-
+    server {
+      listen 8080;
+      server_name _;
+      server_tokens off;
+
+      root /usr/share/nginx/html;
+
+      location = /.well-known/openid-configuration {
+        default_type application/json;
+        try_files /.well-known/openid-configuration =404;
+      }
+
+      location = /openid/v1/jwks {
+        default_type application/json;
+        try_files /openid/v1/jwks =404;
+      }
+
+      location / {
+        return 404;
+      }
+    }

@@ -146,6 +146,12 @@ variable "kubernetes_version" {
   default     = "v1.33.2"
 }
 
+variable "oidc_issuer_url" {
+  description = "OIDC issuer URL for Kubernetes service account tokens."
+  type        = string
+  default     = "https://oidc.toot.community"
+}
+
 variable "resource_prefix" {
   description = "Optional prefix for naming all resources to avoid collisions."
   type        = string

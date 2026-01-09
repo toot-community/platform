@@ -8,6 +8,6 @@ spec:
     - toot.community
     - "*.toot.community"
   issuerRef:
-    name: letsencrypt-hetzner
+    name: letsencrypt-route53
     kind: ClusterIssuer
   secretName: toot-community-tls
