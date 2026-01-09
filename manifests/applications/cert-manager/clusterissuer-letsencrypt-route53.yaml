@@ -13,9 +13,9 @@ spec:
           dnsZones:
             - toot.community
         dns01:
-          route53:
+          route53: {}
       - selector:
           dnsZones:
             - microblog.network
         dns01:
-          route53:
+          route53: {}
