@@ -16,6 +16,7 @@ resources:
   - longhorn.yaml
   - metrics-server.yaml
   - microblog-network.yaml
+  - k8s-oidc-issuer.yaml
   - talos-ccm.yaml
   - victoriametrics.yaml
   - toot-community.yaml

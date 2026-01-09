@@ -8,6 +8,6 @@ spec:
     - microblog.network
     - "*.microblog.network"
   issuerRef:
-    name: letsencrypt-hetzner
+    name: letsencrypt-route53
     kind: ClusterIssuer
   secretName: microblog-network-tls

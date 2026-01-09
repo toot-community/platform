@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-oidc-issuer
+  namespace: argocd
+spec:
+  destination:
+    namespace: oidc-issuer
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/applications/k8s-oidc-issuer
+    repoURL: git@github.com:toot-community/platform.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

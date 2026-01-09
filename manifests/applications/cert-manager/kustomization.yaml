@@ -4,8 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - clusterissuer-letsencrypt-http.yaml
-  - clusterissuer-letsencrypt-hetzner.yaml
-  - secrets.yaml
+  - clusterissuer-letsencrypt-route53.yaml
 
 helmCharts:
   - repo: https://charts.jetstack.io
@@ -15,10 +14,3 @@ helmCharts:
     releaseName: cert-manager
     includeCRDs: true
     valuesFile: helm-values-cert-manager.yaml
-  - repo: https://charts.hetzner.cloud
-    version: 0.6.3
-    name: cert-manager-webhook-hetzner
-    namespace: cert-manager
-    releaseName: cert-manager-webhook-hetzner
-    includeCRDs: true
-    valuesFile: helm-values-webhook-hetzner.yaml
