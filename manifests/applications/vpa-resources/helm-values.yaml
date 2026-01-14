@@ -451,6 +451,42 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+  - name: vmalertmanager-vm-vpa
+    namespace: victoriametrics
+    targetRef:
+      apiVersion: apps/v1
+      kind: StatefulSet
+      name: vmalertmanager-vm
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: vmagent-vm-vpa
+    namespace: victoriametrics
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: vmagent-vm
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: vmalert-vm-vpa
+    namespace: victoriametrics
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: vmalert-vm
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: vmsingle-vm-vpa
+    namespace: victoriametrics
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: vmsingle-vm
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
   - name: vm-victoria-metrics-operator-vpa
     namespace: victoriametrics
     targetRef:
