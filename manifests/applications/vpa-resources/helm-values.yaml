@@ -411,6 +411,7 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          controlledValues: RequestsOnly
   # victorialogs
   - name: vl-victoria-logs-single-server-vpa
     namespace: victorialogs
