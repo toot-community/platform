@@ -4,6 +4,6 @@ resources:
     memory: 1Gi
   limits:
     memory: 1Gi
-    
+
 varnish:
   size: 256m

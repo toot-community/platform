@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: local-path-storage
 
 resources:
-- github.com/rancher/local-path-provisioner/deploy?ref=v0.0.34
+  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.34
 
 patches:
 - patch: |-

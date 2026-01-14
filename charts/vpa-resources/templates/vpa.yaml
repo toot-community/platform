@@ -1,0 +1,39 @@
+{{- $defaultPolicy := dict "controlledResources" (list "cpu" "memory") "controlledValues" "RequestsAndLimits" -}}
+{{- range $vpa := .Values.vpas }}
+{{- $containerPolicies := required "vpa.resourcePolicy.containerPolicies is required" $vpa.resourcePolicy.containerPolicies -}}
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ required "vpa.name is required" $vpa.name }}
+  namespace: {{ required "vpa.namespace is required" $vpa.namespace }}
+  labels:
+    vpa.toot.community/managed: "true"
+spec:
+  targetRef:
+    apiVersion: {{ required "vpa.targetRef.apiVersion is required" $vpa.targetRef.apiVersion }}
+    kind: {{ required "vpa.targetRef.kind is required" $vpa.targetRef.kind }}
+    name: {{ required "vpa.targetRef.name is required" $vpa.targetRef.name }}
+  updatePolicy:
+    updateMode: {{ default $.Values.updateMode $vpa.updateMode | quote }}
+  resourcePolicy:
+    containerPolicies:
+      {{- range $policy := $containerPolicies }}
+      {{- $merged := merge (deepCopy $policy) $defaultPolicy }}
+      - containerName: {{ required "containerPolicies[].containerName is required" $merged.containerName | quote }}
+        {{- with $merged.mode }}
+        mode: {{ . }}
+        {{- end }}
+        controlledResources:
+          {{- toYaml $merged.controlledResources | nindent 10 }}
+        controlledValues: {{ $merged.controlledValues }}
+        {{- with $merged.minAllowed }}
+        minAllowed:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with $merged.maxAllowed }}
+        maxAllowed:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{ end }}
+{{ end }}

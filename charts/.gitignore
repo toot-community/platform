@@ -3,4 +3,6 @@
 !mastodon/**
 !varnish/
 !varnish/**
+!vpa-resources/
+!vpa-resources/**
 !.gitignore

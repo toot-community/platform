@@ -1,0 +1,5 @@
+apiVersion: v2
+name: vpa-resources
+description: Centralized VPA objects for toot.community
+type: application
+version: 0.1.0

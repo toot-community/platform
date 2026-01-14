@@ -20,7 +20,7 @@ resources:
     ephemeral-storage: 6Gi  # Request disk space for scheduling
   limits:
     ephemeral-storage: 7Gi  # Limit with overhead
-  
+
 ingress:
   enabled: false
   className: nginx

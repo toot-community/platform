@@ -17,7 +17,7 @@ resources:
   limits:
     memory: 750Mi
     ephemeral-storage: 90Gi  # With buffer
-    
+
 varnish:
   size: 80G
 

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: velero
+  name: vpa-resources
   namespace: argocd
 spec:
   destination:
@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: manifests/applications/velero
+    path: manifests/applications/vpa-resources
     repoURL: git@github.com:toot-community/platform.git
     targetRevision: main
   syncPolicy:

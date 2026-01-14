@@ -19,6 +19,8 @@ resources:
   - k8s-oidc-issuer.yaml
   - talos-ccm.yaml
   - victoriametrics.yaml
+  - vertical-pod-autoscaler.yaml
+  - vpa-resources.yaml
   - toot-community.yaml
   - victorialogs.yaml
   - victoriatraces.yaml

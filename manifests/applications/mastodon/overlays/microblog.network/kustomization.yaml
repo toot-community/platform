@@ -8,7 +8,6 @@ helmGlobals:
 resources:
   - ../../base
   - secrets.yaml
-
 helmCharts:
   - name: redis-ha
     valuesFile: ../../base/helm-values/redis-ha.yaml
@@ -50,3 +49,4 @@ images:
     
 patches:
   - path: database-cluster.yaml
+  - path: ../../base/patches/redis-ha-haproxy-affinity.yaml
