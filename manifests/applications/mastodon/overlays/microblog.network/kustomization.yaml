@@ -49,4 +49,4 @@ images:
     
 patches:
   - path: database-cluster.yaml
-  - path: ../../base/patches/redis-ha-haproxy-affinity.yaml
+  # - path: ../../base/patches/redis-ha-haproxy-affinity.yaml
