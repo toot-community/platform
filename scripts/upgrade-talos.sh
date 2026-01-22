@@ -220,10 +220,10 @@ resolve_installer_image() {
 
   local mc_image base_image
   mc_image=""
-  # The machineconfig spec is a double-encoded JSON string - use fromjson to decode it properly
+  # The machineconfig spec can be a JSON string or object; jq -r .spec normalizes both.
   # The config may contain multiple YAML documents; use yq ea to select the one with machine.install.image
   mc_image=$(talosctl -n "${node_ip}" get machineconfig -o json 2>/dev/null \
-    | jq -r '.spec | fromjson' 2>/dev/null \
+    | jq -r '.spec' 2>/dev/null \
     | yq ea 'select(.machine.install.image) | .machine.install.image' 2>/dev/null \
     || true)
 
