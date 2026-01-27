@@ -16,7 +16,7 @@ helmCharts:
     additionalValuesFiles:
       - helm-values/redis-ha.yaml
     releaseName: redis-ha
-    version: 4.35.6
+    version: 4.35.7
     namespace: *namespace
     repo: https://dandydeveloper.github.io/charts
   - name: mastodon
