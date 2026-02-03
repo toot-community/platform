@@ -96,21 +96,21 @@ appsec:
       path: /
       appsec_configs:
         - crowdsecurity/appsec-default
-        - toot-community/mastodon-media-proxy-srcset-abuse-inband
+        - toot-community/media-proxy-srcset-abuse-inband
       labels:
         type: appsec
   env:
     - name: COLLECTIONS
       value: "crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
   configs:
-    mastodon-media-proxy-srcset-abuse-inband.yaml: |
-      name: toot-community/mastodon-media-proxy-srcset-abuse-inband
+    media-proxy-srcset-abuse-inband.yaml: |
+      name: toot-community/media-proxy-srcset-abuse-inband
       default_remediation: ban
       inband_rules:
-        - toot-community/mastodon-media-proxy-srcset-abuse
+        - toot-community/media-proxy-srcset-abuse
   rules:
-    mastodon-media-proxy-srcset-abuse.yaml: |
-      name: toot-community/mastodon-media-proxy-srcset-abuse
+    media-proxy-srcset-abuse.yaml: |
+      name: toot-community/media-proxy-srcset-abuse
       description: "Block malformed Mastodon /media_proxy requests that look like srcset values being fetched as URLs"
       rules:
         - and:
@@ -164,7 +164,7 @@ config:
     ---
     name: mastodon_media_proxy_srcset_abuse_profile
     filters:
-      - Alert.Remediation == true && Alert.GetScenario() == "toot-community/mastodon-media-proxy-srcset-abuse"
+      - Alert.Remediation == true && Alert.GetScenario() == "toot-community/media-proxy-srcset-abuse"
     decisions:
       - type: ban
         duration: 2160h
@@ -193,9 +193,9 @@ config:
         service: http
         type: scraper
         remediation: true
-    mastodon-media-proxy-srcset-abuse.yaml: |
+    media-proxy-srcset-abuse.yaml: |
       type: trigger
-      name: toot-community/mastodon-media-proxy-srcset-abuse
+      name: toot-community/media-proxy-srcset-abuse
       description: "Detect malformed Mastodon /media_proxy requests that look like srcset values being fetched as URLs"
       filter: |
         evt.Meta.log_type == "http_access-log" &&
