@@ -1,0 +1,42 @@
+{{- if and .Values.web.autoscaling.keda.enabled .Values.observability.metrics.enabled .Values.observability.metrics.podMonitor.enabled }}
+{{- $minReplicaCount := .Values.web.autoscaling.keda.minReplicaCount | default .Values.web.replicas }}
+{{- $maxReplicaCount := .Values.web.autoscaling.keda.maxReplicaCount | default $minReplicaCount }}
+{{- $fallbackReplicas := .Values.web.autoscaling.keda.fallback.replicas | default $minReplicaCount }}
+{{- $selector := include "mastodon.kedaWebPumaSelector" . }}
+{{- $defaultQuery := printf "(((sum(ruby_puma_running_threads{%s}) / clamp_min(sum(ruby_puma_max_threads{%s}), 1)) + (1 - (sum(ruby_puma_thread_pool_capacity{%s}) / clamp_min(sum(ruby_puma_max_threads{%s}), 1)))) / 2) * (sum(ruby_puma_max_threads{%s}) > 0)" $selector $selector $selector $selector $selector }}
+{{- $query := .Values.web.autoscaling.keda.prometheus.query | default $defaultQuery }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "mastodon.fullname" . }}-web
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "mastodon.fullname" . }}-web
+  minReplicaCount: {{ $minReplicaCount }}
+  maxReplicaCount: {{ $maxReplicaCount }}
+  pollingInterval: {{ .Values.web.autoscaling.keda.pollingInterval }}
+  cooldownPeriod: {{ .Values.web.autoscaling.keda.cooldownPeriod }}
+  {{- if .Values.web.autoscaling.keda.fallback.enabled }}
+  fallback:
+    failureThreshold: {{ .Values.web.autoscaling.keda.fallback.failureThreshold }}
+    replicas: {{ $fallbackReplicas }}
+  {{- end }}
+  {{- with .Values.web.autoscaling.keda.advanced }}
+  advanced:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  triggers:
+    - type: prometheus
+      metricType: {{ .Values.web.autoscaling.keda.prometheus.metricType | default "AverageValue" }}
+      metadata:
+        serverAddress: {{ .Values.web.autoscaling.keda.prometheus.serverAddress | quote }}
+        query: {{ $query | quote }}
+        threshold: {{ .Values.web.autoscaling.keda.prometheus.threshold | quote }}
+        {{- with .Values.web.autoscaling.keda.prometheus.activationThreshold }}
+        activationThreshold: {{ . | quote }}
+        {{- end }}
+{{- end }}

@@ -33,6 +33,11 @@ web:
   replicas: 3
   podDisruptionBudget:
     enabled: false
+  autoscaling:
+    keda:
+      enabled: true
+      minReplicaCount: 3
+      maxReplicaCount: 10
 
 streaming:
   baseUrl: wss://streaming.microblog.network

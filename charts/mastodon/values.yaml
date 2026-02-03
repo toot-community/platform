@@ -276,6 +276,49 @@ web:
 
   annotations: {}
 
+  # KEDA autoscaling based on Puma thread utilization metrics.
+  # Requires observability.metrics.enabled and observability.metrics.podMonitor.enabled.
+  autoscaling:
+    keda:
+      enabled: false
+      pollingInterval: 30
+      cooldownPeriod: 300
+      minReplicaCount: null
+      maxReplicaCount: 10
+      fallback:
+        enabled: true
+        failureThreshold: 3
+        replicas: null
+      advanced:
+        horizontalPodAutoscalerConfig:
+          behavior:
+            scaleUp:
+              stabilizationWindowSeconds: 0
+              policies:
+                - type: Percent
+                  value: 100
+                  periodSeconds: 60
+                - type: Pods
+                  value: 4
+                  periodSeconds: 60
+              selectPolicy: Max
+            scaleDown:
+              stabilizationWindowSeconds: 600
+              policies:
+                - type: Percent
+                  value: 10
+                  periodSeconds: 60
+                - type: Pods
+                  value: 1
+                  periodSeconds: 60
+              selectPolicy: Min
+      prometheus:
+        serverAddress: http://vmsingle-vm.victoriametrics.svc.cluster.local:8429
+        threshold: "0.7"
+        activationThreshold: "0.6"
+        metricType: AverageValue
+        query: "" # Leave empty to use the default Puma utilization query.
+
 # =============================================================================
 # COMPONENT: STREAMING
 # =============================================================================
