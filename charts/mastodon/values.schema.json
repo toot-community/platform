@@ -223,7 +223,41 @@
         "startupProbe": { "type": "object" },
         "readinessProbe": { "type": "object" },
         "livenessProbe": { "type": "object" },
-        "annotations": { "type": "object" }
+        "annotations": { "type": "object" },
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "keda": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "pollingInterval": { "type": "integer", "minimum": 5 },
+                "cooldownPeriod": { "type": "integer", "minimum": 0 },
+                "minReplicaCount": { "type": ["integer", "null"], "minimum": 0 },
+                "maxReplicaCount": { "type": ["integer", "null"], "minimum": 1 },
+                "fallback": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "failureThreshold": { "type": "integer", "minimum": 1 },
+                    "replicas": { "type": ["integer", "null"], "minimum": 0 }
+                  }
+                },
+                "advanced": { "type": "object" },
+                "prometheus": {
+                  "type": "object",
+                  "properties": {
+                    "serverAddress": { "type": "string" },
+                    "threshold": { "type": ["string", "number"] },
+                    "activationThreshold": { "type": ["string", "number"] },
+                    "metricType": { "type": "string" },
+                    "query": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "streaming": {
