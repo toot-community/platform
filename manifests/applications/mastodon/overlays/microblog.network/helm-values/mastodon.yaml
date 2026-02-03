@@ -57,6 +57,46 @@ ingress:
           - *streamingDomain
         secretName: ingress-streaming-tls
 
+sidekiq:
+  autoscaling:
+    keda:
+      enabled: true
+  workers:
+    - name: generic
+      replicas: 3
+      concurrency: 25
+      queues:
+        - default
+        - mailers
+        - ingress
+        - push
+        - pull
+        - fasp
+      autoscaling:
+        keda:
+          enabled: true
+          preset: generic
+          minReplicaCount: 3
+          maxReplicaCount: 10
+      resources:
+        requests:
+          cpu: 125m
+          memory: 541Mi
+        limits:
+          memory: 541Mi
+
+    - name: scheduler
+      replicas: 1
+      concurrency: 25
+      queues:
+        - scheduler
+      resources:
+        requests:
+          cpu: 144m
+          memory: 437Mi
+        limits:
+          memory: 437Mi
+
 s3Gateway:
   ingress:
     host: *staticDomain

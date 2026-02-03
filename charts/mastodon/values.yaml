@@ -413,6 +413,78 @@ sidekiq:
   nodeSelector: {}
   tolerations: []
 
+  # KEDA autoscaling for Sidekiq (per worker group).
+  # Requires observability.metrics.enabled and observability.metrics.podMonitor.enabled.
+  #
+  # The chart can create one ScaledObject per worker group (sidekiq.workers[]).
+  # Enable globally here, then enable per worker at:
+  # sidekiq.workers[].autoscaling.keda.enabled
+  autoscaling:
+    keda:
+      enabled: false
+      pollingInterval: 10
+      cooldownPeriod: 300
+      fallback:
+        enabled: true
+        failureThreshold: 3
+        replicas: null
+      prometheus:
+        # Prometheus-compatible API endpoint (Prometheus, VictoriaMetrics, Thanos, etc).
+        # If unset, defaults to web.autoscaling.keda.prometheus.serverAddress.
+        serverAddress: null
+
+        # Per-worker presets. Overlays typically only set min/max replicas per worker.
+        presets:
+          # Default chart topology (generic + scheduler)
+          generic:
+            backlog:
+              window: 2m
+              threshold: "250"
+              activationThreshold: "25"
+            latency:
+              window: 2m
+              threshold: "5"
+              activationThreshold: "1"
+
+          # Recommended split for production (toot.community):
+          # default-only, federation (push+ingress+fasp), pull-only, mailers-only, scheduler-only (fixed replicas=1).
+          default:
+            backlog:
+              window: 2m
+              threshold: "250"
+              activationThreshold: "25"
+            latency:
+              window: 2m
+              threshold: "5"
+              activationThreshold: "1"
+          federation:
+            backlog:
+              window: 2m
+              threshold: "500"
+              activationThreshold: "50"
+            latency:
+              window: 2m
+              threshold: "30"
+              activationThreshold: "5"
+          pull:
+            backlog:
+              window: 5m
+              threshold: "1250"
+              activationThreshold: "100"
+            latency:
+              window: 5m
+              threshold: "300"
+              activationThreshold: "30"
+          mailers:
+            backlog:
+              window: 5m
+              threshold: "250"
+              activationThreshold: "10"
+            latency:
+              window: 5m
+              threshold: "120"
+              activationThreshold: "10"
+
   workers:
     - name: generic
       replicas: 3

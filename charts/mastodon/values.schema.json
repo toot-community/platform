@@ -316,6 +316,57 @@
         },
         "nodeSelector": { "type": "object" },
         "tolerations": { "type": "array" },
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "keda": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "pollingInterval": { "type": "integer", "minimum": 5 },
+                "cooldownPeriod": { "type": "integer", "minimum": 0 },
+                "fallback": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "failureThreshold": { "type": "integer", "minimum": 1 },
+                    "replicas": { "type": ["integer", "null"], "minimum": 0 }
+                  }
+                },
+                "prometheus": {
+                  "type": "object",
+                  "properties": {
+                    "serverAddress": { "type": ["string", "null"] },
+                    "presets": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "backlog": {
+                            "type": "object",
+                            "properties": {
+                              "window": { "type": "string" },
+                              "threshold": { "type": ["string", "number"] },
+                              "activationThreshold": { "type": ["string", "number"] }
+                            }
+                          },
+                          "latency": {
+                            "type": "object",
+                            "properties": {
+                              "window": { "type": "string" },
+                              "threshold": { "type": ["string", "number"] },
+                              "activationThreshold": { "type": ["string", "number"] }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "workers": {
           "type": "array",
           "items": {
@@ -325,7 +376,52 @@
               "replicas": { "type": "integer", "minimum": 1 },
               "concurrency": { "type": "integer", "minimum": 1 },
               "queues": { "type": "array", "items": { "type": "string" } },
-              "resources": { "$ref": "#/$defs/resources" }
+              "resources": { "$ref": "#/$defs/resources" },
+              "autoscaling": {
+                "type": "object",
+                "properties": {
+                  "keda": {
+                    "type": "object",
+                    "properties": {
+                      "enabled": { "type": "boolean" },
+                      "preset": { "type": "string" },
+                      "minReplicaCount": { "type": ["integer", "null"], "minimum": 0 },
+                      "maxReplicaCount": { "type": ["integer", "null"], "minimum": 1 },
+                      "pollingInterval": { "type": ["integer", "null"], "minimum": 5 },
+                      "cooldownPeriod": { "type": ["integer", "null"], "minimum": 0 },
+                      "fallback": {
+                        "type": "object",
+                        "properties": {
+                          "enabled": { "type": "boolean" },
+                          "failureThreshold": { "type": "integer", "minimum": 1 },
+                          "replicas": { "type": ["integer", "null"], "minimum": 0 }
+                        }
+                      },
+                      "prometheus": {
+                        "type": "object",
+                        "properties": {
+                          "backlog": {
+                            "type": "object",
+                            "properties": {
+                              "window": { "type": "string" },
+                              "threshold": { "type": ["string", "number"] },
+                              "activationThreshold": { "type": ["string", "number"] }
+                            }
+                          },
+                          "latency": {
+                            "type": "object",
+                            "properties": {
+                              "window": { "type": "string" },
+                              "threshold": { "type": ["string", "number"] },
+                              "activationThreshold": { "type": ["string", "number"] }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
             "required": ["name", "queues"]
           }
