@@ -1,0 +1,129 @@
+{{- if and .Values.sidekiq.autoscaling.keda.enabled .Values.observability.metrics.enabled .Values.observability.metrics.podMonitor.enabled }}
+{{- $context := . }}
+{{- $globalKeda := default dict .Values.sidekiq.autoscaling.keda }}
+{{- $globalProm := default dict $globalKeda.prometheus }}
+{{- $serverAddress := $globalProm.serverAddress | default $context.Values.web.autoscaling.keda.prometheus.serverAddress }}
+{{- $presets := default dict $globalProm.presets }}
+{{- range .Values.sidekiq.workers }}
+{{- $workerAutoscaling := default dict .autoscaling }}
+{{- $workerKeda := default dict $workerAutoscaling.keda }}
+{{- if ($workerKeda.enabled | default false) }}
+{{- if has "scheduler" .queues }}
+{{- fail (printf "sidekiq worker %q has queue \"scheduler\" but autoscaling is enabled; the scheduler queue must not be autoscaled (set sidekiq.workers[%s].autoscaling.keda.enabled=false)" .name .name) }}
+{{- end }}
+{{- $workerName := .name }}
+{{- $selector := include "mastodon.kedaSidekiqSelector" (dict "namespace" $context.Release.Namespace "fullname" (include "mastodon.fullname" $context) "worker" $workerName) }}
+{{- $queuesRegex := join "|" .queues }}
+{{- $queueSelector := "" }}
+{{- if eq (len .queues) 1 }}
+{{- $queueSelector = printf "queue=%q" (index .queues 0) }}
+{{- else }}
+{{- $queueSelector = printf "queue=~%q" $queuesRegex }}
+{{- end }}
+
+{{- $presetName := $workerKeda.preset | default $workerName }}
+{{- $preset := default dict (index $presets $presetName) }}
+{{- $presetBacklog := default dict $preset.backlog }}
+{{- $presetLatency := default dict $preset.latency }}
+
+{{- $workerProm := default dict $workerKeda.prometheus }}
+{{- $workerBacklog := default dict $workerProm.backlog }}
+{{- $workerLatency := default dict $workerProm.latency }}
+
+{{- $backlogWindow := (index $workerBacklog "window" | default (index $presetBacklog "window" | default "2m")) }}
+{{- $backlogThreshold := (index $workerBacklog "threshold" | default (index $presetBacklog "threshold")) }}
+{{- $backlogActivationThreshold := (index $workerBacklog "activationThreshold" | default (index $presetBacklog "activationThreshold")) }}
+{{- $backlogQuery := printf "max(max_over_time(sidekiq_queue_backlog{%s,%s}[%s])) or vector(0)" $selector $queueSelector $backlogWindow }}
+
+{{- $latencyWindow := (index $workerLatency "window" | default (index $presetLatency "window" | default "2m")) }}
+{{- $latencyThreshold := (index $workerLatency "threshold" | default (index $presetLatency "threshold")) }}
+{{- $latencyActivationThreshold := (index $workerLatency "activationThreshold" | default (index $presetLatency "activationThreshold")) }}
+{{- $latencyQuery := printf "max(max_over_time(sidekiq_queue_latency_seconds{%s,%s}[%s])) or vector(0)" $selector $queueSelector $latencyWindow }}
+
+{{- if and (not $backlogThreshold) (not $latencyThreshold) }}
+{{- fail (printf "sidekiq worker %q has autoscaling enabled but no KEDA trigger thresholds configured; set sidekiq.workers[%s].autoscaling.keda.preset or provide sidekiq.workers[%s].autoscaling.keda.prometheus.(backlog|latency).threshold" $workerName $workerName $workerName) }}
+{{- end }}
+
+{{- $minReplicaCount := ($workerKeda.minReplicaCount | default (.replicas | default 1)) }}
+{{- $maxReplicaCount := ($workerKeda.maxReplicaCount | default $minReplicaCount) }}
+{{- $pollingInterval := ($workerKeda.pollingInterval | default $globalKeda.pollingInterval) }}
+{{- $cooldownPeriod := ($workerKeda.cooldownPeriod | default $globalKeda.cooldownPeriod) }}
+
+{{- $globalFallback := default dict $globalKeda.fallback }}
+{{- $workerFallback := default dict $workerKeda.fallback }}
+{{- $fallbackEnabled := (index $workerFallback "enabled" | default (index $globalFallback "enabled" | default false)) }}
+{{- $fallbackFailureThreshold := (index $workerFallback "failureThreshold" | default (index $globalFallback "failureThreshold")) }}
+{{- $fallbackReplicas := (index $workerFallback "replicas" | default (index $globalFallback "replicas" | default $minReplicaCount)) }}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "mastodon.fullname" $context }}-sidekiq-{{ $workerName }}
+  labels:
+    {{- include "mastodon.labels" $context | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "mastodon.fullname" $context }}-sidekiq-{{ $workerName }}
+  minReplicaCount: {{ $minReplicaCount }}
+  maxReplicaCount: {{ $maxReplicaCount }}
+  pollingInterval: {{ $pollingInterval }}
+  cooldownPeriod: {{ $cooldownPeriod }}
+  {{- if $fallbackEnabled }}
+  fallback:
+    failureThreshold: {{ $fallbackFailureThreshold }}
+    replicas: {{ $fallbackReplicas }}
+  {{- end }}
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          selectPolicy: Max
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+            - type: Pods
+              value: 4
+              periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          selectPolicy: Max
+          policies:
+            - type: Percent
+              value: 20
+              periodSeconds: 60
+  triggers:
+    {{- if $backlogThreshold }}
+    - type: prometheus
+      name: sidekiq_backlog
+      metricType: AverageValue
+      metadata:
+        serverAddress: {{ $serverAddress | quote }}
+        query: |
+          {{ $backlogQuery }}
+        threshold: {{ $backlogThreshold | quote }}
+        {{- if $backlogActivationThreshold }}
+        activationThreshold: {{ $backlogActivationThreshold | quote }}
+        {{- end }}
+        ignoreNullValues: "true"
+    {{- end }}
+    {{- if $latencyThreshold }}
+    - type: prometheus
+      name: sidekiq_latency
+      metricType: Value
+      metadata:
+        serverAddress: {{ $serverAddress | quote }}
+        query: |
+          {{ $latencyQuery }}
+        threshold: {{ $latencyThreshold | quote }}
+        {{- if $latencyActivationThreshold }}
+        activationThreshold: {{ $latencyActivationThreshold | quote }}
+        {{- end }}
+        ignoreNullValues: "true"
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

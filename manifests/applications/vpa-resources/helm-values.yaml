@@ -631,12 +631,42 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  - name: mastodon-sidekiq-generic-vpa
+  - name: mastodon-sidekiq-default-vpa
     namespace: toot-community
     targetRef:
       apiVersion: apps/v1
       kind: Deployment
-      name: mastodon-sidekiq-generic
+      name: mastodon-sidekiq-default
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          controlledValues: RequestsOnly
+  - name: mastodon-sidekiq-federation-vpa
+    namespace: toot-community
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: mastodon-sidekiq-federation
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          controlledValues: RequestsOnly
+  - name: mastodon-sidekiq-pull-vpa
+    namespace: toot-community
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: mastodon-sidekiq-pull
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          controlledValues: RequestsOnly
+  - name: mastodon-sidekiq-mailers-vpa
+    namespace: toot-community
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: mastodon-sidekiq-mailers
     resourcePolicy:
       containerPolicies:
         - containerName: "*"

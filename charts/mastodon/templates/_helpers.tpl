@@ -242,3 +242,11 @@ PromQL label selector for Mastodon web pods (used by KEDA scaling queries)
 {{- define "mastodon.kedaWebPumaSelector" -}}
 job="{{ .Release.Namespace }}/{{ include "mastodon.fullname" . }}-web"
 {{- end }}
+
+{{/*
+PromQL label selector for Mastodon Sidekiq worker pods (used by KEDA scaling queries)
+Expects a dict with: namespace, fullname, worker
+*/}}
+{{- define "mastodon.kedaSidekiqSelector" -}}
+job="{{ .namespace }}/{{ .fullname }}-sidekiq-{{ .worker }}"
+{{- end }}
