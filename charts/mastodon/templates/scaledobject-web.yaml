@@ -3,7 +3,7 @@
 {{- $maxReplicaCount := .Values.web.autoscaling.keda.maxReplicaCount | default $minReplicaCount }}
 {{- $fallbackReplicas := .Values.web.autoscaling.keda.fallback.replicas | default $minReplicaCount }}
 {{- $selector := include "mastodon.kedaWebPumaSelector" . }}
-{{- $defaultQuery := printf "mastodon:puma_utilization{%s}" $selector }}
+{{- $defaultQuery := printf "((sum(ruby_puma_running_threads{%s}) - sum(ruby_puma_thread_pool_capacity{%s})) / clamp_min(sum(ruby_puma_max_threads{%s}), 1)) * (sum(ruby_puma_max_threads{%s}) > bool 0)" $selector $selector $selector $selector }}
 {{- $query := .Values.web.autoscaling.keda.prometheus.query | default $defaultQuery }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject

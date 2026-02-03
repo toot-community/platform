@@ -296,7 +296,7 @@ web:
               stabilizationWindowSeconds: 0
               policies:
                 - type: Percent
-                  value: 100
+                  value: 200
                   periodSeconds: 60
                 - type: Pods
                   value: 4
@@ -314,10 +314,10 @@ web:
               selectPolicy: Min
       prometheus:
         serverAddress: http://vmsingle-vm.victoriametrics.svc.cluster.local:8428
-        threshold: "0.7"
-        activationThreshold: "0.6"
+        threshold: "0.6"
+        activationThreshold: "0.4"
         metricType: AverageValue
-        query: "" # Leave empty to use the default recording rule (mastodon:puma_utilization).
+        query: "" # Leave empty to use the default raw Puma busy-fraction query.
 
 # =============================================================================
 # COMPONENT: STREAMING

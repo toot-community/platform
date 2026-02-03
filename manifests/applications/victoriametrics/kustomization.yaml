@@ -6,7 +6,6 @@ resources:
   - namespace.yaml
   - dashboards
   - grafana-oidc-credentials.yaml
-  - vmrule-mastodon-puma.yaml
 
 helmCharts:
   - name: victoria-metrics-k8s-stack

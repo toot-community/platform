@@ -45,6 +45,12 @@ web:
       memory: 4Gi
     limits:
       memory: 8Gi
+  autoscaling:
+    keda:
+      enabled: false
+      minReplicaCount: 3
+      maxReplicaCount: 25
+      pollingInterval: 15
 
 streaming:
   baseUrl: wss://streaming.toot.community
