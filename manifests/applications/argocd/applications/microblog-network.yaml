@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: kube-system
+    namespace: microblog-network
     server: https://kubernetes.default.svc
   project: default
   source:
