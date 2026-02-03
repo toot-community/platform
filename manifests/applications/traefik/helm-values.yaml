@@ -41,22 +41,24 @@ global:
 
 ports:
   web:
-    redirections:
-      entryPoint:
-        to: websecure
-        scheme: https
-        permanent: true
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
         - 91.98.11.3/32
   websecure:  
+    http:
+      middlewares:
+        - traefik-system-crowdsec-bouncer@kubernetescrd
     proxyProtocol:
       trustedIPs:
         - 10.0.0.0/8
         - 91.98.11.3/32
-    middlewares:
-        - traefik-system-crowdsec-bouncer@kubernetescrd
 
 deployment:
   replicas: 3
