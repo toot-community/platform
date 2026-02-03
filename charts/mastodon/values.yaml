@@ -334,7 +334,7 @@ streaming:
   image:
     repository: ghcr.io/mastodon/mastodon-streaming
     pullPolicy: IfNotPresent
-    tag: v4.5.5@sha256:de54305f02618c46f74b155ae73d65913a64f288b1d462f357a758f91741884b
+    tag: v4.5.6@sha256:7b7f573c95a04312651bc3ecbe5a549c4dd32123bca53fd04a23d872402a5d9c
 
   # Override database SSL mode for streaming
   databaseSslMode: no-verify
