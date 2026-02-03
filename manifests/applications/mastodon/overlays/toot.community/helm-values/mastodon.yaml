@@ -48,7 +48,7 @@ web:
   autoscaling:
     keda:
       enabled: true
-      minReplicaCount: 3
+      minReplicaCount: 6
       maxReplicaCount: 25
       pollingInterval: 15
 
