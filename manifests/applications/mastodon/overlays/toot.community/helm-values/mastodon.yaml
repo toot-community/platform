@@ -38,7 +38,7 @@ observability:
     namePrefix: toot-community
 
 web:
-  replicas: 12
+  replicas: 20
   resources:
     requests:
       cpu: 683m
@@ -47,7 +47,7 @@ web:
       memory: 8Gi
   autoscaling:
     keda:
-      enabled: true
+      enabled: false
       minReplicaCount: 6
       maxReplicaCount: 25
       pollingInterval: 15
