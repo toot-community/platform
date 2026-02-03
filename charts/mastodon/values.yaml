@@ -313,7 +313,7 @@ web:
                   periodSeconds: 60
               selectPolicy: Min
       prometheus:
-        serverAddress: http://vmsingle-vm.victoriametrics.svc.cluster.local:8429
+        serverAddress: http://vmsingle-vm.victoriametrics.svc.cluster.local:8428
         threshold: "0.7"
         activationThreshold: "0.6"
         metricType: AverageValue
