@@ -47,7 +47,7 @@ web:
       memory: 8Gi
   autoscaling:
     keda:
-      enabled: false
+      enabled: true
       minReplicaCount: 3
       maxReplicaCount: 25
       pollingInterval: 15
