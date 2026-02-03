@@ -48,8 +48,8 @@ web:
   autoscaling:
     keda:
       enabled: true
-      minReplicaCount: 6
-      maxReplicaCount: 80
+      minReplicaCount: 4
+      maxReplicaCount: 40
 
 streaming:
   baseUrl: wss://streaming.toot.community
