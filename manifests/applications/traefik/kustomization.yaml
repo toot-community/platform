@@ -10,7 +10,7 @@ resources:
 
 helmCharts:
   - name: traefik
-    version: "38.0.2"
+    version: "39.0.0"
     releaseName: traefik
     namespace: traefik-system
     valuesFile: helm-values.yaml

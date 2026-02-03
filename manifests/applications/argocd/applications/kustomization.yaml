@@ -14,6 +14,7 @@ resources:
   - hetzner-ccm.yaml
   - haproxy-onload.yaml
   - longhorn.yaml
+  - keda.yaml
   - metrics-server.yaml
   - microblog-network.yaml
   - k8s-oidc-issuer.yaml

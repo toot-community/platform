@@ -92,6 +92,14 @@ config:
         duration: 2160h
     on_success: break
     ---
+    name: mastodon_media_proxy_srcset_abuse_profile
+    filters:
+      - Alert.Remediation == true && Alert.GetScenario() == "toot-community/mastodon-media-proxy-srcset-abuse"
+    decisions:
+      - type: ban
+        duration: 24h
+    on_success: break
+    ---
     name: default_ip_remediation
     filters:
       - Alert.Remediation == true && Alert.GetScope() == "Ip"
@@ -111,6 +119,25 @@ config:
         evt.Meta.ASNNumber in ["132203", "132591", "45090"]
       groupby: evt.Meta.source_ip
       blackhole: 5m
+      labels:
+        service: http
+        type: scraper
+        remediation: true
+    mastodon-media-proxy-srcset-abuse.yaml: |
+      type: trigger
+      name: toot-community/mastodon-media-proxy-srcset-abuse
+      description: "Detect malformed Mastodon /media_proxy requests that look like srcset values being fetched as URLs"
+      filter: |
+        evt.Meta.log_type == "http_access-log" &&
+        evt.Meta.http_verb == "GET" &&
+        evt.Meta.http_path startsWith "/media_proxy/" &&
+        evt.Meta.http_path contains "%20" &&
+        (
+          evt.Meta.http_path contains ",%20https:/" ||
+          evt.Meta.http_path contains "%2C%20https:/"
+        )
+      groupby: evt.Meta.source_ip
+      blackhole: 30m
       labels:
         service: http
         type: scraper

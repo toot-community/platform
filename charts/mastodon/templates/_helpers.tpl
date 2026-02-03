@@ -235,3 +235,10 @@ template:
           securityContext:
             {{- toYaml .Values.global.podDefaults.securityContext | nindent 12 }}
 {{- end }}
+
+{{/*
+PromQL label selector for Mastodon web pods (used by KEDA scaling queries)
+*/}}
+{{- define "mastodon.kedaWebPumaSelector" -}}
+job="{{ .Release.Namespace }}/{{ include "mastodon.fullname" . }}-web"
+{{- end }}

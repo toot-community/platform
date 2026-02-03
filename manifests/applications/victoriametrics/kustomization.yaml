@@ -6,6 +6,7 @@ resources:
   - namespace.yaml
   - dashboards
   - grafana-oidc-credentials.yaml
+  - vmrule-mastodon-puma.yaml
 
 helmCharts:
   - name: victoria-metrics-k8s-stack
@@ -16,7 +17,7 @@ helmCharts:
     includeCRDs: true
     repo: https://victoriametrics.github.io/helm-charts/
   - name: prometheus-operator-crds
-    version: "26.0.0"
+    version: "26.0.1"
     releaseName: prometheus-operator-crds
     namespace: victoriametrics
     includeCRDs: true

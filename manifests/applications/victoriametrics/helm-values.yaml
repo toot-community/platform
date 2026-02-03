@@ -127,6 +127,7 @@ vmcluster:
 vmalert:
   remoteWriteVMAgent: true
   spec:
+    selectAllByDefault: true
     replicaCount: 1
     resources:
       requests:
