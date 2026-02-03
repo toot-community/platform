@@ -11,3 +11,9 @@ spec:
       crowdsecLapiHost: crowdsec-service.crowdsec.svc.cluster.local:8080
       crowdsecLapiPath: "/"
       crowdsecLapiKeyFile: /etc/traefik/secrets/crowdsec_middleware_lapi_key
+      crowdsecAppsecEnabled: true
+      crowdsecAppsecScheme: http
+      crowdsecAppsecHost: crowdsec-appsec-service.crowdsec.svc.cluster.local:7422
+      crowdsecAppsecPath: "/"
+      crowdsecAppsecFailureBlock: false
+      crowdsecAppsecUnreachableBlock: false

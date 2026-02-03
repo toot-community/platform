@@ -82,6 +82,76 @@ lapi:
           name: crowdsec-secrets
           key: BOUNCER_KEY_traefik
 
+appsec:
+  enabled: true
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  acquisitions:
+    - source: appsec
+      listen_addr: 0.0.0.0:7422
+      path: /
+      appsec_configs:
+        - crowdsecurity/appsec-default
+        - toot-community/mastodon-media-proxy-srcset-abuse-inband
+      labels:
+        type: appsec
+  env:
+    - name: COLLECTIONS
+      value: "crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+  configs:
+    mastodon-media-proxy-srcset-abuse-inband.yaml: |
+      name: toot-community/mastodon-media-proxy-srcset-abuse-inband
+      default_remediation: ban
+      inband_rules:
+        - toot-community/mastodon-media-proxy-srcset-abuse
+  rules:
+    mastodon-media-proxy-srcset-abuse.yaml: |
+      name: toot-community/mastodon-media-proxy-srcset-abuse
+      description: "Block malformed Mastodon /media_proxy requests that look like srcset values being fetched as URLs"
+      rules:
+        - and:
+            - zones:
+                - METHOD
+              match:
+                type: equals
+                value: GET
+            - zones:
+                - URI
+              match:
+                type: startsWith
+                value: /media_proxy/
+            - or:
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: "%20"
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: " "
+            - or:
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: ",%20https:/"
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: "%2C%20https:/"
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: ", https:/"
+
 config:
   profiles.yaml: |
     name: tencent_scraper_profile
