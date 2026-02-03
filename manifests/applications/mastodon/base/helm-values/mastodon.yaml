@@ -21,7 +21,7 @@ observability:
     exporterUri: http://vt-vt-single-server.victoriatraces.svc.cluster.local:10428/insert/opentelemetry/
   metrics:
     podMonitor:
-      interval: 15s
+      interval: 10s
 
 ingress:
   web:

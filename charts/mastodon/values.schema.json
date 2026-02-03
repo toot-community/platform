@@ -243,15 +243,24 @@
                     "replicas": { "type": ["integer", "null"], "minimum": 0 }
                   }
                 },
-                "advanced": { "type": "object" },
                 "prometheus": {
                   "type": "object",
                   "properties": {
                     "serverAddress": { "type": "string" },
-                    "threshold": { "type": ["string", "number"] },
-                    "activationThreshold": { "type": ["string", "number"] },
-                    "metricType": { "type": "string" },
-                    "query": { "type": "string" }
+                    "busyFraction": {
+                      "type": "object",
+                      "properties": {
+                        "threshold": { "type": ["string", "number"] },
+                        "activationThreshold": { "type": ["string", "number"] }
+                      }
+                    },
+                    "backlog": {
+                      "type": "object",
+                      "properties": {
+                        "threshold": { "type": ["string", "number"] },
+                        "activationThreshold": { "type": ["string", "number"] }
+                      }
+                    }
                   }
                 }
               }

@@ -3,8 +3,11 @@
 {{- $maxReplicaCount := .Values.web.autoscaling.keda.maxReplicaCount | default $minReplicaCount }}
 {{- $fallbackReplicas := .Values.web.autoscaling.keda.fallback.replicas | default $minReplicaCount }}
 {{- $selector := include "mastodon.kedaWebPumaSelector" . }}
-{{- $defaultQuery := printf "((sum(ruby_puma_running_threads{%s}) - sum(ruby_puma_thread_pool_capacity{%s})) / clamp_min(sum(ruby_puma_max_threads{%s}), 1)) * (sum(ruby_puma_max_threads{%s}) > bool 0)" $selector $selector $selector $selector }}
-{{- $query := .Values.web.autoscaling.keda.prometheus.query | default $defaultQuery }}
+{{- $busyQuery := printf "max_over_time((1 - (sum(ruby_puma_thread_pool_capacity{%s}) / clamp_min(sum(ruby_puma_max_threads{%s}), 1)))[2m:10s])" $selector $selector }}
+{{- $backlogQuery := printf "max_over_time(sum(ruby_puma_request_backlog{%s})[1m:10s])" $selector }}
+{{- $prom := default dict .Values.web.autoscaling.keda.prometheus }}
+{{- $busy := default dict $prom.busyFraction }}
+{{- $backlog := default dict $prom.backlog }}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -25,18 +28,45 @@ spec:
     failureThreshold: {{ .Values.web.autoscaling.keda.fallback.failureThreshold }}
     replicas: {{ $fallbackReplicas }}
   {{- end }}
-  {{- with .Values.web.autoscaling.keda.advanced }}
   advanced:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          selectPolicy: Max
+          policies:
+            - type: Percent
+              value: 200
+              periodSeconds: 60
+            - type: Pods
+              value: 10
+              periodSeconds: 60
+        scaleDown:
+          stabilizationWindowSeconds: 900
+          selectPolicy: Min
+          policies:
+            - type: Percent
+              value: 10
+              periodSeconds: 60
   triggers:
     - type: prometheus
-      metricType: {{ .Values.web.autoscaling.keda.prometheus.metricType | default "AverageValue" }}
+      name: puma_backlog
+      metricType: AverageValue
       metadata:
-        serverAddress: {{ .Values.web.autoscaling.keda.prometheus.serverAddress | quote }}
-        query: {{ $query | quote }}
-        threshold: {{ .Values.web.autoscaling.keda.prometheus.threshold | quote }}
-        {{- with .Values.web.autoscaling.keda.prometheus.activationThreshold }}
-        activationThreshold: {{ . | quote }}
-        {{- end }}
+        serverAddress: {{ $prom.serverAddress | quote }}
+        query: |
+          {{ $backlogQuery }}
+        threshold: {{ index $backlog "threshold" | default "40" | quote }}
+        activationThreshold: {{ index $backlog "activationThreshold" | default "10" | quote }}
+        ignoreNullValues: "true"
+    - type: prometheus
+      name: puma_busy_fraction
+      metricType: Value
+      metadata:
+        serverAddress: {{ $prom.serverAddress | quote }}
+        query: |
+          {{ $busyQuery }}
+        threshold: {{ index $busy "threshold" | default "0.70" | quote }}
+        activationThreshold: {{ index $busy "activationThreshold" | default "0.60" | quote }}
+        ignoreNullValues: "true"
 {{- end }}

@@ -38,7 +38,7 @@ observability:
     namePrefix: toot-community
 
 web:
-  replicas: 20
+  replicas: 4
   resources:
     requests:
       cpu: 683m
@@ -47,10 +47,9 @@ web:
       memory: 8Gi
   autoscaling:
     keda:
-      enabled: false
+      enabled: true
       minReplicaCount: 6
-      maxReplicaCount: 25
-      pollingInterval: 15
+      maxReplicaCount: 80
 
 streaming:
   baseUrl: wss://streaming.toot.community

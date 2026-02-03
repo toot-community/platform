@@ -38,7 +38,6 @@ web:
       enabled: true
       minReplicaCount: 3
       maxReplicaCount: 10
-      pollingInterval: 15
 
 streaming:
   baseUrl: wss://streaming.microblog.network
