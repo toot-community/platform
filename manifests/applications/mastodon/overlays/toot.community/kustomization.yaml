@@ -47,7 +47,7 @@ images:
   - name: ghcr.io/mastodon/mastodon-streaming
     newTag: "v4.5.5@sha256:de54305f02618c46f74b155ae73d65913a64f288b1d462f357a758f91741884b"
   - name: varnish
-    newTag: "8.0.0@sha256:1c538c66d3c2fa76e22385cd13a9a08e4ca751d0db664d9e6c88f77192c8f970"
+    newTag: "8.0.0@sha256:226a23129ecf7c69d670e409fc8be49d1c1bfc2fad8557f66f62dd8dbdcc3fe1"
  
 patches:
   - path: database-cluster.yaml
