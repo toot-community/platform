@@ -240,5 +240,5 @@ template:
 PromQL label selector for Mastodon web pods (used by KEDA scaling queries)
 */}}
 {{- define "mastodon.kedaWebPumaSelector" -}}
-namespace="{{ .Release.Namespace }}",pod=~"{{ include "mastodon.fullname" . }}-web-.*"
+job="{{ .Release.Namespace }}/{{ include "mastodon.fullname" . }}-web"
 {{- end }}
