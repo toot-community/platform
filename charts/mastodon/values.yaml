@@ -317,7 +317,7 @@ web:
         threshold: "0.7"
         activationThreshold: "0.6"
         metricType: AverageValue
-        query: "" # Leave empty to use the default Puma utilization query.
+        query: "" # Leave empty to use the default recording rule (mastodon:puma_utilization).
 
 # =============================================================================
 # COMPONENT: STREAMING
