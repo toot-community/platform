@@ -32,3 +32,4 @@ terraform.rc
 .envrc
 
 manifests/**/charts
+out/*
