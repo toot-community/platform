@@ -97,7 +97,7 @@ config:
       - Alert.Remediation == true && Alert.GetScenario() == "toot-community/mastodon-media-proxy-srcset-abuse"
     decisions:
       - type: ban
-        duration: 24h
+        duration: 2160h
     on_success: break
     ---
     name: default_ip_remediation
