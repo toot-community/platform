@@ -48,7 +48,7 @@ web:
   autoscaling:
     keda:
       enabled: true
-      minReplicaCount: 4
+      minReplicaCount: 6
       maxReplicaCount: 40
 
 streaming:
