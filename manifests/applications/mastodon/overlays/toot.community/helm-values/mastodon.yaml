@@ -76,23 +76,86 @@ ingress:
         secretName: ingress-streaming-tls
 
 sidekiq:
+  autoscaling:
+    keda:
+      enabled: true
   workers:
-    - name: generic
+    - name: default
       concurrency: 25
-      replicas: 10
+      replicas: 5
       queues:
         - default
-        - mailers
-        - push
-        - ingress
-        - fasp
-        - pull
+      autoscaling:
+        keda:
+          enabled: true
+          preset: default
+          minReplicaCount: 5
+          maxReplicaCount: 25
       resources:
         requests:
           cpu: 1111m
           memory: 4Gi
         limits:
           memory: 8Gi
+
+    - name: federation
+      concurrency: 25
+      replicas: 3
+      queues:
+        - push
+        - ingress
+        - fasp
+      autoscaling:
+        keda:
+          enabled: true
+          preset: federation
+          minReplicaCount: 3
+          maxReplicaCount: 20
+      resources:
+        requests:
+          cpu: 1111m
+          memory: 4Gi
+        limits:
+          memory: 8Gi
+
+    - name: pull
+      concurrency: 25
+      replicas: 1
+      queues:
+        - pull
+      autoscaling:
+        keda:
+          enabled: true
+          preset: pull
+          cooldownPeriod: 600
+          minReplicaCount: 1
+          maxReplicaCount: 15
+      resources:
+        requests:
+          cpu: 1111m
+          memory: 4Gi
+        limits:
+          memory: 8Gi
+
+    - name: mailers
+      concurrency: 25
+      replicas: 1
+      queues:
+        - mailers
+      autoscaling:
+        keda:
+          enabled: true
+          preset: mailers
+          cooldownPeriod: 600
+          minReplicaCount: 1
+          maxReplicaCount: 5
+      resources:
+        requests:
+          cpu: 1111m
+          memory: 4Gi
+        limits:
+          memory: 8Gi
+
     - name: scheduler
       concurrency: 25
       replicas: 1

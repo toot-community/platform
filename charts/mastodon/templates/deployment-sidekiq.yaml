@@ -18,7 +18,9 @@ spec:
   strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if .replicas }}
+  {{- $workerAutoscaling := default dict .autoscaling }}
+  {{- $workerKeda := default dict $workerAutoscaling.keda }}
+  {{- if and (not (and $context.Values.sidekiq.autoscaling.keda.enabled ($workerKeda.enabled | default false))) .replicas }}
   replicas: {{ .replicas }}
   {{- end }}
   template:
