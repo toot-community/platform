@@ -20,4 +20,4 @@ spec:
               +
               (1 - (mastodon:puma_thread_pool_capacity:sum / clamp_min(mastodon:puma_max_threads:sum, 1)))
             ) / 2
-            * on(job, namespace) (mastodon:puma_max_threads:sum > 0)
+            * on(job, namespace) (mastodon:puma_max_threads:sum > bool 0)
