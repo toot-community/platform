@@ -15,3 +15,9 @@ helmCharts:
     valuesFile: helm-values.yaml
     includeCRDs: true
     repo: https://crowdsecurity.github.io/helm-charts
+
+patches:
+  - target:
+      kind: DaemonSet
+      name: crowdsec-agent
+    path: remove-agent-cpu-limit.json
