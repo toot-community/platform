@@ -3,7 +3,6 @@ container_runtime: containerd
 agent:
   resources:
     limits:
-      cpu: "1"
       memory: "1Gi"
     requests:
       cpu: "500m"

@@ -178,6 +178,7 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          controlledValues: RequestsOnly
   - name: crowdsec-capi-register-job-vpa
     namespace: crowdsec
     targetRef:
