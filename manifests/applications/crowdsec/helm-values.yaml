@@ -124,22 +124,27 @@ appsec:
               match:
                 type: startsWith
                 value: /media_proxy/
-            - zones:
-                - URI
-              match:
-                type: contains
-                value: "%20"
             - or:
                 - zones:
                     - URI
                   match:
                     type: contains
-                    value: ",%20https:/"
+                    value: ",%20https:"
                 - zones:
                     - URI
                   match:
                     type: contains
-                    value: "%2C%20https:/"
+                    value: "%2C%20https:"
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: ", https:"
+                - zones:
+                    - URI
+                  match:
+                    type: contains
+                    value: "%2C https:"
 
 config:
   profiles.yaml: |
