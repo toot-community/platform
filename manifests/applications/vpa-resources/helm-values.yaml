@@ -169,16 +169,6 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  - name: crowdsec-agent-vpa
-    namespace: crowdsec
-    targetRef:
-      apiVersion: apps/v1
-      kind: DaemonSet
-      name: crowdsec-agent
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
-          controlledValues: RequestsOnly
   - name: crowdsec-capi-register-job-vpa
     namespace: crowdsec
     targetRef:
