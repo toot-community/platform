@@ -565,6 +565,8 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          minAllowed:
+            memory: 2Gi
   - name: mastodon-cleanup-unused-media-profiles-vpa
     namespace: microblog-network
     targetRef:
@@ -574,6 +576,8 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          minAllowed:
+            memory: 2Gi
   - name: mastodon-remove-preview-cards-vpa
     namespace: microblog-network
     targetRef:
