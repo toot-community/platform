@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - argocd.yaml
+  - cloudflared.yaml
   - cert-manager.yaml
   - cilium.yaml
   - cloudnative-pg.yaml

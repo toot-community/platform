@@ -1,0 +1,43 @@
+replicaCount: 3
+
+cloudflare:
+  tunnelTokenSecretName: cloudflared-public-credentials
+  tunnelTokenSecretKey: token
+
+serviceMonitor:
+  enabled: true
+
+fullnameOverride: cloudflared-public
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: 128Mi
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudflare-tunnel
+              app.kubernetes.io/instance: cloudflared-public
+          topologyKey: kubernetes.io/hostname
