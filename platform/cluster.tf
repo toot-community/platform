@@ -57,9 +57,6 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
     }),
     templatefile("${path.module}/talos/patches/cp-enable-talos-service-accounts.yaml", {}),
     templatefile("${path.module}/talos/patches/cp-monitoring-listen-all-interfaces.yaml", {}),
-    templatefile("${path.module}/talos/patches/cp-service-account-issuer.yaml", {
-      oidc_issuer_url : var.oidc_issuer_url,
-    }),
     templatefile("${path.module}/talos/patches/cp-hcloud-install-disk.yaml", {}),
     templatefile("${path.module}/talos/patches/cp-set-etcd-advertised-subnets.yaml", {
       vpc_cidr : var.vpc_cidr,

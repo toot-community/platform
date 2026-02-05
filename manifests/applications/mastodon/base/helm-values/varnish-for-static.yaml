@@ -67,10 +67,7 @@ onload:
   port: 8080
 
 gateway:
-  enabled: true
-  parentRefs:
-    - name: shared
-      namespace: traefik-system
+  enabled: false
 
 # Migration mode configuration
 migration:

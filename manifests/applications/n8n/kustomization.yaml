@@ -6,7 +6,6 @@ resources:
   - configuration.yaml
   - database.yaml
   - deployment.yaml
-  - ingress.yaml
   - namespace.yaml
   - secret.yaml
   - service.yaml

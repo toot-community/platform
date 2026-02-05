@@ -23,17 +23,5 @@ resources:
 
 ingress:
   enabled: false
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  hosts:
-    - host: static.microblog.network
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: static.microblog.network-tls
-      hosts:
-        - static.microblog.network
       
 replicaCount: 1

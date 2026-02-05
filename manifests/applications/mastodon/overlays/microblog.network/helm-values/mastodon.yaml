@@ -45,12 +45,14 @@ streaming:
 
 ingress:
   web:
+    enabled: false
     host: *instanceDomain
     tls:
       - hosts:
           - *instanceDomain
         secretName: ingress-web-tls
   streaming:
+    enabled: false
     host: *streamingDomain
     tls:
       - hosts:
@@ -99,6 +101,7 @@ sidekiq:
 
 s3Gateway:
   ingress:
+    enabled: false
     host: *staticDomain
     tls:
       - hosts:

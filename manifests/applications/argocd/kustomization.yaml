@@ -8,7 +8,6 @@ resources:
   - platform-repository.yaml
   - ./applications
   - namespace.yaml
-  - ingress.yaml
   - secrets.yaml
 
 patches:
