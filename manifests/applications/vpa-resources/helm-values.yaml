@@ -56,6 +56,43 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+  # cert-manager
+  - name: cert-manager-vpa
+    namespace: cert-manager
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: cert-manager
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: cert-manager-cainjector-vpa
+    namespace: cert-manager
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: cert-manager-cainjector
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: cert-manager-webhook-vpa
+    namespace: cert-manager
+    targetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: cert-manager-webhook
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+  - name: cert-manager-startupapicheck-vpa
+    namespace: cert-manager
+    targetRef:
+      apiVersion: batch/v1
+      kind: Job
+      name: cert-manager-startupapicheck
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
   # cilium
   - name: cilium-operator-vpa
     namespace: kube-system

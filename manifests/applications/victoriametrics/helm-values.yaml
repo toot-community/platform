@@ -14,7 +14,7 @@ victoria-metrics-operator:
   admissionWebhooks:
     enabled: true
     certManager:
-      enabled: false
+      enabled: true
 
   replicaCount: 1
   enabled: true
