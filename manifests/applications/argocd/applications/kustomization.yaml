@@ -7,7 +7,6 @@ resources:
   - cert-manager.yaml
   - cilium.yaml
   - cloudnative-pg.yaml
-  - crowdsec.yaml
   - descheduler.yaml
   - dex.yaml
   - n8n.yaml
@@ -18,7 +17,6 @@ resources:
   - keda.yaml
   - metrics-server.yaml
   - microblog-network.yaml
-  - k8s-oidc-issuer.yaml
   - talos-ccm.yaml
   - victoriametrics.yaml
   - vertical-pod-autoscaler.yaml
@@ -28,4 +26,3 @@ resources:
   - victoriatraces.yaml
   - robusta.yaml
   - local-path-storage.yaml
-  - traefik.yaml

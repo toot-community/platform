@@ -124,16 +124,4 @@ config:
         useLoginAsID: false
 
 ingress:
-  enabled: true
-  className: traefik
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  hosts:
-    - host: idp.toot.community
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: dex-tls
-      hosts:
-        - idp.toot.community
+  enabled: false

@@ -31,16 +31,7 @@ grafana:
     - name: grafana-oidc-credentials
 
   ingress:
-    enabled: true
-    ingressClassName: traefik
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-    hosts:
-      - monitoring.toot.community
-    tls:
-      - secretName: monitoring-toot-community-tls
-        hosts:
-          - monitoring.toot.community
+    enabled: false
 
   sidecar:
     dashboards:

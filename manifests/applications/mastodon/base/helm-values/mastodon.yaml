@@ -25,15 +25,12 @@ observability:
 
 ingress:
   web:
+    enabled: false
     serviceOverride:
       name: varnish-for-app
       port: 80
+  streaming:
+    enabled: false
 
 gateway:
-  enabled: true
-  parentRefs:
-    - name: shared
-      namespace: traefik-system
-  web:
-    wwwRedirect:
-      enabled: true
+  enabled: false

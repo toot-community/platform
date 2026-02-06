@@ -18,7 +18,3 @@ configMapGenerator:
     files:
       - redis.json
     options: *options
-  - name: traefik
-    files:
-      - traefik.json
-    options: *options

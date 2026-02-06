@@ -159,34 +159,6 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  # crowdsec
-  - name: crowdsec-lapi-vpa
-    namespace: crowdsec
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: crowdsec-lapi
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
-  - name: crowdsec-capi-register-job-vpa
-    namespace: crowdsec
-    targetRef:
-      apiVersion: batch/v1
-      kind: Job
-      name: crowdsec-capi-register-job
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
-  - name: crowdsec-lapi-cscli-register-job-vpa
-    namespace: crowdsec
-    targetRef:
-      apiVersion: batch/v1
-      kind: Job
-      name: crowdsec-lapi-cscli-register-job
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
   # descheduler
   - name: descheduler-vpa
     namespace: kube-system
@@ -227,17 +199,6 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  # k8s-oidc-issuer
-  - name: oidc-proxy-vpa
-    namespace: oidc-issuer
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: oidc-proxy
-    resourcePolicy:
-      containerPolicies:
-        - containerName: oidc-proxy
-        - containerName: oidc-refresh
   # local-path-storage
   - name: local-path-provisioner-vpa
     namespace: local-path-storage
@@ -389,16 +350,6 @@ vpas:
       apiVersion: apps/v1
       kind: Deployment
       name: talos-cloud-controller-manager
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
-  # traefik
-  - name: traefik-vpa
-    namespace: traefik-system
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: traefik
     resourcePolicy:
       containerPolicies:
         - containerName: "*"

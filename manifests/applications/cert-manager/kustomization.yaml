@@ -3,8 +3,6 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - clusterissuer-letsencrypt-http.yaml
-  - clusterissuer-letsencrypt-route53.yaml
 
 helmCharts:
   - repo: https://charts.jetstack.io

@@ -73,15 +73,3 @@ initContainers:
 
 ingress:
   enabled: false
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  hosts:
-    - host: static.toot.community
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: static.toot.community-tls
-      hosts:
-        - static.toot.community

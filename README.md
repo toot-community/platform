@@ -79,5 +79,4 @@ This bootstrap process installs:
 - 1Password Connect for secure secrets management
 - ArgoCD for GitOps deployments
 - Core networking (Cilium)
-- Certificate management (cert-manager)
 - Other essential cluster services defined in the manifests
