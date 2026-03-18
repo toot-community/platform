@@ -14,7 +14,7 @@ data:
   N8N_EDITOR_BASE_URL: "https://workflows.toot.community"
   N8N_TEMPLATES_ENABLED: "false"
   EXECUTIONS_DATA_PRUNE: "true"
-  EXECUTIONS_DATA_MAX_AGES: "336"
+  EXECUTIONS_DATA_MAX_AGE: "720"
   GENERIC_TIMEZONE: "Europe/Amsterdam"
   N8N_HOST: "workflows.toot.community"
   N8N_PORT: "5678"
