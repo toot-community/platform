@@ -11,7 +11,7 @@ resources:
   - dex.yaml
   - n8n.yaml
   - elastic-operator.yaml
-  - hetzner-ccm.yaml
+
   - haproxy-onload.yaml
   - longhorn.yaml
   - keda.yaml
