@@ -7,15 +7,6 @@ networking:
   enabled: false
 
 env:
-  HCLOUD_NETWORK:
-    valueFrom:
-      secretKeyRef:
-        name: hcloud
-        key: network
-
-  HCLOUD_NETWORK_ROUTES_ENABLED:
-    value: "false"
-
   HCLOUD_TOKEN:
     valueFrom:
       secretKeyRef:
@@ -35,6 +26,6 @@ env:
         name: hcloud
         key: robot-password
         optional: true
-        
-  HCLOUD_NETWORK_DISABLE_ATTACHED_CHECK:
-    value: "true"
+
+  ROBOT_FORWARD_INTERNAL_IPS:
+    value: "false"
