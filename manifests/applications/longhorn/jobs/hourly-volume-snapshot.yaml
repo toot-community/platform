@@ -9,5 +9,5 @@ spec:
   groups:
   - default
   name: hourly-volume-snapshot
-  retain: 24
+  retain: 4
   task: snapshot
