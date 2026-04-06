@@ -22,6 +22,14 @@ victoria-metrics-operator:
     enabled: true
 
 grafana:
+  service:
+    labels:
+      teleport.dev/enabled: "true"
+    annotations:
+      teleport.dev/name: grafana
+      teleport.dev/port: "80"
+      teleport.dev/protocol: http
+      teleport.dev/description: "Grafana monitoring dashboards"
   vmScrape:
     spec:
       selector:
@@ -95,6 +103,15 @@ defaultDashboards:
 vmsingle:
   enabled: true
   spec:
+    serviceSpec:
+      metadata:
+        labels:
+          teleport.dev/enabled: "true"
+        annotations:
+          teleport.dev/name: victoriametrics
+          teleport.dev/port: "8429"
+          teleport.dev/protocol: http
+          teleport.dev/description: "VictoriaMetrics time-series database"
     resources:
       requests:
         cpu: 350m
@@ -217,6 +234,15 @@ coreDns:
 
 alertmanager:
   spec:
+    serviceSpec:
+      metadata:
+        labels:
+          teleport.dev/enabled: "true"
+        annotations:
+          teleport.dev/name: alertmanager
+          teleport.dev/port: "9093"
+          teleport.dev/protocol: http
+          teleport.dev/description: "Alertmanager alert routing"
     replicaCount: 1
   config:
     receivers:

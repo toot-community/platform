@@ -15,3 +15,4 @@ patches:
   - path: patches/argocd-rbac-cm.yaml
   - path: patches/argocd-cmd-params-cm.yaml
   - path: patches/redis-ha-haproxy-affinity-patch.yaml
+  - path: patches/argocd-server-teleport.yaml

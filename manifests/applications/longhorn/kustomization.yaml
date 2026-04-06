@@ -10,6 +10,23 @@ resources:
   - storageclasses
   - rules.yaml
 
+patches:
+  - target:
+      kind: Service
+      name: longhorn-frontend
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: longhorn-frontend
+        labels:
+          teleport.dev/enabled: "true"
+        annotations:
+          teleport.dev/name: longhorn
+          teleport.dev/port: "80"
+          teleport.dev/protocol: http
+          teleport.dev/description: "Longhorn distributed storage management"
+
 helmCharts:
   - name: longhorn
     releaseName: longhorn

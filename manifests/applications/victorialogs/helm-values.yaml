@@ -2,6 +2,14 @@ serviceAccount:
   create: true
   
 server:
+  service:
+    labels:
+      teleport.dev/enabled: "true"
+    annotations:
+      teleport.dev/name: victorialogs
+      teleport.dev/port: "9428"
+      teleport.dev/protocol: http
+      teleport.dev/description: "VictoriaLogs log aggregation"
   retentionDiskSpaceUsage: "100"
   extraArgs:
     envflag.enable: true
