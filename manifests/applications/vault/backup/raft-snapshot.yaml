@@ -36,8 +36,8 @@ spec:
                   FILENAME="vault-raft-$(date +%Y%m%d-%H%M%S).snap"
                   vault operator raft snapshot save "/snapshots/${FILENAME}"
                   echo "${FILENAME}" > /snapshots/FILENAME
-                  vault kv get -field=AWS_ACCESS_KEY_ID secret/backup/r2 > /snapshots/R2_KEY_ID
-                  vault kv get -field=AWS_SECRET_ACCESS_KEY secret/backup/r2 > /snapshots/R2_SECRET
+                  vault kv get -field=AWS_ACCESS_KEY_ID secret/vault/backup/r2 > /snapshots/R2_KEY_ID
+                  vault kv get -field=AWS_SECRET_ACCESS_KEY secret/vault/backup/r2 > /snapshots/R2_SECRET
               env:
                 - name: VAULT_ADDR
                   value: "https://vault-active.vault.svc.cluster.local:8200"
