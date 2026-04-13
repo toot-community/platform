@@ -26,3 +26,4 @@ resources:
   - victoriatraces.yaml
   - robusta.yaml
   - local-path-storage.yaml
+  - vault.yaml
