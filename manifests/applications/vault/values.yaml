@@ -1,0 +1,128 @@
+global:
+  enabled: true
+  tlsDisable: false
+  serverTelemetry:
+    prometheusOperator: true
+
+server:
+  image:
+    repository: hashicorp/vault
+    tag: "1.21.2"
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: local-path
+    accessMode: ReadWriteOnce
+
+  auditStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: local-path
+    accessMode: ReadWriteOnce
+
+  volumes:
+    - name: vault-tls
+      secret:
+        secretName: vault-server-tls
+
+  volumeMounts:
+    - name: vault-tls
+      mountPath: /vault/userconfig/tls
+      readOnly: true
+
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/userconfig/tls/ca.crt
+    VAULT_ADDR: https://127.0.0.1:8200
+    VAULT_UI_DEFAULT_AUTH: userpass
+
+  extraSecretEnvironmentVars:
+    - envName: AWS_ACCESS_KEY_ID
+      secretName: vault-aws-kms-credentials
+      secretKey: AWS_ACCESS_KEY_ID
+    - envName: AWS_SECRET_ACCESS_KEY
+      secretName: vault-aws-kms-credentials
+      secretKey: AWS_SECRET_ACCESS_KEY
+
+  ha:
+    enabled: true
+    replicas: 3
+
+    raft:
+      enabled: true
+      setNodeId: true
+
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable     = 0
+          address         = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_cert_file   = "/vault/userconfig/tls/tls.crt"
+          tls_key_file    = "/vault/userconfig/tls/tls.key"
+          tls_client_ca_file = "/vault/userconfig/tls/ca.crt"
+
+          telemetry {
+            unauthenticated_metrics_access = true
+          }
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+
+          retry_join {
+            leader_api_addr         = "https://vault-0.vault-internal:8200"
+            leader_tls_servername   = "vault-0.vault-internal"
+            leader_ca_cert_file     = "/vault/userconfig/tls/ca.crt"
+            leader_client_cert_file = "/vault/userconfig/tls/tls.crt"
+            leader_client_key_file  = "/vault/userconfig/tls/tls.key"
+          }
+          retry_join {
+            leader_api_addr         = "https://vault-1.vault-internal:8200"
+            leader_tls_servername   = "vault-1.vault-internal"
+            leader_ca_cert_file     = "/vault/userconfig/tls/ca.crt"
+            leader_client_cert_file = "/vault/userconfig/tls/tls.crt"
+            leader_client_key_file  = "/vault/userconfig/tls/tls.key"
+          }
+          retry_join {
+            leader_api_addr         = "https://vault-2.vault-internal:8200"
+            leader_tls_servername   = "vault-2.vault-internal"
+            leader_ca_cert_file     = "/vault/userconfig/tls/ca.crt"
+            leader_client_cert_file = "/vault/userconfig/tls/tls.crt"
+            leader_client_key_file  = "/vault/userconfig/tls/tls.key"
+          }
+        }
+
+        seal "awskms" {
+          region     = "eu-central-1"
+          kms_key_id = "arn:aws:kms:eu-central-1:875175157867:key/1bce7cd9-ffe2-4c86-bd02-e973f8df47cb"
+        }
+
+        service_registration "kubernetes" {}
+
+        telemetry {
+          prometheus_retention_time = "30s"
+          disable_hostname          = true
+        }
+
+    disruptionBudget:
+      enabled: true
+      maxUnavailable: 1
+
+ui:
+  enabled: true
+  serviceType: ClusterIP
+
+injector:
+  enabled: false
+
+csi:
+  enabled: false

@@ -1,0 +1,69 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: vault-selfsigned
+  namespace: vault
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-ca
+  namespace: vault
+spec:
+  isCA: true
+  commonName: vault-ca
+  secretName: vault-ca-tls
+  duration: 87600h
+  renewBefore: 8760h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: vault-selfsigned
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: vault-ca-issuer
+  namespace: vault
+spec:
+  ca:
+    secretName: vault-ca-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-server-tls
+  namespace: vault
+spec:
+  secretName: vault-server-tls
+  duration: 8760h
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - vault
+    - vault.vault
+    - vault.vault.svc
+    - vault.vault.svc.cluster.local
+    - vault-0.vault-internal
+    - vault-1.vault-internal
+    - vault-2.vault-internal
+    - vault-0.vault-internal.vault.svc.cluster.local
+    - vault-1.vault-internal.vault.svc.cluster.local
+    - vault-2.vault-internal.vault.svc.cluster.local
+    - vault-active.vault.svc.cluster.local
+    - vault-standby.vault.svc.cluster.local
+    - vault-ui.vault.svc.cluster.local
+  ipAddresses:
+    - 127.0.0.1
+  issuerRef:
+    name: vault-ca-issuer
+    kind: Issuer

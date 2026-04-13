@@ -1,0 +1,78 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: vault
+    role: alert-rules
+  name: prometheus-vault-rules
+  namespace: monitoring
+spec:
+  groups:
+    - name: vault.critical
+      interval: 30s
+      rules:
+        - alert: VaultSealed
+          expr: vault_core_unsealed == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Vault node is sealed"
+            description: "Vault pod {{ $labels.pod }} is sealed and cannot serve requests."
+        - alert: VaultDown
+          expr: up{job="vault"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Vault instance is down"
+            description: "Vault pod {{ $labels.pod }} is not responding to Prometheus scrapes."
+        - alert: VaultNoActiveNode
+          expr: count(vault_core_active == 1) == 0
+          for: 30s
+          labels:
+            severity: critical
+          annotations:
+            summary: "No active Vault leader"
+            description: "Vault cluster has no active leader. Write requests cannot be served."
+        - alert: VaultAuditLogFailure
+          expr: increase(vault_audit_log_request_failure[5m]) > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: "Vault audit log failure"
+            description: "Vault cannot write to audit log. All requests will be blocked if all audit devices fail."
+    - name: vault.warning
+      interval: 60s
+      rules:
+        - alert: VaultLeadershipChange
+          expr: changes(vault_core_active[5m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault leadership changed"
+            description: "Vault leader election occurred in the last 5 minutes."
+        - alert: VaultRaftHighCommitTime
+          expr: vault_raft_commitTime_mean > 2000
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault Raft commit time elevated"
+            description: "Raft commit time is {{ $value }}ms (threshold: 2000ms). Check storage performance."
+        - alert: VaultHighMemoryUsage
+          expr: vault_runtime_sys_bytes / (1024*1024*1024) > 1.5
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault memory usage high"
+            description: "Vault is using {{ $value | humanize }}GB of memory."
+        - alert: VaultTokenCountHigh
+          expr: vault_token_count > 100000
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault token count elevated"
+            description: "Vault has {{ $value }} active tokens. Possible token leak."

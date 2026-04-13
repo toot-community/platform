@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: vault
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+# Allow Raft replication between Vault pods (port 8201)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vault-raft
+  namespace: vault
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: vault
+      component: server
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: vault
+              component: server
+      ports:
+        - port: 8201
+          protocol: TCP
+  policyTypes:
+    - Ingress
+---
+# Allow API/UI access on port 8200 from within the cluster
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vault-api
+  namespace: vault
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: vault
+      component: server
+  ingress:
+    - ports:
+        - port: 8200
+          protocol: TCP
+  policyTypes:
+    - Ingress

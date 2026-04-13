@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vault
+
+resources:
+  - namespace.yaml
+  - certificates
+  - backup
+  - rules.yaml
+  - networkpolicies.yaml
+
+patches:
+  - target:
+      kind: Service
+      name: vault-ui
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: vault-ui
+        labels:
+          teleport.dev/enabled: "true"
+        annotations:
+          teleport.dev/name: tc-vault
+          teleport.dev/port: "8200"
+          teleport.dev/protocol: https
+          teleport.dev/insecure-skip-verify: "true"
+          teleport.dev/description: "HashiCorp Vault secrets management"
+
+helmCharts:
+  - name: vault
+    releaseName: vault
+    namespace: vault
+    valuesFile: values.yaml
+    version: "0.32.0"
+    repo: https://helm.releases.hashicorp.com
