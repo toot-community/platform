@@ -55,6 +55,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
     templatefile("${path.module}/talos/patches/all-set-up-networking.yaml", {
       vpc_cidr : var.vpc_cidr,
     }),
+    templatefile("${path.module}/talos/patches/all-enable-kubespan.yaml", {}),
     templatefile("${path.module}/talos/patches/cp-enable-talos-service-accounts.yaml", {}),
     templatefile("${path.module}/talos/patches/cp-monitoring-listen-all-interfaces.yaml", {}),
     templatefile("${path.module}/talos/patches/cp-hcloud-install-disk.yaml", {}),
@@ -97,6 +98,7 @@ resource "talos_machine_configuration_apply" "metal_config_apply" {
     templatefile("${path.module}/talos/patches/all-set-up-networking.yaml", {
       vpc_cidr : var.vpc_cidr,
     }),
+    templatefile("${path.module}/talos/patches/all-enable-kubespan.yaml", {}),
     templatefile("${path.module}/talos/patches/worker-longhorn-volume.yaml", {}),
     templatefile("${path.module}/talos/patches/worker-elasticsearch.yaml", {}),
     templatefile("${path.module}/talos/patches/worker-metal-install-configuration.yaml", {

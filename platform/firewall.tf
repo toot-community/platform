@@ -40,6 +40,17 @@ resource "hcloud_firewall" "controlplane" {
 
   rule {
     direction = "in"
+    protocol  = "udp"
+    port      = "51820"
+    source_ips = concat(
+      [for n in var.metal_nodes : regex("^([^/]+)", n.public_ipv4_address)[0]],
+      [for name, srv in hcloud_server.controlplane : srv.ipv4_address]
+    )
+    description = "Allow UDP 51820 (WireGuard/KubeSpan) from all nodes"
+  }
+
+  rule {
+    direction = "in"
     protocol  = "tcp"
     port      = "6443"
     source_ips = concat(

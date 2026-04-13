@@ -5,7 +5,12 @@
       "Bash(kubectl top:*)",
       "Bash(kubectl describe:*)",
       "Bash(kubectl logs:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "WebSearch",
+      "Bash(gh search:*)",
+      "Bash(gh api:*)",
+      "WebFetch"
     ],
     "deny": [],
     "ask": []
