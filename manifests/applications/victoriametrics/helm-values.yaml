@@ -26,7 +26,7 @@ grafana:
     labels:
       teleport.dev/enabled: "true"
     annotations:
-      teleport.dev/name: grafana
+      teleport.dev/name: tc-grafana
       teleport.dev/port: "80"
       teleport.dev/protocol: http
       teleport.dev/description: "Grafana monitoring dashboards"
@@ -108,7 +108,7 @@ vmsingle:
         labels:
           teleport.dev/enabled: "true"
         annotations:
-          teleport.dev/name: victoriametrics
+          teleport.dev/name: tc-victoriametrics
           teleport.dev/port: "8429"
           teleport.dev/protocol: http
           teleport.dev/description: "VictoriaMetrics time-series database"
@@ -239,7 +239,7 @@ alertmanager:
         labels:
           teleport.dev/enabled: "true"
         annotations:
-          teleport.dev/name: alertmanager
+          teleport.dev/name: tc-alertmanager
           teleport.dev/port: "9093"
           teleport.dev/protocol: http
           teleport.dev/description: "Alertmanager alert routing"

@@ -5,7 +5,7 @@ metadata:
   labels:
     teleport.dev/enabled: "true"
   annotations:
-    teleport.dev/name: argocd
+    teleport.dev/name: tc-argocd
     teleport.dev/port: "443"
     teleport.dev/protocol: https
     teleport.dev/description: "ArgoCD GitOps continuous delivery"

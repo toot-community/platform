@@ -6,7 +6,7 @@ server:
     labels:
       teleport.dev/enabled: "true"
     annotations:
-      teleport.dev/name: victorialogs
+      teleport.dev/name: tc-victorialogs
       teleport.dev/port: "9428"
       teleport.dev/protocol: http
       teleport.dev/description: "VictoriaLogs log aggregation"

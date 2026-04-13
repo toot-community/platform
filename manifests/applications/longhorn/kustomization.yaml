@@ -22,7 +22,7 @@ patches:
         labels:
           teleport.dev/enabled: "true"
         annotations:
-          teleport.dev/name: longhorn
+          teleport.dev/name: tc-longhorn
           teleport.dev/port: "80"
           teleport.dev/protocol: http
           teleport.dev/description: "Longhorn distributed storage management"
