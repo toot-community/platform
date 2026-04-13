@@ -8,6 +8,7 @@ resources:
   - backup
   - rules.yaml
   - networkpolicies.yaml
+  - vault-auth-global.yaml
 
 patches:
   - target:
@@ -33,4 +34,11 @@ helmCharts:
     namespace: vault
     valuesFile: values.yaml
     version: "0.32.0"
+    repo: https://helm.releases.hashicorp.com
+  - name: vault-secrets-operator
+    releaseName: vault-secrets-operator
+    namespace: vault
+    valuesFile: vso-values.yaml
+    version: "1.3.0"
+    includeCRDs: true
     repo: https://helm.releases.hashicorp.com

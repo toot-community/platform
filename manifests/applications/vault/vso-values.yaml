@@ -1,0 +1,58 @@
+controller:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          control-plane: controller-manager
+  terminationGracePeriodSeconds: 120
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  manager:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+    logging:
+      level: info
+      timeEncoding: rfc3339
+    clientCache:
+      persistenceModel: "none"
+      cacheSize: 10000
+    globalTransformationOptions:
+      excludeRaw: true
+  kubeRbacProxy:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
+
+defaultVaultConnection:
+  enabled: true
+  address: "https://vault.vault.svc.cluster.local:8200"
+  skipTLSVerify: false
+  caCertSecret: vault-ca-tls
+
+defaultVaultAuth:
+  enabled: false
+
+telemetry:
+  serviceMonitor:
+    enabled: true
+    interval: "30s"
+    scrapeTimeout: "10s"
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: true
