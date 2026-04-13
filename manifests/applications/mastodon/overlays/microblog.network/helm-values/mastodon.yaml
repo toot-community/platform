@@ -13,8 +13,8 @@ mastodon:
     # OTEL_RUBY_INSTRUMENTATION_PG_ENABLED: "false"
 
 s3:
-  endpoint: https://36imo.upcloudobjects.com
-  hostname: 36imo.upcloudobjects.com
+  endpoint: https://0ae89288096e9795bb1a5d327d89aec5.r2.cloudflarestorage.com
+  hostname: 0ae89288096e9795bb1a5d327d89aec5.r2.cloudflarestorage.com
   region: auto
   aliasHost: *staticDomain
   bucket: microblog-network-assets
