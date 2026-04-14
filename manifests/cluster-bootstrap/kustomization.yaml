@@ -4,6 +4,4 @@ kind: Kustomization
 resources:
   - ../applications/cilium # needed for networking
   - ../applications/talos-ccm # needed for approving the certificate requests
-
-  - ../applications/op-connect # needed for secret management
   # - ../applications/argocd # provisions the rest of the cluster

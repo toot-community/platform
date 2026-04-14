@@ -11,7 +11,7 @@ This repository contains the complete infrastructure-as-code setup for deploying
 - **Talos Linux** - Kubernetes-optimized operating system
 - **Packer** - Custom OS image building
 - **ArgoCD** - GitOps continuous deployment
-- **1Password Connect** - Secrets management
+- **HashiCorp Vault** - Secrets management
 - **Helm Charts** - Application packaging (Mastodon, Varnish)
 - **Task** - Build automation via [platform/Taskfile.yml](platform/Taskfile.yml)
 
@@ -58,11 +58,6 @@ task get-kubeconfig   # Download cluster access credentials
 task get-talosconfig  # Download Talos management credentials
 cd ../
 
-# Setup 1Password Connect for secrets management
-kubectl create namespace op-connect
-kubectl create --namespace op-connect secret generic op-credentials --from-literal=1password-credentials.json="$(op read 'op://toot.community/toot.community Production on Hetzner Credentials File/1password-credentials.json' | base64 -w 0)"
-kubectl create --namespace op-connect secret generic onepassword-token --from-literal=token="$(op read 'op://toot.community/put37jzwsy6wtsfydfdwvpdaxm/credential')"
-
 # Setup Hetzner Cloud integration
 kubectl create --namespace kube-system secret generic hcloud \
   --from-literal=network="$(op read 'op://toot.community/6r6v2bqh6dhuunbn6nri4bw3sa/network')" \
@@ -72,11 +67,9 @@ kubectl create --namespace kube-system secret generic hcloud \
 
 # Deploy core cluster services via ArgoCD
 kustomize build --enable-helm --load-restrictor=LoadRestrictionsNone manifests/cluster-bootstrap | kubectl apply -f -
-# Run the command again after ArgoCD and 1Password CRDs are created
 ```
 
 This bootstrap process installs:
-- 1Password Connect for secure secrets management
 - ArgoCD for GitOps deployments
 - Core networking (Cilium)
 - Other essential cluster services defined in the manifests

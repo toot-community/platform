@@ -170,6 +170,11 @@ sidekiq:
         limits:
           memory: 2Gi
 
+vault:
+  secretsEnv:
+    enabled: true
+    path: toot-community/mastodon-secrets-env
+
 jobs:
   removePreviewCards:
     resources:

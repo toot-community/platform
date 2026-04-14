@@ -1,7 +1,7 @@
 # Vault
 
 HashiCorp Vault OSS deployed as a 3-replica HA Raft cluster with Vault Secrets Operator (VSO).
-Replaces 1Password Connect for cluster secret management.
+Cluster secret management.
 
 ## Architecture
 
@@ -38,7 +38,7 @@ secret/<service>/<secret-name>
 
 Example: `secret/vault/backup/r2` holds the R2 credentials used by the backup CronJob.
 
-## Onboarding a new app (OnePasswordItem migration)
+## Onboarding a new app
 
 Each app that consumes secrets from Vault needs four things:
 
@@ -102,7 +102,7 @@ spec:
     allowDefault: true
 ```
 
-**VaultStaticSecret** — replaces `OnePasswordItem`, creates/manages the Kubernetes Secret:
+**VaultStaticSecret** — creates/manages the Kubernetes Secret:
 
 ```yaml
 apiVersion: secrets.hashicorp.com/v1beta1
@@ -128,7 +128,7 @@ spec:
 3. `vault write auth/kubernetes/role/...` the auth role
 4. Add `VaultAuth` + `VaultStaticSecret` CRDs to the app's manifests
 5. Verify the Kubernetes Secret is created with correct data
-6. Remove the old `OnePasswordItem` CRD
+6. Verify the Kubernetes Secret has the expected keys
 
 ## Bootstrap secrets
 

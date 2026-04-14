@@ -9,7 +9,6 @@ resources:
   - ../../base
   - vault-auth.yaml
   - database-s3-credentials.yaml
-  - mastodon-secrets-env.yaml
 helmCharts:
   - name: redis-ha
     valuesFile: ../../base/helm-values/redis-ha.yaml

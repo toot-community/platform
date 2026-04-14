@@ -285,26 +285,6 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  # op-connect
-  - name: onepassword-connect-vpa
-    namespace: kube-system
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: onepassword-connect
-    resourcePolicy:
-      containerPolicies:
-        - containerName: connect-api
-        - containerName: connect-sync
-  - name: onepassword-connect-operator-vpa
-    namespace: kube-system
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: onepassword-connect-operator
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
   # robusta
   - name: robusta-forwarder-vpa
     namespace: robusta

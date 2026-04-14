@@ -655,6 +655,17 @@ jobs:
         memory: 584Mi
 
 # =============================================================================
+# VAULT SECRETS OPERATOR
+# =============================================================================
+vault:
+  secretsEnv:
+    enabled: false
+    vaultAuthRef: default
+    mount: secret
+    path: ""  # REQUIRED when enabled: Vault KV v2 path (e.g., toot-community/mastodon-secrets-env)
+    refreshAfter: "1h"
+
+# =============================================================================
 # DEBUG MODE
 # =============================================================================
 debug:

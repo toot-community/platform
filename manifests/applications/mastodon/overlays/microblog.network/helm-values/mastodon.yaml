@@ -99,6 +99,11 @@ sidekiq:
         limits:
           memory: 437Mi
 
+vault:
+  secretsEnv:
+    enabled: true
+    path: microblog-network/mastodon-secrets-env
+
 s3Gateway:
   ingress:
     enabled: false
