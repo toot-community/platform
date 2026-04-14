@@ -16,6 +16,7 @@ controller:
   podDisruptionBudget:
     enabled: true
     minAvailable: 1
+    maxUnavailable: ""
   manager:
     resources:
       requests:
