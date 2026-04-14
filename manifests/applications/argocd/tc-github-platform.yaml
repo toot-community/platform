@@ -14,4 +14,4 @@ spec:
     create: true
     overwrite: true
     labels:
-      argocd.argoproj.io/secret-type=repository
+      argocd.argoproj.io/secret-type: repository
