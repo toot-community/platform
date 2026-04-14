@@ -2,7 +2,7 @@ apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
   name: default
-  namespace: cloudflared
+  namespace: cloudflare
 spec:
   vaultConnectionRef: vault/default
   method: kubernetes

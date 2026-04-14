@@ -39,6 +39,7 @@ Arguments:
   service-account   Kubernetes service account to bind (default: "default")
 
 Options:
+  --namespace, -n NS  Kubernetes namespace (default: auto-detected from kustomization.yaml, or app-name)
   --label KEY=VALUE   Add a label to the destination Secret (can be repeated)
   -h, --help          Show this help
 
@@ -78,6 +79,11 @@ while (($# > 0)); do
       LABELS+=("$2")
       shift 2
       ;;
+    --namespace|-n)
+      [[ -z "${2:-}" ]] && fatal "--namespace requires a value"
+      NAMESPACE_OVERRIDE="$2"
+      shift 2
+      ;;
     -*)
       fatal "Unknown flag: $1"
       ;;
@@ -104,6 +110,16 @@ if [[ ! -d "${APP_DIR}" ]]; then
   fatal "Application directory not found: ${APP_DIR}"
 fi
 
+# Resolve namespace: --namespace flag > kustomization.yaml namespace field > app name
+if [[ -n "${NAMESPACE_OVERRIDE:-}" ]]; then
+  NAMESPACE="${NAMESPACE_OVERRIDE}"
+elif [[ -f "${APP_DIR}/kustomization.yaml" ]] && grep -q '^namespace:' "${APP_DIR}/kustomization.yaml"; then
+  NAMESPACE=$(grep '^namespace:' "${APP_DIR}/kustomization.yaml" | awk '{print $2}')
+  log "INFO" "Detected namespace '${NAMESPACE}' from kustomization.yaml"
+else
+  NAMESPACE="${APP_NAME}"
+fi
+
 # --- Step 1: Create Vault policy ---
 
 POLICY_NAME="${APP_NAME}-readonly"
@@ -127,11 +143,11 @@ log "INFO" "Policy '${POLICY_NAME}' created"
 log "INFO" "Creating Kubernetes auth role: ${APP_NAME}"
 vault write "auth/kubernetes/role/${APP_NAME}" \
   bound_service_account_names="${SERVICE_ACCOUNT}" \
-  bound_service_account_namespaces="${APP_NAME}" \
+  bound_service_account_namespaces="${NAMESPACE}" \
   policies="${POLICY_NAME}" \
   audience=vault \
   ttl=1h
-log "INFO" "Kubernetes auth role '${APP_NAME}' created (sa=${SERVICE_ACCOUNT}, ns=${APP_NAME})"
+log "INFO" "Kubernetes auth role '${APP_NAME}' created (sa=${SERVICE_ACCOUNT}, ns=${NAMESPACE})"
 
 # --- Step 3: Generate Kubernetes manifests ---
 
@@ -147,7 +163,7 @@ apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
   name: default
-  namespace: ${APP_NAME}
+  namespace: ${NAMESPACE}
 spec:
   vaultConnectionRef: vault/default
   method: kubernetes
@@ -171,7 +187,7 @@ apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultStaticSecret
 metadata:
   name: ${SECRET_NAME}
-  namespace: ${APP_NAME}
+  namespace: ${NAMESPACE}
 spec:
   vaultAuthRef: default
   mount: secret
@@ -222,4 +238,4 @@ log "INFO" "  1. Store your secret in Vault:"
 log "INFO" "     vault kv put secret/${APP_NAME}/${SECRET_NAME} KEY=value"
 log "INFO" "  2. Add vault-auth.yaml and vault-static-secret.yaml to your kustomization.yaml"
 log "INFO" "  3. Commit and push — ArgoCD will sync the VaultAuth and VaultStaticSecret resources"
-log "INFO" "  4. The secret '${SECRET_NAME}' will appear in namespace '${APP_NAME}'"
+log "INFO" "  4. The secret '${SECRET_NAME}' will appear in namespace '${NAMESPACE}'"

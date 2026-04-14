@@ -1,0 +1,17 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: tc-github-platform
+  namespace: argocd
+spec:
+  vaultAuthRef: default
+  mount: secret
+  type: kv-v2
+  path: argocd/tc-github-platform
+  refreshAfter: "1h"
+  destination:
+    name: tc-github-platform
+    create: true
+    overwrite: true
+    labels:
+      argocd.argoproj.io/secret-type=repository
