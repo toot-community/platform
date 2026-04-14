@@ -26,13 +26,6 @@ helmCharts:
       - helm-values/mastodon.yaml
   - name: varnish
     version: "0.0.0"
-    releaseName: varnish-for-static
-    namespace: *namespace
-    valuesFile: ../../base/helm-values/varnish-for-static.yaml
-    additionalValuesFiles:
-      - helm-values/varnish-for-static.yaml
-  - name: varnish
-    version: "0.0.0"
     releaseName: varnish-for-app
     namespace: *namespace
     valuesFile: ../../base/helm-values/varnish-for-app.yaml

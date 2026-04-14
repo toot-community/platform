@@ -33,13 +33,6 @@ helmCharts:
     valuesFile: ../../base/helm-values/varnish-for-app.yaml
     additionalValuesFiles:
       - helm-values/varnish-for-app.yaml
-  - name: varnish
-    version: "0.0.0"
-    releaseName: varnish-for-static
-    namespace: *namespace
-    valuesFile: ../../base/helm-values/varnish-for-static.yaml
-    additionalValuesFiles:
-      - helm-values/varnish-for-static.yaml
 
 images:
   - name: ghcr.io/mastodon/mastodon

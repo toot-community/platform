@@ -672,15 +672,6 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
-  - name: varnish-for-static-vpa
-    namespace: microblog-network
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: varnish-for-static
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
   # varnish (toot.community)
   - name: varnish-for-app-vpa
     namespace: toot-community
@@ -688,15 +679,6 @@ vpas:
       apiVersion: apps/v1
       kind: Deployment
       name: varnish-for-app
-    resourcePolicy:
-      containerPolicies:
-        - containerName: "*"
-  - name: varnish-for-static-vpa
-    namespace: toot-community
-    targetRef:
-      apiVersion: apps/v1
-      kind: Deployment
-      name: varnish-for-static
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
