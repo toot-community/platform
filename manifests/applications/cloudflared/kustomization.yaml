@@ -8,9 +8,10 @@ helmGlobals:
 resources:
   - namespace.yaml
   - cloudflared-public-pdb.yaml
-  - cloudflared-public-secret.yaml
+  - cloudflared-public-credentials.yaml
   - cloudflared-private-pdb.yaml
-  - cloudflared-private-secret.yaml
+  - cloudflared-private-credentials.yaml
+  - vault-auth.yaml
 
 helmCharts:
   - name: cloudflare-tunnel-remote

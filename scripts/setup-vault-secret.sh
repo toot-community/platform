@@ -31,17 +31,21 @@ usage() {
 Set up Vault secret access for a Kubernetes application.
 
 Usage:
-  ./setup-vault-secret.sh <app-name> <secret-name> [service-account]
+  ./setup-vault-secret.sh [options] <app-name> <secret-name> [service-account]
 
 Arguments:
   app-name          Application name (must match namespace and manifests/applications/ dir)
   secret-name       Name for the secret in Vault (stored at secret/<app>/<secret-name>)
   service-account   Kubernetes service account to bind (default: "default")
 
+Options:
+  --label KEY=VALUE   Add a label to the destination Secret (can be repeated)
+  -h, --help          Show this help
+
 What this script does:
   1. Creates a Vault policy "<app>-readonly" with read access to secret/data/<app>/*
   2. Creates a Kubernetes auth role "<app>" bound to the service account and namespace
-  3. Generates vault-auth.yaml and vault-static-secret.yaml in manifests/applications/<app>/
+  3. Generates vault-auth.yaml and <secret-name>.yaml in manifests/applications/<app>/
 
 Prerequisites:
   - vault CLI authenticated and configured (VAULT_ADDR, VAULT_TOKEN, etc.)
@@ -51,6 +55,7 @@ Prerequisites:
 Examples:
   ./setup-vault-secret.sh n8n credentials
   ./setup-vault-secret.sh mastodon smtp-credentials mastodon-web
+  ./setup-vault-secret.sh --label app.kubernetes.io/part-of=argocd argocd argocd-secrets
 USAGE
 }
 
@@ -60,19 +65,37 @@ require_cmd() {
 
 # --- Parse arguments ---
 
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  usage
-  exit 0
-fi
+LABELS=()
+POSITIONAL=()
+while (($# > 0)); do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --label)
+      [[ -z "${2:-}" ]] && fatal "--label requires a KEY=VALUE argument"
+      LABELS+=("$2")
+      shift 2
+      ;;
+    -*)
+      fatal "Unknown flag: $1"
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
 
-if (($# < 2)); then
+if ((${#POSITIONAL[@]} < 2)); then
   usage
   fatal "Required arguments: <app-name> <secret-name>"
 fi
 
-APP_NAME="$1"
-SECRET_NAME="$2"
-SERVICE_ACCOUNT="${3:-default}"
+APP_NAME="${POSITIONAL[0]}"
+SECRET_NAME="${POSITIONAL[1]}"
+SERVICE_ACCOUNT="${POSITIONAL[2]:-default}"
 
 require_cmd vault
 
@@ -113,7 +136,7 @@ log "INFO" "Kubernetes auth role '${APP_NAME}' created (sa=${SERVICE_ACCOUNT}, n
 # --- Step 3: Generate Kubernetes manifests ---
 
 VAULT_AUTH_FILE="${APP_DIR}/vault-auth.yaml"
-VAULT_SECRET_FILE="${APP_DIR}/vault-static-secret.yaml"
+VAULT_SECRET_FILE="${APP_DIR}/${SECRET_NAME}.yaml"
 
 if [[ -f "${VAULT_AUTH_FILE}" ]]; then
   log "WARN" "vault-auth.yaml already exists at ${VAULT_AUTH_FILE}, skipping"
@@ -140,14 +163,14 @@ EOF
 fi
 
 if [[ -f "${VAULT_SECRET_FILE}" ]]; then
-  log "WARN" "vault-static-secret.yaml already exists at ${VAULT_SECRET_FILE}, skipping"
+  log "WARN" "${SECRET_NAME}.yaml already exists at ${VAULT_SECRET_FILE}, skipping"
 else
   log "INFO" "Writing ${VAULT_SECRET_FILE}"
   cat > "${VAULT_SECRET_FILE}" <<EOF
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultStaticSecret
 metadata:
-  name: ${APP_NAME}-${SECRET_NAME}
+  name: ${SECRET_NAME}
   namespace: ${APP_NAME}
 spec:
   vaultAuthRef: default
@@ -156,10 +179,16 @@ spec:
   path: ${APP_NAME}/${SECRET_NAME}
   refreshAfter: "1h"
   destination:
-    name: ${APP_NAME}-${SECRET_NAME}
+    name: ${SECRET_NAME}
     create: true
     overwrite: true
 EOF
+  if ((${#LABELS[@]} > 0)); then
+    echo "    labels:" >> "${VAULT_SECRET_FILE}"
+    for label in "${LABELS[@]}"; do
+      echo "      ${label%%=*}: ${label#*=}" >> "${VAULT_SECRET_FILE}"
+    done
+  fi
 fi
 
 # --- Step 4: Remind about kustomization.yaml ---
@@ -170,8 +199,8 @@ if [[ -f "${KUSTOMIZATION_FILE}" ]]; then
   if ! grep -q "vault-auth.yaml" "${KUSTOMIZATION_FILE}"; then
     MISSING_RESOURCES+=("vault-auth.yaml")
   fi
-  if ! grep -q "vault-static-secret.yaml" "${KUSTOMIZATION_FILE}"; then
-    MISSING_RESOURCES+=("vault-static-secret.yaml")
+  if ! grep -q "${SECRET_NAME}.yaml" "${KUSTOMIZATION_FILE}"; then
+    MISSING_RESOURCES+=("${SECRET_NAME}.yaml")
   fi
   if ((${#MISSING_RESOURCES[@]} > 0)); then
     log "WARN" "Add the following to ${KUSTOMIZATION_FILE} under resources:"
@@ -193,4 +222,4 @@ log "INFO" "  1. Store your secret in Vault:"
 log "INFO" "     vault kv put secret/${APP_NAME}/${SECRET_NAME} KEY=value"
 log "INFO" "  2. Add vault-auth.yaml and vault-static-secret.yaml to your kustomization.yaml"
 log "INFO" "  3. Commit and push — ArgoCD will sync the VaultAuth and VaultStaticSecret resources"
-log "INFO" "  4. The secret '${APP_NAME}-${SECRET_NAME}' will appear in namespace '${APP_NAME}'"
+log "INFO" "  4. The secret '${SECRET_NAME}' will appear in namespace '${APP_NAME}'"
