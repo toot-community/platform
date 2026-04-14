@@ -5,7 +5,7 @@ namespace: argocd
 resources:
   - https://github.com/argoproj/argo-cd/manifests/ha/cluster-install?ref=v3.3.6
   - projects
-  - platform-repository.yaml
+  - tc-github-platform.yaml
   - ./applications
   - namespace.yaml
   - vault-auth.yaml
