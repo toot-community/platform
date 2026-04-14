@@ -5,6 +5,7 @@ namespace: victoriametrics
 resources:
   - namespace.yaml
   - dashboards
+  - vault-auth.yaml
   - grafana-oidc-credentials.yaml
 
 helmCharts:

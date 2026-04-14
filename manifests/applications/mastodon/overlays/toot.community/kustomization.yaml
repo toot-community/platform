@@ -8,7 +8,9 @@ helmGlobals:
 resources:
   - ../../base
   - ../../base/search-cluster.yaml
-  - secrets.yaml
+  - vault-auth.yaml
+  - database-s3-credentials.yaml
+  - mastodon-secrets-env.yaml
   - database-rw-pooler.yaml
 helmCharts:
   - name: redis-ha

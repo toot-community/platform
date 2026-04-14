@@ -1,15 +1,15 @@
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultStaticSecret
 metadata:
-  name: grafana-oidc-credentials
-  namespace: victoriametrics
+  name: hcloud
+  namespace: kube-system
 spec:
   vaultAuthRef: default
   mount: secret
   type: kv-v2
-  path: victoriametrics/grafana-oidc-credentials
+  path: talos-ccm/hcloud
   refreshAfter: "1h"
   destination:
-    name: grafana-oidc-credentials
+    name: hcloud
     create: true
     overwrite: true

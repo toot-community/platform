@@ -3,7 +3,8 @@ kind: Kustomization
 namespace: robusta
 
 resources:
-  - secrets.yaml
+  - vault-auth.yaml
+  - robusta-secrets-env.yaml
 
 helmCharts:
   - name: robusta

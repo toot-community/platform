@@ -3,7 +3,8 @@ kind: Kustomization
 namespace: kube-system
 
 resources:
-  - credentials.yaml
+  - vault-auth.yaml
+  - hcloud.yaml
 
 helmCharts:
   - name: talos-cloud-controller-manager

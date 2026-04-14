@@ -7,7 +7,9 @@ resources:
   - database.yaml
   - deployment.yaml
   - namespace.yaml
-  - secret.yaml
+  - vault-auth.yaml
+  - database-s3-credentials.yaml
+  - n8n-secrets.yaml
   - service.yaml
   - serviceaccount.yaml
 

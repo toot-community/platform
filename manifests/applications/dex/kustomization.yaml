@@ -4,7 +4,9 @@ namespace: dex
 
 resources:
   - namespace.yaml
-  - secrets.yaml
+  - vault-auth.yaml
+  - dex-secrets.yaml
+  - static-client-secrets.yaml
 
 helmCharts:
   - name: dex
