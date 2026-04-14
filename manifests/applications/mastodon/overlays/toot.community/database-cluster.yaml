@@ -53,5 +53,5 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://36imo.upcloudobjects.com
-    destinationPath: s3://toot-community-cnpg-storage/v20251031/
+    endpointURL: https://0ae89288096e9795bb1a5d327d89aec5.r2.cloudflarestorage.com
+    destinationPath: s3://toot-community-cnpg-storage/v20260414/

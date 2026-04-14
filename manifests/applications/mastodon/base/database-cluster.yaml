@@ -132,7 +132,7 @@ metadata:
   name: database-backup
 spec:
   configuration:
-    endpointURL: https://s3.jorijn.com
+    endpointURL: https://0ae89288096e9795bb1a5d327d89aec5.r2.cloudflarestorage.com
     s3Credentials:
       accessKeyId:
         name: database-s3-credentials
@@ -142,9 +142,4 @@ spec:
         key: ACCESS_SECRET_KEY
     wal:
       compression: gzip
-    data:
-      additionalCommandArgs:
-        - --max-archive-size=10GB
-        - --min-chunk-size=64MB # default chunk size is 5MB, but Hetzners limit of 10k objects per multi-part object results in a limit of 50GB per backup file (see: https://docs.hetzner.com/storage/object-storage/overview/#limits)
-        - --read-timeout=180 # Hetzner S3 can be slow
   retentionPolicy: "7d"
