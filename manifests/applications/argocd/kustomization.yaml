@@ -8,7 +8,8 @@ resources:
   - platform-repository.yaml
   - ./applications
   - namespace.yaml
-  - secrets.yaml
+  - vault-auth.yaml
+  - vault-static-secret.yaml
 
 patches:
   - path: patches/argocd-cm.yaml
