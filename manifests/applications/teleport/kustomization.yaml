@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: teleport
+
+resources:
+  - vault-auth.yaml
+  - vault-static-secret.yaml
+
+helmCharts:
+  - name: teleport-kube-agent
+    version: "18.7.3"
+    releaseName: teleport-agent
+    namespace: teleport
+    valuesFile: helm-values.yaml
+    repo: https://charts.releases.teleport.dev

@@ -5,6 +5,7 @@ server:
   service:
     labels:
       teleport.dev/enabled: "true"
+      domain: toot-community
     annotations:
       teleport.dev/name: tc-victorialogs
       teleport.dev/port: "9428"

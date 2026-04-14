@@ -1,0 +1,26 @@
+roles: kube,app,discovery
+authToken: ""
+
+joinTokenSecret:
+  create: false
+  name: teleport-join-token
+proxyAddr: teleport.jorijn.com:443
+kubeClusterName: k8s-toot-community
+
+labels:
+    teleport.internal/resource-id: 5eaeab5e-8950-48b0-bc7d-873f462cd561
+    domain: toot-community
+    environment: production
+    role: k8s
+
+kubernetesDiscovery:
+  - types: ["app"]
+    namespaces: ["*"]
+    labels:
+      teleport.dev/enabled: "true"
+
+highAvailability:
+  replicaCount: 2
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1

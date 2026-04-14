@@ -25,6 +25,7 @@ grafana:
   service:
     labels:
       teleport.dev/enabled: "true"
+      domain: toot-community
     annotations:
       teleport.dev/name: tc-grafana
       teleport.dev/port: "80"
@@ -107,11 +108,13 @@ vmsingle:
       metadata:
         labels:
           teleport.dev/enabled: "true"
+          domain: toot-community
         annotations:
           teleport.dev/name: tc-victoriametrics
           teleport.dev/port: "8429"
           teleport.dev/protocol: http
           teleport.dev/description: "VictoriaMetrics time-series database"
+      spec: {}
     resources:
       requests:
         cpu: 350m
@@ -238,11 +241,13 @@ alertmanager:
       metadata:
         labels:
           teleport.dev/enabled: "true"
+          domain: toot-community
         annotations:
           teleport.dev/name: tc-alertmanager
           teleport.dev/port: "9093"
           teleport.dev/protocol: http
           teleport.dev/description: "Alertmanager alert routing"
+      spec: {}
     replicaCount: 1
   config:
     receivers:

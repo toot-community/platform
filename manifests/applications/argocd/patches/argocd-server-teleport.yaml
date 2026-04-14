@@ -4,6 +4,7 @@ metadata:
   name: argocd-server
   labels:
     teleport.dev/enabled: "true"
+    domain: toot-community
   annotations:
     teleport.dev/name: tc-argocd
     teleport.dev/port: "443"

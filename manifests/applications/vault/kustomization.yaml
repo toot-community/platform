@@ -21,6 +21,7 @@ patches:
         name: vault-ui
         labels:
           teleport.dev/enabled: "true"
+          domain: toot-community
         annotations:
           teleport.dev/name: tc-vault
           teleport.dev/port: "8200"

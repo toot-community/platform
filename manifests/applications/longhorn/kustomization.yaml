@@ -21,6 +21,7 @@ patches:
         name: longhorn-frontend
         labels:
           teleport.dev/enabled: "true"
+          domain: toot-community
         annotations:
           teleport.dev/name: tc-longhorn
           teleport.dev/port: "80"

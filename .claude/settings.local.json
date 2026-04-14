@@ -10,7 +10,8 @@
       "WebSearch",
       "Bash(gh search:*)",
       "Bash(gh api:*)",
-      "WebFetch"
+      "WebFetch",
+      "Bash(grep \"\\\\.go$\")"
     ],
     "deny": [],
     "ask": []
