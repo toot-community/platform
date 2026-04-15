@@ -4,6 +4,18 @@ global:
   serverTelemetry:
     prometheusOperator: true
 
+serverTelemetry:
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    tlsConfig:
+      insecureSkipVerify: true
+    authorization:
+      credentials:
+        name: vault-metrics-token
+        key: token
+
 server:
   image:
     repository: hashicorp/vault
@@ -71,7 +83,7 @@ server:
           tls_client_ca_file = "/vault/userconfig/tls/ca.crt"
 
           telemetry {
-            unauthenticated_metrics_access = true
+            unauthenticated_metrics_access = false
           }
         }
 
@@ -109,8 +121,9 @@ server:
         service_registration "kubernetes" {}
 
         telemetry {
-          prometheus_retention_time = "30s"
+          prometheus_retention_time = "12h"
           disable_hostname          = true
+          usage_gauge_period        = "10m"
         }
 
     disruptionBudget:

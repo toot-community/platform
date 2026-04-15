@@ -12,7 +12,8 @@
       "Bash(gh api:*)",
       "WebFetch",
       "Bash(gh issue:*)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(xargs ls:*)"
     ],
     "deny": [],
     "ask": []

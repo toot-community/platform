@@ -43,8 +43,31 @@ spec:
       app.kubernetes.io/name: vault
       component: server
   ingress:
-    - ports:
+    - from:
+        - namespaceSelector: {}
+      ports:
         - port: 8200
+          protocol: TCP
+  policyTypes:
+    - Ingress
+---
+# Allow VictoriaMetrics scraping of VSO metrics
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vso-metrics
+  namespace: vault
+spec:
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: victoriametrics
+      ports:
+        - port: 8443
           protocol: TCP
   policyTypes:
     - Ingress

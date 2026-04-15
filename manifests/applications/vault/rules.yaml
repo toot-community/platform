@@ -12,13 +12,15 @@ spec:
       interval: 30s
       rules:
         - alert: VaultSealed
-          expr: vault_core_unsealed == 0
+          expr: vault_core_unsealed == 0 or absent(vault_core_unsealed{job="vault"})
           for: 1m
           labels:
             severity: critical
           annotations:
-            summary: "Vault node is sealed"
-            description: "Vault pod {{ $labels.pod }} is sealed and cannot serve requests."
+            summary: "Vault node is sealed or unreachable"
+            description: >-
+              Vault pod {{ $labels.pod | default "unknown" }} is sealed or not
+              returning metrics. When sealed, Vault cannot serve requests.
         - alert: VaultDown
           expr: up{job="vault"} == 0
           for: 1m
@@ -26,22 +28,47 @@ spec:
             severity: critical
           annotations:
             summary: "Vault instance is down"
-            description: "Vault pod {{ $labels.pod }} is not responding to Prometheus scrapes."
+            description: "Vault pod {{ $labels.pod }} is not responding to metric scrapes."
         - alert: VaultNoActiveNode
-          expr: count(vault_core_active == 1) == 0
+          expr: >-
+            sum(vault_core_active) == 0
+            or absent(vault_core_active{job="vault"})
           for: 30s
           labels:
             severity: critical
           annotations:
             summary: "No active Vault leader"
-            description: "Vault cluster has no active leader. Write requests cannot be served."
+            description: >-
+              Vault cluster has no active leader. All write requests will fail.
+              Check Raft quorum and pod health.
         - alert: VaultAuditLogFailure
           expr: increase(vault_audit_log_request_failure[5m]) > 0
           labels:
             severity: critical
           annotations:
             summary: "Vault audit log failure"
-            description: "Vault cannot write to audit log. All requests will be blocked if all audit devices fail."
+            description: >-
+              Vault cannot write to an audit log device. If all audit devices
+              fail, Vault will stop serving all requests.
+        - alert: VaultClusterUnhealthy
+          expr: vault_autopilot_healthy == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Vault autopilot reports cluster unhealthy"
+            description: >-
+              The Raft autopilot health check failed. The cluster may not have
+              quorum or a node may be in a bad state.
+        - alert: VaultRaftQuorumInstability
+          expr: increase(vault_raft_transition_leader_lease_timeout[5m]) > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: "Vault Raft leader lease timeout"
+            description: >-
+              A Raft leader lease timeout occurred, indicating quorum
+              instability. Check network connectivity between Vault pods.
     - name: vault.warning
       interval: 60s
       rules:
@@ -53,21 +80,43 @@ spec:
             summary: "Vault leadership changed"
             description: "Vault leader election occurred in the last 5 minutes."
         - alert: VaultRaftHighCommitTime
-          expr: vault_raft_commitTime_mean > 2000
+          expr: vault_raft_commitTime{quantile="0.99"} > 2000
           for: 5m
           labels:
             severity: warning
           annotations:
             summary: "Vault Raft commit time elevated"
-            description: "Raft commit time is {{ $value }}ms (threshold: 2000ms). Check storage performance."
+            description: >-
+              Raft p99 commit time is {{ $value }}ms (threshold: 2000ms).
+              Check storage I/O performance.
+        - alert: VaultRaftFollowerLag
+          expr: vault_raft_leader_lastContact{quantile="0.99"} > 500
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault Raft follower contact lag"
+            description: >-
+              Raft follower p99 last-contact time is {{ $value }}ms
+              (threshold: 500ms). Check network or disk contention.
+        - alert: VaultRaftFailureTolerance
+          expr: vault_autopilot_failure_tolerance < 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault cluster cannot tolerate another node failure"
+            description: >-
+              The Raft cluster can tolerate {{ $value }} more node failures.
+              Ensure all 3 replicas are healthy.
         - alert: VaultHighMemoryUsage
-          expr: vault_runtime_sys_bytes / (1024*1024*1024) > 1.5
+          expr: vault_runtime_sys_bytes / (1024*1024*1024) > 0.85
           for: 10m
           labels:
             severity: warning
           annotations:
-            summary: "Vault memory usage high"
-            description: "Vault is using {{ $value | humanize }}GB of memory."
+            summary: "Vault memory usage approaching container limit"
+            description: "Vault is using {{ $value | humanize }}GB of memory (limit: 1Gi)."
         - alert: VaultTokenCountHigh
           expr: vault_token_count > 100000
           for: 30m
@@ -76,3 +125,23 @@ spec:
           annotations:
             summary: "Vault token count elevated"
             description: "Vault has {{ $value }} active tokens. Possible token leak."
+        - alert: VaultNonExpiringTokens
+          expr: vault_token_count_by_ttl{creation_ttl="+Inf"} > 5
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Non-expiring Vault tokens accumulating"
+            description: >-
+              There are {{ $value }} tokens with infinite TTL. Non-expiring
+              tokens are a security risk and should be minimized.
+        - alert: VaultHighGoroutineCount
+          expr: vault_runtime_num_goroutines > 10000
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Vault goroutine count elevated"
+            description: >-
+              Vault has {{ $value }} goroutines. Sustained high counts
+              may indicate a goroutine leak.

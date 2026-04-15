@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-metrics-rotation
+  namespace: vault
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-metrics-token-rotation
+  namespace: vault
+spec:
+  schedule: "23 3 * * 1"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          serviceAccountName: vault-metrics-rotation
+          restartPolicy: OnFailure
+          containers:
+            - name: rotate
+              image: hashicorp/vault:1.21.4
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -euo pipefail
+
+                  # Authenticate via Kubernetes auth
+                  VAULT_TOKEN=$(vault write -field=token auth/kubernetes/login \
+                    role=vault-metrics-rotation \
+                    jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)")
+                  export VAULT_TOKEN
+
+                  # Read the current token (if it exists) so we can revoke it later
+                  OLD_TOKEN=""
+                  if vault kv get -field=token secret/vault/metrics-token 2>/dev/null; then
+                    OLD_TOKEN=$(vault kv get -field=token secret/vault/metrics-token)
+                  fi
+
+                  # Create a new periodic token with metrics-only policy
+                  NEW_TOKEN=$(vault token create \
+                    -policy=prometheus-metrics \
+                    -period=336h \
+                    -no-default-policy \
+                    -display-name=prometheus-scraper \
+                    -field=token)
+
+                  # Store the new token in KV for VSO to sync
+                  vault kv put secret/vault/metrics-token token="${NEW_TOKEN}"
+
+                  # Revoke the old token (best-effort)
+                  if [ -n "${OLD_TOKEN}" ]; then
+                    vault token revoke "${OLD_TOKEN}" 2>/dev/null || true
+                  fi
+
+                  echo "Metrics token rotated successfully"
+              env:
+                - name: VAULT_ADDR
+                  value: "https://vault-active.vault.svc.cluster.local:8200"
+                - name: VAULT_CACERT
+                  value: "/vault/tls/ca.crt"
+              volumeMounts:
+                - name: vault-tls
+                  mountPath: /vault/tls
+                  readOnly: true
+          volumes:
+            - name: vault-tls
+              secret:
+                secretName: vault-server-tls

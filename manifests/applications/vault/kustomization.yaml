@@ -6,9 +6,11 @@ resources:
   - namespace.yaml
   - certificates
   - backup
+  - metrics-token-rotation
   - rules.yaml
   - networkpolicies.yaml
   - vault-auth-global.yaml
+  - vault-metrics-token.yaml
 
 patches:
   - target:

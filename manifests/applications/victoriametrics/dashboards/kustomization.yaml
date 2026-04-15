@@ -18,3 +18,11 @@ configMapGenerator:
     files:
       - redis.json
     options: *options
+  - name: vault
+    files:
+      - vault.json
+    options: *options
+  - name: vault-secrets-operator
+    files:
+      - vault-secrets-operator.json
+    options: *options
