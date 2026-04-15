@@ -313,6 +313,8 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          minAllowed:
+            memory: 1Gi
   # talos-ccm
   - name: talos-cloud-controller-manager-vpa
     namespace: kube-system
