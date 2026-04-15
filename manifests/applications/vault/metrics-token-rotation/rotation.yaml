@@ -21,9 +21,17 @@ spec:
         spec:
           serviceAccountName: vault-metrics-rotation
           restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: rotate
               image: hashicorp/vault:1.21.4
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
               command:
                 - /bin/sh
                 - -c
@@ -42,11 +50,9 @@ spec:
                     OLD_TOKEN=$(vault kv get -field=token secret/vault/metrics-token)
                   fi
 
-                  # Create a new periodic token with metrics-only policy
+                  # Create a new periodic token via the prometheus-metrics token role
                   NEW_TOKEN=$(vault token create \
-                    -policy=prometheus-metrics \
-                    -period=336h \
-                    -no-default-policy \
+                    -role=prometheus-metrics \
                     -display-name=prometheus-scraper \
                     -field=token)
 
