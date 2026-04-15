@@ -9,6 +9,7 @@ resources:
   - cloudnative-pg.yaml
   - descheduler.yaml
   - dex.yaml
+  - goldilocks.yaml
   - n8n.yaml
   - elastic-operator.yaml
 
@@ -20,7 +21,6 @@ resources:
   - talos-ccm.yaml
   - victoriametrics.yaml
   - vertical-pod-autoscaler.yaml
-  - vpa-resources.yaml
   - toot-community.yaml
   - victorialogs.yaml
   - victoriatraces.yaml

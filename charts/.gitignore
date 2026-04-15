@@ -3,8 +3,6 @@
 !mastodon/**
 !varnish/
 !varnish/**
-!vpa-resources/
-!vpa-resources/**
 !cloudflare-tunnel-remote/
 !cloudflare-tunnel-remote/**
 !.gitignore

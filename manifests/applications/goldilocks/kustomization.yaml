@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: goldilocks
+
+resources:
+  - namespace.yaml
+
+patches:
+  - target:
+      kind: Service
+      name: goldilocks-dashboard
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: goldilocks-dashboard
+        labels:
+          teleport.dev/enabled: "true"
+          domain: toot-community
+        annotations:
+          teleport.dev/name: tc-goldilocks
+          teleport.dev/port: "80"
+          teleport.dev/protocol: http
+          teleport.dev/description: "Goldilocks resource recommendations dashboard"
+
+helmCharts:
+  - name: goldilocks
+    releaseName: goldilocks
+    namespace: goldilocks
+    valuesFile: helm-values.yaml
+    version: "10.3.0"
+    repo: https://charts.fairwinds.com/stable

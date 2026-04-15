@@ -1,0 +1,49 @@
+vpa:
+  enabled: false
+
+metrics-server:
+  enabled: false
+
+controller:
+  enabled: true
+  rbac:
+    create: true
+    enableArgoproj: true
+  flags:
+    on-by-default: "true"
+    exclude-namespaces: "kube-system,goldilocks"
+  resources:
+    requests:
+      cpu: 25m
+      memory: 256Mi
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 10324
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+
+dashboard:
+  enabled: true
+  replicaCount: 2
+  rbac:
+    create: true
+    enableArgoproj: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 256Mi
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 10324
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault

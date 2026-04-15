@@ -2,34 +2,31 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
+    app.kubernetes.io/instance: mastodon
+    app.kubernetes.io/name: mastodon
     job-name: mastodon-remove-orphans
   name: mastodon-remove-orphans
   namespace: toot-community
 spec:
+  backoffLimit: 6
+  completions: 1
   parallelism: 1
   podReplacementPolicy: TerminatingOrFailed
-  selector:
-    matchLabels:
-      job-name: mastodon-remove-orphans
   suspend: false
   template:
     metadata:
       labels:
+        app.kubernetes.io/instance: mastodon
+        app.kubernetes.io/name: mastodon
         job-name: mastodon-remove-orphans
       name: mastodon-remove-orphans
     spec:
-      restartPolicy: Never
       containers:
       - command:
         - bash
         - -c
         - bin/tootctl media remove-orphans
         env:
-        - name: ES_PASS
-          valueFrom:
-            secretKeyRef:
-              key: elastic
-              name: elasticsearch-es-elastic-user
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -40,18 +37,38 @@ spec:
             secretKeyRef:
               key: password
               name: database-app
+        - name: ES_PASS
+          valueFrom:
+            secretKeyRef:
+              key: elastic
+              name: elasticsearch-es-elastic-user
         envFrom:
         - configMapRef:
             name: mastodon-env
         - secretRef:
             name: mastodon-secrets-env
-        image: ghcr.io/mastodon/mastodon:v4.4.0-beta.1@sha256:49d58b37ff8a1e282e6bef2eae2ea9e0c1d7f39dc62d7e2595b06949fec25c4d
+        image: ghcr.io/mastodon/mastodon:v4.5.8@sha256:31504587a5cb72c04682ee020adef711c4fa765cc8d2b6cde1dec865adb2d718
         imagePullPolicy: IfNotPresent
         name: remove-orphans
         resources:
           limits:
-            memory: 4Gi
+            memory: 665Mi
           requests:
-            cpu: "1"
-            memory: 4Gi
-            
+            cpu: 1221m
+            memory: 665Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 991
+          seccompProfile:
+            type: RuntimeDefault
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 991
+        runAsGroup: 991
+        runAsUser: 991
+      serviceAccount: mastodon
+      serviceAccountName: mastodon
