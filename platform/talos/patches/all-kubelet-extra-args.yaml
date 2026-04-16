@@ -2,4 +2,3 @@ machine:
   kubelet:
     extraArgs:
       rotate-server-certificates: true
-      cloud-provider: external

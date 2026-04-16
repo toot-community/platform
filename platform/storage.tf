@@ -1,112 +1,25 @@
-resource "upcloud_managed_object_storage" "this" {
-  configured_status = var.upcloud_object_storage_status
-  name              = var.upcloud_object_storage_name
-  region            = var.upcloud_object_storage_region
+data "cloudflare_account_api_token_permission_groups_list" "all" {
+  account_id = var.cloudflare_account_id
+}
 
-  network {
-    family = var.upcloud_object_storage_network_family
-    name   = var.upcloud_object_storage_network_name
-    type   = var.upcloud_object_storage_network_type
+locals {
+  r2_permission_groups = {
+    for pg in data.cloudflare_account_api_token_permission_groups_list.all.result :
+    pg.name => pg.id
+    if contains([
+      "Workers R2 Storage Bucket Item Read",
+      "Workers R2 Storage Bucket Item Write",
+    ], pg.name)
   }
 }
 
-resource "upcloud_managed_object_storage_bucket" "this" {
-  for_each = { for bucket in concat(var.generic_s3_buckets, var.mastodon_s3_buckets) : bucket.name => bucket }
+module "s3_identity" {
+  for_each = var.r2_buckets
+  source   = "./modules/s3-identity"
 
-  service_uuid = upcloud_managed_object_storage.this.id
-  name         = each.value.name
-  depends_on   = [upcloud_managed_object_storage.this]
-}
-
-resource "objsto_bucket_policy" "public_read_on_mastodon_buckets" {
-  for_each = { for bucket in var.mastodon_s3_buckets : bucket.name => bucket }
-
-  bucket = each.value.name
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          AWS = ["*"]
-        },
-        Action = [
-          "s3:GetObject"
-        ],
-        Resource = [
-          "arn:aws:s3:::${each.value.name}/*"
-        ]
-      }
-    ]
-  })
-
-  depends_on = [upcloud_managed_object_storage_bucket.this]
-}
-
-resource "upcloud_managed_object_storage_policy" "this" {
-  for_each = { for bucket in concat(var.generic_s3_buckets, var.mastodon_s3_buckets) : bucket.name => bucket }
-
-  name         = "FullAccessOn${replace(title(each.value.name), "-", "")}"
-  description  = "Full access for bucket ${each.value.name}"
-  service_uuid = upcloud_managed_object_storage.this.id
-
-  document = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "s3:*"
-        ],
-        Resource = [
-          "arn:aws:s3:::${each.value.name}",
-          "arn:aws:s3:::${each.value.name}/*"
-        ]
-      }
-    ]
-  })
-}
-
-resource "upcloud_managed_object_storage_user" "this" {
-  for_each = { for bucket in concat(var.generic_s3_buckets, var.mastodon_s3_buckets) : bucket.name => bucket }
-
-  service_uuid = upcloud_managed_object_storage.this.id
-  username     = "${each.value.name}-rw"
-}
-
-resource "upcloud_managed_object_storage_user_access_key" "this" {
-  for_each = upcloud_managed_object_storage_user.this
-
-  username     = each.value.username
-  status       = "Active"
-  service_uuid = upcloud_managed_object_storage.this.id
-  depends_on   = [upcloud_managed_object_storage_user.this]
-}
-
-resource "upcloud_managed_object_storage_user_policy" "this" {
-  for_each = upcloud_managed_object_storage_user.this
-
-  username     = each.value.username
-  name         = upcloud_managed_object_storage_policy.this[each.key].name
-  service_uuid = upcloud_managed_object_storage.this.id
-  depends_on   = [upcloud_managed_object_storage_user.this, upcloud_managed_object_storage_policy.this]
-}
-
-resource "upcloud_managed_object_storage_user" "terraform" {
-  service_uuid = upcloud_managed_object_storage.this.id
-  username     = "terraform"
-}
-
-resource "upcloud_managed_object_storage_user_access_key" "terraform" {
-  username     = upcloud_managed_object_storage_user.terraform.username
-  status       = "Active"
-  service_uuid = upcloud_managed_object_storage.this.id
-  depends_on   = [upcloud_managed_object_storage_user.terraform]
-}
-
-resource "upcloud_managed_object_storage_user_policy" "terraform" {
-  username     = upcloud_managed_object_storage_user.terraform.username
-  name         = var.upcloud_object_storage_management_user_policy_name
-  service_uuid = upcloud_managed_object_storage.this.id
-  depends_on   = [upcloud_managed_object_storage_user_policy.terraform, upcloud_managed_object_storage_user.terraform]
+  account_id                   = var.cloudflare_account_id
+  bucket_name                  = each.key
+  r2_read_permission_group_id  = local.r2_permission_groups["Workers R2 Storage Bucket Item Read"]
+  r2_write_permission_group_id = local.r2_permission_groups["Workers R2 Storage Bucket Item Write"]
+  vault_secret                 = each.value.vault_secret
 }

@@ -128,6 +128,10 @@ Common envFrom configuration for Mastodon containers
     name: {{ include "mastodon.fullname" . }}-env
 - secretRef:
     name: {{ include "mastodon.fullname" . }}-secrets-env
+{{- if .Values.vault.s3Credentials.enabled }}
+- secretRef:
+    name: {{ include "mastodon.fullname" . }}-s3-credentials
+{{- end }}
 {{- end }}
 
 {{/*

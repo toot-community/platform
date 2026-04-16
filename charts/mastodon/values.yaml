@@ -664,6 +664,12 @@ vault:
     mount: secret
     path: ""  # REQUIRED when enabled: Vault KV v2 path (e.g., toot-community/mastodon-secrets-env)
     refreshAfter: "1h"
+  s3Credentials:
+    enabled: false
+    vaultAuthRef: default
+    mount: secret
+    path: ""  # REQUIRED when enabled: Vault KV v2 path (e.g., toot-community/s3-credentials)
+    refreshAfter: "1h"
 
 # =============================================================================
 # DEBUG MODE

@@ -2,4 +2,4 @@ machine:
   network:
     kubespan:
       enabled: true
-      allowDownPeerBypass: true
+      allowDownPeerBypass: false

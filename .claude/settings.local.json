@@ -13,7 +13,9 @@
       "WebFetch",
       "Bash(gh issue:*)",
       "Bash(gh pr:*)",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
     ],
     "deny": [],
     "ask": []

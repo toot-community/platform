@@ -103,6 +103,9 @@ vault:
   secretsEnv:
     enabled: true
     path: microblog-network/mastodon-secrets-env
+  s3Credentials:
+    enabled: true
+    path: microblog-network/s3-credentials
 
 s3Gateway:
   ingress:

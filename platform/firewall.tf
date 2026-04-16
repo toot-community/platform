@@ -1,66 +1,31 @@
-
 resource "hcloud_firewall" "controlplane" {
   name = "${var.resource_prefix}controlplane"
 
   rule {
     direction   = "in"
-    protocol    = "icmp"
-    source_ips  = [var.vpc_cidr]
-    description = "Allow ICMP from VPC"
+    protocol    = "tcp"
+    port        = "50000"
+    source_ips  = var.whitelist_admins
+    description = "Allow TCP 50000 (Talos APId) from admins"
   }
+
   rule {
     direction   = "in"
     protocol    = "udp"
-    port        = "any"
-    source_ips  = [var.vpc_cidr]
-    description = "Allow UDP from VPC"
-  }
-  rule {
-    direction   = "in"
-    protocol    = "tcp"
-    port        = "any"
-    source_ips  = [var.vpc_cidr]
-    description = "Allow TCP from VPC"
+    port        = "51820"
+    source_ips  = ["0.0.0.0/0", "::/0"]
+    description = "KubeSpan WireGuard"
   }
 
-  rule {
-    direction   = "in"
-    protocol    = "tcp"
-    port        = "50000"
-    source_ips  = concat(var.whitelist_admins, [var.vpc_cidr])
-    description = "Allow TCP 50000 (Talos APId) from admins and VPC"
-  }
-  rule {
-    direction   = "in"
-    protocol    = "tcp"
-    port        = "50001"
-    source_ips  = [var.vpc_cidr]
-    description = "Allow TCP 50001 (Talos Trustd) from VPC"
-  }
-
-  rule {
-    direction = "in"
-    protocol  = "udp"
-    port      = "51820"
-    source_ips = concat(
-      [for n in var.metal_nodes : regex("^([^/]+)", n.public_ipv4_address)[0]],
-      [for name, srv in hcloud_server.controlplane : srv.ipv4_address]
-    )
-    description = "Allow UDP 51820 (WireGuard/KubeSpan) from all nodes"
-  }
-
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "6443"
-    source_ips = concat(
-      var.whitelist_admins,
-      [var.vpc_cidr],
-      [for n in var.metal_nodes : regex("^([^/]+)", n.public_ipv4_address)[0]], # all metal nodes
-      [for name, srv in hcloud_server.controlplane : srv.ipv4_address]          # all virtual nodes
-    )
-    description = "Allow TCP 6443 (Kubernetes API) from admins, VPC, and nodes"
-  }
+  # Commented: API traffic flows through Teleport proxy. You do need
+  # this rule if you ever bootstrap this cluster from scratch again.
+  # rule {
+  #   direction   = "in"
+  #   protocol    = "tcp"
+  #   port        = "6443"
+  #   source_ips  = var.whitelist_admins
+  #   description = "Allow TCP 6443 (Kubernetes API) from admins"
+  # }
 }
 
 resource "hcloud_firewall_attachment" "controlplane" {
