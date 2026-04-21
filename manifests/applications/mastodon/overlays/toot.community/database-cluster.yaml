@@ -39,13 +39,18 @@ spec:
       max_parallel_workers_per_gather: "2"
       max_parallel_workers: "4"
       max_parallel_maintenance_workers: "2"
-      
+
+      # safety rails (added 2026-04-21 after replica OOM incident)
+      statement_timeout: "120s"
+      idle_in_transaction_session_timeout: "60s"
+      log_min_duration_statement: "2000"
+
   resources:
     requests:
-      memory: "32Gi"
+      memory: "40Gi"
       cpu: "4"
     limits:
-      memory: "32Gi"
+      memory: "40Gi"
 ---
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
