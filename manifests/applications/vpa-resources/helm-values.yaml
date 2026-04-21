@@ -345,6 +345,9 @@ vpas:
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
+          maxAllowed:
+            cpu: 1
+            memory: 2Gi
   # victoriametrics
   - name: vm-grafana-vpa
     namespace: victoriametrics
