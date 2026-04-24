@@ -8,6 +8,12 @@
   "labels": [
     "renovate"
   ],
+  "kubernetes": {
+    "managerFilePatterns": [
+      "manifests/applications/vault/metrics-token-rotation/rotation.yaml",
+      "manifests/applications/vault/backup/raft-snapshot.yaml"
+    ]
+  },
   "customManagers": [
     {
       "customType": "regex",
@@ -67,6 +73,7 @@
       "matchManagers": [
         "kustomize",
         "helmv3",
+        "kubernetes",
         "terraform"
       ],
       "matchFileNames": [
