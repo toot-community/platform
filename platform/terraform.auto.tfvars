@@ -53,7 +53,7 @@ cluster_name    = "tootcommunity-prod"
 resource_prefix = "tc-prod-"
 
 # --- Talos ---
-talos_version            = "v1.11.3"
+talos_version            = "v1.13.0"
 kubernetes_version       = "v1.35.0"
 talos_schematic_id       = "ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515"
 talos_metal_schematic_id = "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"

@@ -41,6 +41,7 @@ data "talos_client_configuration" "this" {
 resource "talos_machine_configuration_apply" "controlplane" {
   for_each = var.controlplane_nodes
 
+  apply_mode                  = "staged_if_needing_reboot"
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   node                        = hcloud_server.controlplane[each.key].ipv4_address
@@ -66,11 +67,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
       installer_image = data.talos_image_factory_urls.this.urls.installer,
     }),
     yamlencode({
-      machine = {
-        network = {
-          hostname = "${var.resource_prefix}cp-${each.key}"
-        }
-      }
+      apiVersion = "v1alpha1"
+      kind       = "HostnameConfig"
+      hostname   = "${var.resource_prefix}cp-${each.key}"
+      auto       = "off"
     }),
   ]
 }
@@ -78,6 +78,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
 resource "talos_machine_configuration_apply" "metal_worker" {
   for_each = var.metal_nodes
 
+  apply_mode                  = "staged_if_needing_reboot"
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   node                        = regex("^([^/]+)", each.value.public_ipv4_address)[0]
@@ -96,7 +97,6 @@ resource "talos_machine_configuration_apply" "metal_worker" {
     yamlencode({
       machine = {
         network = {
-          hostname = "${var.resource_prefix}wk-${each.key}"
           interfaces = [{
             deviceSelector = { busPath = "0*" }
             addresses = [
@@ -111,6 +111,12 @@ resource "talos_machine_configuration_apply" "metal_worker" {
           }]
         }
       }
+    }),
+    yamlencode({
+      apiVersion = "v1alpha1"
+      kind       = "HostnameConfig"
+      hostname   = "${var.resource_prefix}wk-${each.key}"
+      auto       = "off"
     }),
   ]
 }
