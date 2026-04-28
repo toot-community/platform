@@ -51,7 +51,7 @@ spec:
                   readOnly: true
           containers:
             - name: upload
-              image: amazon/aws-cli
+              image: amazon/aws-cli@sha256:3a1e663f3429e4b677b7f4187e84ea833bad16e9d028360259baf2cf50e88e2a
               command:
                 - /bin/sh
                 - -c
