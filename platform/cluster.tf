@@ -46,7 +46,6 @@ resource "talos_machine_configuration_apply" "controlplane" {
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   node                        = hcloud_server.controlplane[each.key].ipv4_address
   config_patches = [
-    file("${path.module}/talos/patches/all-enable-kubespan.yaml"),
     file("${path.module}/talos/patches/all-kubelet-extra-args.yaml"),
     file("${path.module}/talos/patches/all-no-cni.yaml"),
     file("${path.module}/talos/patches/all-set-timeservers.yaml"),
@@ -58,7 +57,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       ipv4_vip_addr = hcloud_floating_ip.api.ip_address,
       hcloud_token  = var.hcloud_token,
     }),
-    templatefile("${path.module}/talos/patches/cp-kubespan-endpoint-filters.yaml", {
+    templatefile("${path.module}/talos/patches/cp-kubespan.yaml", {
       floating_ip = hcloud_floating_ip.api.ip_address,
     }),
     file("${path.module}/talos/patches/cp-monitoring-listen-all-interfaces.yaml"),
@@ -83,12 +82,12 @@ resource "talos_machine_configuration_apply" "metal_worker" {
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   node                        = regex("^([^/]+)", each.value.public_ipv4_address)[0]
   config_patches = [
-    file("${path.module}/talos/patches/all-enable-kubespan.yaml"),
     file("${path.module}/talos/patches/all-kubelet-extra-args.yaml"),
     file("${path.module}/talos/patches/all-no-cni.yaml"),
     file("${path.module}/talos/patches/all-set-timeservers.yaml"),
     file("${path.module}/talos/patches/all-set-up-networking.yaml"),
     file("${path.module}/talos/patches/worker-elasticsearch.yaml"),
+    file("${path.module}/talos/patches/worker-kubespan.yaml"),
     file("${path.module}/talos/patches/worker-longhorn-volume.yaml"),
     templatefile("${path.module}/talos/patches/worker-metal-install-configuration.yaml", {
       install_disk    = each.value.install_disk,

@@ -1,7 +1,0 @@
-machine:
-  network:
-    kubespan:
-      filters:
-        endpoints:
-          - 0.0.0.0/0
-          - '!${floating_ip}/32'

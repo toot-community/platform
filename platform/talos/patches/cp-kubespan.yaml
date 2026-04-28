@@ -1,0 +1,8 @@
+apiVersion: v1alpha1
+kind: KubeSpanConfig
+enabled: true
+allowDownPeerBypass: false
+filters:
+  endpoints:
+    - 0.0.0.0/0
+    - '!${floating_ip}/32'
